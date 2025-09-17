@@ -36,7 +36,7 @@ Scenario Outline: TC_UI_Zlaata_ADM_03 |Verify New Arrivals Section Product Displ
 Examples:  
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_03   |
-  @Regression
+ 
    @TC_UI_Zlaata_ADM_04
 Scenario Outline: TC_UI_Zlaata_ADM_04 |Verify Category Section Display on Website.| "<TD_ID>"  
    Given admin is logged in
@@ -50,9 +50,9 @@ Examples:
    @TC_UI_Zlaata_ADM_05
 Scenario Outline: TC_UI_Zlaata_ADM_05 |Verify bulk product upload and visibility.| "<TD_ID>" 
    Given admin is logged in
-    When I upload the product excel "Auto Product.xlsx"
-    Then the products from "Auto Product.xlsx" should be visible in admin panel
-    And the products from "Auto Product.xlsx" should be visible in user app
+    When I upload the product excel "Auto Product2.xlsx"
+    Then the products from "Auto Product2.xlsx" should be visible in admin panel
+    And the products from "Auto Product2.xlsx" should be visible in user app
 
 Examples:  
   | TD_ID                  |  
@@ -69,6 +69,16 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_06   |
   
+    @TC_UI_Zlaata_ADM_07
+Scenario Outline: TC_UI_Zlaata_ADM_07 |Verify all uploaded Special Timer products appear in Admin and User App.| "<TD_ID>" 
+     Given admin is logged in
+    When I upload the special product excel "Test.xlsx"
+    Then I verify products in Admin panel with "Test.xlsx"
+    And verify products from "Test.xlsx" should be visible in user app
+
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Zlaata_ADM_07   |
   
   
   

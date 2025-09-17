@@ -238,7 +238,9 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 
 
 	 
-	    
+	    //Special Timer Product
+	    @FindBy(xpath = "//input[@placeholder='Search']")
+	    protected WebElement userAppSearchBox;
 	    
 	    
 	    
