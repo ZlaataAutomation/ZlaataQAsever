@@ -37,7 +37,7 @@ public class TestRunner {
 @AfterClass
 public static void generateExcelReport() {
 	 ExcelReportUtil.generateExcelReport();
-//	 EmailSendUtils.sendEmail();
+	// EmailSendUtils.sendEmail();
 }
 }
 
