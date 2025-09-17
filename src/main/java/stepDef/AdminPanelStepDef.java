@@ -146,6 +146,32 @@ public class AdminPanelStepDef {
 		}
 
 
+//Special Timer Product
+		
+	
+			@When("I upload the special product excel {string}")
+			public void i_upload_the_special_product_excel(String filePath) {
+				String excelPath = System.getProperty("user.dir") + "/src/test/resources/SpecialTimerProduct/" + filePath;
+			    admin.uploadTheSpecialTimerProductExcel(excelPath);
+			 
+			}
+
+			@Then("I verify products in Admin panel with {string}")
+			public void i_verify_products_in_admin_panel_with(String filePath) throws IOException {
+				String excelPath = System.getProperty("user.dir") + "/src/test/resources/SpecialTimerProduct/" + filePath;
+			    admin.verifySpecialProductsinAdmin(excelPath);
+			}
+
+				@Then("verify products from {string} should be visible in user app")
+				public void verify_products_from_should_be_visible_in_user_app(String filePath) throws IOException {
+					String excelPath = System.getProperty("user.dir") + "/src/test/resources/SpecialTimerProduct/" + filePath;
+				    admin.verifyProductsUserApp(excelPath);
+				 
+				}
+
+
+
+
 
 
 

@@ -3,9 +3,11 @@ package pages;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -41,6 +43,7 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	public AdminPanelPage(WebDriver driver) 
 	{
 		this.driver = driver;
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		PageFactory.initElements(this.driver, this);
 	}
 	public void clickUsingJavaScript(WebElement element) {
@@ -963,8 +966,9 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
         submitButton.click();
 	    System.out.println("✅ successful saved");
 	        
-       // Assert.assertTrue("❌ Excel upload failed!", successMessage.isDisplayed());
+      //  Assert.assertTrue("❌ Excel upload failed!", successMessage.isDisplayed());
         System.out.println("✅ Excel uploaded successfully");
+        
     }
 	
 	public void verifyProductsInAdmin(String filePath) throws IOException {
@@ -1117,15 +1121,250 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	}
 
 
+//Special Timer Product
+	
+	 // ✅ Upload excel
+    public void uploadTheSpecialTimerProductExcel(String filePath) {
+        Common.waitForElement(2);
+        driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+        
+        System.out.println("✅ Redirected to Admin Special Timer Product page");
+        Common.waitForElement(2);
+	    waitFor(clickStatus);
+	    click(clickStatus);
 
-//sarojko
+	    // Select Status -> Active
+	    waitFor(statusActiveOption);
+	    click(statusActiveOption);
+	    System.out.println("✅ Selected Active status");
+	    
+	 // Click Plus Button to add products
+	 		Common.waitForElement(2);
+	 		waitFor(plusButton);
+	 		click(plusButton);
+	 		System.out.println("✅ Clicked '+'Plus button");
 
+        Common.waitForElement(2);
+        waitFor(importButton);
+        click(importButton);
+        System.out.println("✅ Clicked Import Button");
 
+        Common.waitForElement(2);
+        waitFor(uploadExcelButton);
+        uploadExcelButton.sendKeys(filePath);
+        System.out.println("✅ Uploaded file: " + filePath);
 
+        Common.waitForElement(2);
+        waitFor(submitButton);
+        submitButton.click();
+        System.out.println("✅ Excel uploaded successfully");
+        
+      //Clear Catch
+	    Common.waitForElement(2);
+	    waitFor(clearCatchButton);
+	    click(clearCatchButton);
+	    System.out.println("✅ Successfull click Clear Catch Button");
+	    
+        
+    }
 
+    // ✅ Verify in Admin panel
+    public void verifySpecialProductsinAdmin(String excelPath) throws IOException {
+        List<Map<String, Object>> excelProducts = ExcelXLSReader.readProductsWithMultipleListing(excelPath);
+        List<Map<String, String>> adminProducts = readAdminProductsFromTable();
 
+        for (Map<String, Object> excelProduct : excelProducts) {
+            String excelSku = excelProduct.get("sku").toString().trim();
+            String excelDiscount = excelProduct.get("discount").toString().trim();
 
+            Optional<Map<String, String>> match = adminProducts.stream()
+                .filter(p -> p.get("Sku").equalsIgnoreCase(excelSku))
+                .findFirst();
 
+            if (match.isPresent()) {
+                Map<String, String> adminProduct = match.get();
+                String colorName = adminProduct.get("ColorName");
+
+                if (!adminProduct.get("Discount").equals(excelDiscount)) {
+                    System.out.println("❌ Discount mismatch for SKU: " + excelSku);
+                } else {
+                    System.out.println("✅ Verified in Admin → SKU: " + excelSku + 
+                                       " | Color: " + colorName + 
+                                       " | Discount: " + excelDiscount);
+                }
+            } else {
+                System.out.println("❌ SKU not found in Admin: " + excelSku);
+            }
+        }
+    }
+
+    private List<Map<String, String>> readAdminProductsFromTable() {
+    	List<WebElement> productRows = driver.findElements(
+    		    By.xpath("//tbody[@id='specialEventTimerProduct']/tr")
+    		);
+    	//	waitFor(productRows.get(0));  // wait for first row to be visible
+        List<Map<String, String>> adminProducts = new ArrayList<>();
+
+        for (WebElement row : productRows) {
+            List<WebElement> cols = row.findElements(By.tagName("td"));
+            if (cols.size() >= 6) {
+                Map<String, String> product = new HashMap<>();
+                product.put("ColorName", cols.get(2).getText().trim());
+                product.put("Sku", cols.get(3).getText().trim());
+                product.put("DiscountType", cols.get(4).getText().trim());
+                product.put("Discount", cols.get(5).getText().trim());
+                adminProducts.add(product);
+            }
+        }
+        return adminProducts;
+    }
+
+    // ✅ Verify in User app
+    public void verifyProductsUserApp(String excelPath) throws IOException {
+        // ✅ Step 1: Read products from Excel
+        List<Map<String, Object>> excelProducts = ExcelXLSReader.readProductsWithMultipleListing(excelPath);
+
+        // ✅ Step 2: Read all Admin products into a map (Sku → ColorName)
+        Map<String, String> adminProducts = new HashMap<>();
+        List<WebElement> rows = driver.findElements(By.xpath("//table//tr"));
+        for (WebElement row : rows) {
+            try {
+                String sku = row.findElement(By.xpath(".//td[4]")).getText().trim();     // adjust index if SKU col is different
+                String colorName = row.findElement(By.xpath(".//td[3]")).getText().trim(); // adjust index for ColorName col
+                adminProducts.put(sku, colorName);
+            } catch (Exception e) {
+                // ignore header or invalid rows
+            }
+        }
+
+        // ✅ Step 3: Switch to User App
+        switchToWindow(1);
+        driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+        // ✅ Step 4: Loop through Excel SKUs and verify in User App
+        for (Map<String, Object> product : excelProducts) {
+            Object skuObj = product.get("sku");
+            if (skuObj == null) {
+                System.out.println("⚠ SKU missing in Excel row, skipping...");
+                continue;
+            }
+
+            String sku = skuObj.toString().trim();
+
+            // Get ColorName from Admin Map
+            String productColorName = adminProducts.get(sku);
+            if (productColorName == null) {
+                System.out.println("⚠ No ColorName found in Admin for SKU: " + sku);
+                continue;
+            }
+
+            // Search in user app
+            wait.until(ExpectedConditions.elementToBeClickable(userSearchBox));
+            userSearchBox.clear();
+            userSearchBox.sendKeys(productColorName);
+          
+
+            By locator = By.xpath("//h6[normalize-space()='" + productColorName + "']");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+
+            WebElement productElement = driver.findElement(locator);
+            Assert.assertTrue("❌ Product not found in User App: " + productColorName, productElement.isDisplayed());
+            productElement.click();
+
+            System.out.println("✅ Product found in User App: " + productColorName);
+
+            // ✅ Verify price details
+            try {
+                WebElement actualPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_actual_price']")
+                ));
+
+                WebElement currentPrice = driver.findElement(
+                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_current_price']")
+                );
+
+                WebElement discountPercentage = driver.findElement(
+                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_discount_percentage']")
+                );
+
+                System.out.println("   Actual Price   : " + actualPrice.getText());
+                System.out.println("   Special  Price  : " + currentPrice.getText());
+                System.out.println("   Discount Shown : " + discountPercentage.getText());
+
+            } catch (Exception e) {
+                System.out.println("⚠ Could not fetch all price details for: " + productColorName);
+            }
+        }
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 
