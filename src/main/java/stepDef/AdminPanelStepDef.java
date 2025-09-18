@@ -183,7 +183,7 @@ public class AdminPanelStepDef {
 				    admin.verifyCategoriesInAdmin(excelPath);
 				}
 				@Then("verify Categories from {string} should be visible in user app")
-				public void verify_categories_from_should_be_visible_in_user_app(String filePath) throws IOException {
+				public void verify_categories_from_should_be_visible_in_user_app(String filePath) throws IOException, InterruptedException {
 					String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/BulkCatagories/" + filePath;
 			       admin.verifyCatagoriesInUserApp(excelPath);
 				}

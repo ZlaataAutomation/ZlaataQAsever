@@ -252,9 +252,12 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	    @FindBy(xpath = "//span[@class='ladda-label']")
 	    protected WebElement addProductSort;
 	    
-	    @FindBy(xpath = "//span[@aria-labelledby='select2-category_id-sr-container']")
+	    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[2]")
 	    protected WebElement categoryId;
 	    
+	    @FindBy(xpath = "//input[@role='searchbox']")
+	    protected WebElement categorySearchTextBox;
+	 
 	    
 	    //Bulk Collection
 	    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[2]")

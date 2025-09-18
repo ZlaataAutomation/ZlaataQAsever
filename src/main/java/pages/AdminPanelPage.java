@@ -1387,96 +1387,128 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
     		click(categoryType);
     		System.out.println("Clicked Category Type");
     		Common.waitForElement(2);
-    		waitFor(categorySearchBox);
-    		type(categorySearchBox,"Category");
-    		categorySearchBox.sendKeys(Keys.ENTER);
+    		waitFor(categorySearchTextBox);
+    		type(categorySearchTextBox,"Category");
+    		categorySearchTextBox.sendKeys(Keys.ENTER);
     		System.out.println("Typed 'Category Name' & pressed Enter");
-    		Common.waitForElement(2);
+    	//  Click Category Name
     		waitFor(categoryId);
-    		type(categoryId,categoryName);
-    		categoryId.sendKeys(Keys.ENTER);
-    		System.out.println("Typed 'Category Id' & pressed Enter");
+    		click(categoryId);
+    		System.out.println("Clicked Catagory Id Type");
+    		Common.waitForElement(2);
+    		waitFor(categorySearchTextBox);
+    		type(categorySearchTextBox,categoryName);
+    		categorySearchTextBox.sendKeys(Keys.ENTER);
+    		System.out.println("Typed 'Category id' & pressed Enter");
+    		Common.waitForElement(2);
+            waitFor(saveButton);
+            saveButton.click();
+            System.out.println("✅ Excel uploaded successfully");
+    		
         }
         
     
-		
+      //Clear Catch
+	    Common.waitForElement(2);
+	    waitFor(clearCatchButton);
+	    click(clearCatchButton);
+	    System.out.println("✅ Successfull click Clear Catch Button");
 		
 	
 
         System.out.println("🎉 All categories verification completed successfully!");
     }
 		
-    public void verifyCatagoriesInUserApp(String filePath) throws IOException {
-	    switchToWindow(1);
-	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-	    Common.waitForElement(3);
+    public void verifyCatagoriesInUserApp(String filePath) throws IOException, InterruptedException {
+        switchToWindow(1);
+        driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+        Common.waitForElement(3);
 
-	    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
+        List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
 
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-	    Actions actions = new Actions(driver);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        Actions actions = new Actions(driver);
 
-	    ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Catagories in User App");
-	    ExtentManager.setTest(test);
+        ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Categories in User App");
+        ExtentManager.setTest(test);
 
-	    for (Map<String, Object> product : products) {
-	        String catagories = (String) product.get("Category Name");
+        for (Map<String, Object> product : products) {
+            String category = (String) product.get("Category Name");
 
-	        if (catagories == null || catagories.trim().isEmpty()) {
-	            System.out.println("⚠ Skipping empty catagories");
-	            continue;
-	        }
+            if (category == null || category.trim().isEmpty()) {
+                System.out.println("⚠ Skipping empty category");
+                continue;
+            }
 
-	        // ✅ Hover Shop menu
-	        WebElement shopMenu = wait.until(ExpectedConditions
-	                .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
-	        actions.moveToElement(shopMenu).perform();
+            // ✅ Hover Shop menu
+            WebElement shopMenu = wait.until(ExpectedConditions
+                    .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
+            actions.moveToElement(shopMenu).perform();
 
-	        // ✅ Wait for dropdown
-	        List<WebElement> dropdownLinks = wait.until(ExpectedConditions
-	                .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
+            // ✅ Get dropdown links
+            List<WebElement> dropdownLinks = wait.until(ExpectedConditions
+                    .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
 
-	        boolean found = false;
-	        for (WebElement link : dropdownLinks) {
-	            String linkText = link.getText().trim();
-	            if (linkText.equalsIgnoreCase(catagories.trim())) {
-	                found = true;
+            boolean found = false;
+            for (WebElement link : dropdownLinks) {
+                if (link.getText().trim().equalsIgnoreCase(category.trim())) {
+                    found = true;
 
-	                // ✅ Verify visible
-	                Assert.assertTrue("❌ Catagories not visible: " + catagories, link.isDisplayed());
-	                System.out.println("✅ Catagories visible in dropdown: " + catagories);
-	                test.pass("Catagories visible: " + catagories);
+                    // ✅ Verify link
+                    Assert.assertTrue("❌ Category not visible: " + category, link.isDisplayed());
+                    System.out.println("✅ Category visible in dropdown: " + category);
+                    test.pass("Category visible: " + category);
 
-	                // ✅ Click
-	                link.click();
-	                System.out.println("✅ Navigated to Catagories: " + catagories);
+                    // ✅ Click category
+                    link.click();
+                    System.out.println("✅ Navigated to Category: " + category);
 
-	                // ✅ Verify products inside collection
-	                List<WebElement> productsInCollection = driver.findElements(By.xpath("//h6[@class='prod_name']"));
-	                Assert.assertTrue("❌ No products found in Catagories: " + catagories,
-	                        productsInCollection.size() > 0);
-	                System.out.println("✅ Products available under Catagories: " + catagories);
-	                test.pass("Products found in Catagories: " + catagories);
+                    // 🔄 WAIT + REFRESH here until products show
+                    int timeoutMinutes = 10;
+                    int refreshInterval = 5; // seconds
+                    boolean productsFound = false;
+                    long endTime = System.currentTimeMillis() + timeoutMinutes * 60 * 1000;
 
-	                break;
-	            }
-	        }
+                    while (System.currentTimeMillis() < endTime) {
+                        try {
+                            List<WebElement> productsInCollection = driver.findElements(By.xpath("//h6[@class='prod_name']"));
 
-	        if (!found) {
-	            System.out.println("❌ Catagories not found in dropdown: " + catagories);
-	            test.fail("Catagories not found: " + catagories);
-	        }
+                            if (!productsInCollection.isEmpty()) {
+                                productsFound = true;
+                                break;
+                            }
+                        } catch (Exception ignored) {}
 
-	        // ✅ After clicking, go back & refresh Shop menu for next collection
-	        driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-	        Common.waitForElement(2);
-	    }
+                        driver.navigate().refresh();
+                        Common.waitForElement(3);
+                        Thread.sleep(refreshInterval * 1000);
+                    }
 
-	    ExtentManager.getExtentReports().flush();
-	}
+                    // ✅ Final check
+                    if (productsFound) {
+                        System.out.println("✅ Products available under Category: " + category);
+                        test.pass("Products found in Category: " + category);
+                    } else {
+                        System.err.println("❌ No products found in Category '" + category + "' within " + timeoutMinutes + " minutes.");
+                        test.fail("No products found in Category: " + category);
+                    }
 
-	
+                    break; // stop dropdown loop
+                }
+            }
 
+            if (!found) {
+                System.err.println("❌ Category not found in dropdown: " + category);
+                test.fail("Category not found: " + category);
+            }
+
+            // ✅ Reset for next category
+            driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+            Common.waitForElement(2);
+        }
+
+        ExtentManager.getExtentReports().flush();
+    }
 		
 		
 		
