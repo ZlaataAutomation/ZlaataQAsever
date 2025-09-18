@@ -1296,8 +1296,381 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
         }
     }
 	
+    
+	//Bulk Catagories
+    
+    public void uploadTheCategoriesBulkExcel(String filePath) {
+    	Common.waitForElement(2);
+        driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+        
+        System.out.println("✅ Redirected to Admin product Catagories page");
+ 
+        Common.waitForElement(2);
+        waitFor(importButton);
+        click(importButton);
+        System.out.println("✅ Clicked Import Button");
+
+        Common.waitForElement(2);
+        waitFor(uploadExcelButton);
+        uploadExcelButton.sendKeys(filePath);
+        System.out.println("✅ Uploaded file: " + filePath);
+
+        Common.waitForElement(2);
+        waitFor(submitButton);
+        submitButton.click();
+        System.out.println("✅ Excel uploaded successfully");
+        
+      //Clear Catch
+	    Common.waitForElement(3);
+	    waitFor(clearCatchButton);
+	    click(clearCatchButton);
+	    System.out.println("✅ Successful click Clear Catch Button");
+		
+	}
 	
+    public void verifyCategoriesInAdmin(String filePath) throws IOException {
+        Common.waitForElement(2);
+
+        // ✅ Read Excel → Filter only non-empty Categories
+        List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath)
+            .stream()
+            .filter(product -> {
+                Object categoryObj = product.get("Category Name");  // <-- Excel column name
+                return categoryObj != null && !categoryObj.toString().trim().isEmpty();
+            })
+            .collect(Collectors.toList());
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+        for (Map<String, Object> product : products) {
+            String categoryName = (String) product.get("Category Name");
+
+            // ✅ Refresh page before each search
+            driver.navigate().refresh();
+            Common.waitForElement(3);
+
+            // ✅ Click Categories button (replace with your locator)
+            wait.until(ExpectedConditions.elementToBeClickable(categoriesNameButton)).click();
+            System.out.println("✅ Clicked Categories button");
+
+            // ✅ Enter category name in search box
+            wait.until(ExpectedConditions.elementToBeClickable(searchTextBox));
+            searchTextBox.clear();
+            searchTextBox.sendKeys(categoryName);
+            searchTextBox.sendKeys(Keys.ENTER);
+            System.out.println("✅ Searched for Category: " + categoryName);
+
+            // ✅ Verify category visible in table
+            By categoryLocator = By.xpath("//span[@title='" + categoryName + "']");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(categoryLocator));
+            System.out.println("✅ Category is visible in Admin panel: " + categoryName);
+            
+            // Click on Search Box for Product Sort
+    		Common.waitForElement(3);
+    		click(searchProductSortMenu);
+    		waitFor(searchProductSortMenu);
+    		type(searchProductSortMenu, "Product Sorts");
+    		// Thread.sleep(2000);
+    		System.out.println("Typed 'Product Sorts");
+    		waitFor(clickProductSort);
+    		// Thread.sleep(3000);
+    		click(clickProductSort);
+    		System.out.println("Selected Product Sorts");
+
+    		//  Click add Product Sort Name
+    		waitFor(addProductSort);
+    		click(addProductSort);
+    		System.out.println("Clicked add product Sort");
+    		Common.waitForElement(2);
+    		//  Click Category Name
+    		waitFor(categoryType);
+    		click(categoryType);
+    		System.out.println("Clicked Category Type");
+    		Common.waitForElement(2);
+    		waitFor(categorySearchBox);
+    		type(categorySearchBox,"Category");
+    		categorySearchBox.sendKeys(Keys.ENTER);
+    		System.out.println("Typed 'Category Name' & pressed Enter");
+    		Common.waitForElement(2);
+    		waitFor(categoryId);
+    		type(categoryId,categoryName);
+    		categoryId.sendKeys(Keys.ENTER);
+    		System.out.println("Typed 'Category Id' & pressed Enter");
+        }
+        
+    
+		
+		
 	
+
+        System.out.println("🎉 All categories verification completed successfully!");
+    }
+		
+    public void verifyCatagoriesInUserApp(String filePath) throws IOException {
+	    switchToWindow(1);
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	    Common.waitForElement(3);
+
+	    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	    Actions actions = new Actions(driver);
+
+	    ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Catagories in User App");
+	    ExtentManager.setTest(test);
+
+	    for (Map<String, Object> product : products) {
+	        String catagories = (String) product.get("Category Name");
+
+	        if (catagories == null || catagories.trim().isEmpty()) {
+	            System.out.println("⚠ Skipping empty catagories");
+	            continue;
+	        }
+
+	        // ✅ Hover Shop menu
+	        WebElement shopMenu = wait.until(ExpectedConditions
+	                .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
+	        actions.moveToElement(shopMenu).perform();
+
+	        // ✅ Wait for dropdown
+	        List<WebElement> dropdownLinks = wait.until(ExpectedConditions
+	                .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
+
+	        boolean found = false;
+	        for (WebElement link : dropdownLinks) {
+	            String linkText = link.getText().trim();
+	            if (linkText.equalsIgnoreCase(catagories.trim())) {
+	                found = true;
+
+	                // ✅ Verify visible
+	                Assert.assertTrue("❌ Catagories not visible: " + catagories, link.isDisplayed());
+	                System.out.println("✅ Catagories visible in dropdown: " + catagories);
+	                test.pass("Catagories visible: " + catagories);
+
+	                // ✅ Click
+	                link.click();
+	                System.out.println("✅ Navigated to Catagories: " + catagories);
+
+	                // ✅ Verify products inside collection
+	                List<WebElement> productsInCollection = driver.findElements(By.xpath("//h6[@class='prod_name']"));
+	                Assert.assertTrue("❌ No products found in Catagories: " + catagories,
+	                        productsInCollection.size() > 0);
+	                System.out.println("✅ Products available under Catagories: " + catagories);
+	                test.pass("Products found in Catagories: " + catagories);
+
+	                break;
+	            }
+	        }
+
+	        if (!found) {
+	            System.out.println("❌ Catagories not found in dropdown: " + catagories);
+	            test.fail("Catagories not found: " + catagories);
+	        }
+
+	        // ✅ After clicking, go back & refresh Shop menu for next collection
+	        driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+	        Common.waitForElement(2);
+	    }
+
+	    ExtentManager.getExtentReports().flush();
+	}
+
+	
+
+		
+		
+		
+
+		//Bulk Upload Collection
+		
+		 public void bulkBploadCollectionExcel(String filePath) {
+		        Common.waitForElement(2);
+		        driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+		        
+		        System.out.println("✅ Redirected to Admin product collection page");
+		 
+		        Common.waitForElement(2);
+		        waitFor(importButton);
+		        click(importButton);
+		        System.out.println("✅ Clicked Import Button");
+
+		        Common.waitForElement(2);
+		        waitFor(uploadExcelButton);
+		        uploadExcelButton.sendKeys(filePath);
+		        System.out.println("✅ Uploaded file: " + filePath);
+
+		        Common.waitForElement(2);
+		        waitFor(submitButton);
+		        submitButton.click();
+		        System.out.println("✅ Excel uploaded successfully");
+		        
+		      //Clear Catch
+			    Common.waitForElement(3);
+			    waitFor(clearCatchButton);
+			    click(clearCatchButton);
+			    System.out.println("✅ Successfull click Clear Catch Button");
+			    
+		        
+		    }
+		
+		 public void verifyCollectionsInAdmin(String filePath) throws IOException {
+			    Common.waitForElement(2);
+
+			    // Read Excel → Filter only non-empty collection names
+			    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath)
+			        .stream()
+			        .filter(product -> {
+			            Object collectionObj = product.get("Collections");  // <-- Excel column
+			            return collectionObj != null && !collectionObj.toString().trim().isEmpty();
+			        })
+			        .collect(Collectors.toList());
+			    
+			    Common.waitForElement(2);
+			    waitFor(clickStatus);
+			    click(clickStatus);
+
+			    // Select Status -> Active
+			    waitFor(statusActiveOption);
+			    click(statusActiveOption);
+			    System.out.println("✅ Selected Active status");
+
+			    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+			    for (Map<String, Object> product : products) {
+			        String collectionName = (String) product.get("Collections");
+
+			        // ✅ Navigate to Product Collection section
+			        wait.until(ExpectedConditions.elementToBeClickable(collectionButton)).click();
+			        System.out.println("✅ Clicked Collection button");
+
+			        wait.until(ExpectedConditions.elementToBeClickable(searchTextBox));
+			        searchTextBox.clear();
+			        searchTextBox.sendKeys(collectionName);
+			        searchTextBox.sendKeys(Keys.ENTER);
+
+			        System.out.println("✅ Searched for Collection: " + collectionName);
+
+			        // ✅ Wait until collection is visible in table
+			        By collectionLocator = By.xpath("//span[@title='" + collectionName + "']");
+			        wait.until(ExpectedConditions.visibilityOfElementLocated(collectionLocator));
+
+			        System.out.println("✅ Collection is visible in Admin panel: " + collectionName);
+			        
+			     // Click Edit button
+				    Common.waitForElement(2);
+				    waitFor(editButton);
+			        click(editButton);
+			        System.out.println("✅ Clicked  editbutton");
+			        Common.waitForElement(3);
+				    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,1800);");
+				    // Click Collection button
+				    //Thread.sleep(2000);
+				    Common.waitForElement(2);
+				    waitFor(menuButton);
+				    click(menuButton);
+				    System.out.println("✅ Clicked Collection button");
+
+				    //Search 'new-arrivals'
+				    //Thread.sleep(2000);
+				    Common.waitForElement(2);
+				    waitFor(menuSearchBox);
+				    type(menuSearchBox, "Shop");
+				    menuSearchBox.sendKeys(Keys.ENTER);
+				    System.out.println("✅ Successfull  set ShopMenu");
+				   // Thread.sleep(2000);
+				    // Save changes
+			        Common.waitForElement(2);
+			        waitFor(saveButton);
+			        saveButton.click();
+				    System.out.println("✅ successful saved");
+			        
+
+			    }
+			 
+			    // ✅ Clear Cache
+			    Common.waitForElement(2);
+			    waitFor(clearCatchButton);
+			    click(clearCatchButton);
+			    System.out.println("✅ Successfully clicked Clear Cache Button");
+			    Common.waitForElement(2);
+			}
+
+
+
+
+
+		 public void verifyCollectionsInUserApp(String filePath) throws IOException {
+			    switchToWindow(1);
+			    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+			    Common.waitForElement(3);
+
+			    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
+
+			    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+			    Actions actions = new Actions(driver);
+
+			    ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Collections in User App");
+			    ExtentManager.setTest(test);
+
+			    for (Map<String, Object> product : products) {
+			        String collection = (String) product.get("Collections");
+
+			        if (collection == null || collection.trim().isEmpty()) {
+			            System.out.println("⚠ Skipping empty collection");
+			            continue;
+			        }
+
+			        // ✅ Hover Shop menu
+			        WebElement shopMenu = wait.until(ExpectedConditions
+			                .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
+			        actions.moveToElement(shopMenu).perform();
+
+			        // ✅ Wait for dropdown
+			        List<WebElement> dropdownLinks = wait.until(ExpectedConditions
+			                .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
+
+			        boolean found = false;
+			        for (WebElement link : dropdownLinks) {
+			            String linkText = link.getText().trim();
+			            if (linkText.equalsIgnoreCase(collection.trim())) {
+			                found = true;
+
+			                // ✅ Verify visible
+			                Assert.assertTrue("❌ Collection not visible: " + collection, link.isDisplayed());
+			                System.out.println("✅ Collection visible in dropdown: " + collection);
+			                test.pass("Collection visible: " + collection);
+
+			                // ✅ Click
+			                link.click();
+			                System.out.println("✅ Navigated to collection: " + collection);
+
+			                // ✅ Verify products inside collection
+			                List<WebElement> productsInCollection = driver.findElements(By.xpath("//h6[@class='prod_name']"));
+			                Assert.assertTrue("❌ No products found in collection: " + collection,
+			                        productsInCollection.size() > 0);
+			                System.out.println("✅ Products available under collection: " + collection);
+			                test.pass("Products found in Collection: " + collection);
+
+			                break;
+			            }
+			        }
+
+			        if (!found) {
+			            System.out.println("❌ Collection not found in dropdown: " + collection);
+			            test.fail("Collection not found: " + collection);
+			        }
+
+			        // ✅ After clicking, go back & refresh Shop menu for next collection
+			        driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+			        Common.waitForElement(2);
+			    }
+
+			    ExtentManager.getExtentReports().flush();
+			}
+
+
+
+
 	
 	
 	
@@ -1374,6 +1747,208 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 	@Override
 	public boolean verifyExactText(WebElement ele, String expectedText) {
@@ -1395,26 +1970,18 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 
 
+	
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 

@@ -79,5 +79,26 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_07   |
   
+  @TC_UI_Zlaata_ADM_08
+Scenario Outline: TC_UI_Zlaata_ADM_08 |Verify uploaded categories appear in Admin and User App.| "<TD_ID>"
+     Given admin is logged in
+    When I upload the categories excel "CatagoriesTest5.xlsx"
+    Then I verify categories in Admin panel with "CatagoriesTest5.xlsx"
+     And verify Categories from "CatagoriesTest5.xlsx" should be visible in user app
+Examples:
+  | TD_ID                  |
+  | TD_UI_Zlaata_ADM_08   |
   
+  
+ 
+    @TC_UI_Zlaata_ADM_09
+Scenario Outline: TC_UI_Zlaata_ADM_09 |Verify bulk uploaded Collection appear in Admin and User App.| "<TD_ID>" 
+     Given admin is logged in
+    When I upload the Collection excel "Test1.xlsx"
+    Then I verify collection in Admin panel with "Test1.xlsx"
+    And verify collection from "Test1.xlsx" should be visible in user app
+
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Zlaata_ADM_09   |
   
