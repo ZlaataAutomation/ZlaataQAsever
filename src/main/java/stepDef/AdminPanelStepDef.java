@@ -128,19 +128,19 @@ public class AdminPanelStepDef {
 	
 		@When("I upload the product excel {string}")
 		public void i_upload_the_product_excel(String filePath) {
-			String excelPath= System.getProperty("user.dir") + "/src/test/resources/BulkProduct/" + filePath;
+			String excelPath= System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/BulkProduct/" + filePath;
 			admin.UploadTheProductExcel(excelPath);
 		}
 
 		@Then("the products from {string} should be visible in admin panel")
 		public void the_products_from_should_be_visible_in_admin_panel(String filePath) throws IOException {
-			String excelPath= System.getProperty("user.dir") + "/src/test/resources/BulkProduct/" + filePath;
+			String excelPath= System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/BulkProduct/" + filePath;
 			admin.verifyProductsInAdmin(excelPath);
 		    
 		}
 		@Then("the products from {string} should be visible in user app")
 		public void the_products_from_should_be_visible_in_user_app(String filePath) throws IOException {
-			String excelPath= System.getProperty("user.dir") + "/src/test/resources/BulkProduct/" + filePath;
+			String excelPath= System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/BulkProduct/" + filePath;
 			admin.verifyProductsInUserApp(excelPath);
 		
 		}
@@ -151,44 +151,68 @@ public class AdminPanelStepDef {
 	
 			@When("I upload the special product excel {string}")
 			public void i_upload_the_special_product_excel(String filePath) {
-				String excelPath = System.getProperty("user.dir") + "/src/test/resources/SpecialTimerProduct/" + filePath;
+				String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/SpecialTimerProduct/" + filePath;
 			    admin.uploadTheSpecialTimerProductExcel(excelPath);
 			 
 			}
 
 			@Then("I verify products in Admin panel with {string}")
 			public void i_verify_products_in_admin_panel_with(String filePath) throws IOException {
-				String excelPath = System.getProperty("user.dir") + "/src/test/resources/SpecialTimerProduct/" + filePath;
+				String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/SpecialTimerProduct/" + filePath;
 			    admin.verifySpecialProductsinAdmin(excelPath);
 			}
 
 				@Then("verify products from {string} should be visible in user app")
 				public void verify_products_from_should_be_visible_in_user_app(String filePath) throws IOException {
-					String excelPath = System.getProperty("user.dir") + "/src/test/resources/SpecialTimerProduct/" + filePath;
+					String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/SpecialTimerProduct/" + filePath;
 				    admin.verifyProductsUserApp(excelPath);
 				 
 				}
 
 
+	//Bulk Categories
+				
+				@When("I upload the categories excel {string}")
+				public void i_upload_the_categories_excel(String filePath) {
+					String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/BulkCatagories/" + filePath;
+					admin.uploadTheCategoriesBulkExcel(excelPath);
+				}
+				@Then("I verify categories in Admin panel with {string}")
+				public void i_verify_categories_in_admin_panel_with(String filePath) throws IOException {
+					String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/BulkCatagories/" + filePath;
+				    admin.verifyCategoriesInAdmin(excelPath);
+				}
+				@Then("verify Categories from {string} should be visible in user app")
+				public void verify_categories_from_should_be_visible_in_user_app(String filePath) throws IOException {
+					String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/BulkCatagories/" + filePath;
+			       admin.verifyCatagoriesInUserApp(excelPath);
+				}
 
+				
+				
+	
+				
+	//Bulk Collection
 
-
-
-
+					@When("I upload the Collection excel {string}")
+					public void i_upload_the_collection_excel(String filePath) {
+						String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/Bulk Collection/" + filePath;
+					    admin.bulkBploadCollectionExcel(excelPath);
+					}
+					
+					@Then("I verify collection in Admin panel with {string}")
+					public void i_verify_collection_in_admin_panel_with(String filePath) throws IOException {
+						String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/Bulk Collection/" + filePath;
+					    admin.verifyCollectionsInAdmin(excelPath);
+					}
+					@Then("verify collection from {string} should be visible in user app")
+					public void verify_collection_from_should_be_visible_in_user_app(String filePath) throws IOException {
+						String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/Bulk Collection/" + filePath;
+					    admin.verifyCollectionsInUserApp(excelPath);
+					}
 
 
 			
-				
-
-
-
-
-
-	
-				
-	
-	
-	
 	
 	
 

@@ -242,7 +242,26 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	    @FindBy(xpath = "//input[@placeholder='Search']")
 	    protected WebElement userAppSearchBox;
 	    
+	    //Bulk categories
+	    @FindBy(xpath = "//a[normalize-space()='Category Name']")
+	    protected WebElement categoriesNameButton;
 	    
+	    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[1]")
+	    protected WebElement categoryType;
+	    
+	    @FindBy(xpath = "//span[@class='ladda-label']")
+	    protected WebElement addProductSort;
+	    
+	    @FindBy(xpath = "//span[@aria-labelledby='select2-category_id-sr-container']")
+	    protected WebElement categoryId;
+	    
+	    
+	    //Bulk Collection
+	    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[2]")
+	    protected WebElement menuButton;
+	    
+	    @FindBy(xpath = "(//input[@role='searchbox'])[4]")
+	    protected WebElement menuSearchBox; 
 	    
 	    
 	    
