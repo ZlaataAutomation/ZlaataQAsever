@@ -28,6 +28,7 @@ public class PageObjectManager {
     private SearchSectionPage search;
     private CouponPage coupon;
     private AdminPanelPage admin;
+    private AdminPanelSortingPage adminSort;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -105,6 +106,11 @@ public class PageObjectManager {
 	
 	public AdminPanelPage getAdminPanelPage() {
         return (admin == null) ? admin = new AdminPanelPage(driver) : admin;
+    
+	}
+	
+	public AdminPanelSortingPage getAdminPanelSortingPage() {
+        return (adminSort == null) ? adminSort = new AdminPanelSortingPage(driver) : adminSort;
     
 	}
 	

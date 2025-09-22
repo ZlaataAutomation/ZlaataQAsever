@@ -268,7 +268,25 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	    
 	    
 	    
+	//New Added Product Export Check
+	    @FindBy(xpath = "//div[normalize-space()='Active products.']")
+	    protected WebElement activeProductButton;
 	    
+	    @FindBy(xpath = "//button[@data-type='new_products']")
+	    protected WebElement exportBtn1;
+	    
+	    @FindBy(xpath = "//input[@name='products.created_at']")
+	    protected WebElement createdAtBox;
+	    
+	    @FindBy(xpath = "//input[@name='products.created_at']")
+	    protected WebElement dateInput;
+	    
+	    @FindBy(xpath = "(//button[@type='button'][normalize-space()='Apply'])[2]")
+	    protected WebElement calendarApplyBtn1;
+	    
+	    @FindBy(xpath = "//button[normalize-space()='Generate']")
+	    protected WebElement generateBtn1;
+	  
 	    
 	    
 	    
