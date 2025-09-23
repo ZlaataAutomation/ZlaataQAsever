@@ -94,11 +94,22 @@ Examples:
     @TC_UI_Zlaata_ADM_09
 Scenario Outline: TC_UI_Zlaata_ADM_09 |Verify bulk uploaded Collection appear in Admin and User App.| "<TD_ID>" 
      Given admin is logged in
-    When I upload the Collection excel "Test1.xlsx"
-    Then I verify collection in Admin panel with "Test1.xlsx"
-    And verify collection from "Test1.xlsx" should be visible in user app
+    When I upload the Collection excel "Test5.xlsx"
+    Then I verify collection in Admin panel with "Test5.xlsx"
+    And verify collection from "Test5.xlsx" should be visible in user app
 
 Examples:  
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_09   |
+  
+  @TC_UI_Zlaata_ADM_10
+Scenario Outline: TC_UI_Zlaata_ADM_10 |Verify New Product added match between two exports.| "<TD_ID>" 
+     Given admin is logged in
+    When I export products from first page with date range "2025-09-17 - 2025-09-19" and save as "Export1.xlsx"
+    And I export products from second page with date range "2025-09-18 - 2025-09-19" and save as "Export2.xlsx"
+    Then I verify both exported files "Export1.xlsx" and "Export2.xlsx" have matching product names
+
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Zlaata_ADM_10   |
   
