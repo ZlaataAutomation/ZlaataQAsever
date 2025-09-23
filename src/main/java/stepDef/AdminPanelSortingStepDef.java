@@ -13,7 +13,6 @@ public class AdminPanelSortingStepDef {
 	AdminPanelSortingPage adminSort;
 	
 
-
 	public AdminPanelSortingStepDef(TestContext context) {
 		testContext = context;
 		adminSort = testContext.getPageObjectManager().getAdminPanelSortingPage();

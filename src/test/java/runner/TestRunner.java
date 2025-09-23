@@ -16,7 +16,7 @@ features = {"src/test/resources/features"},
 glue = "stepDef",	
 monochrome = true,	
 dryRun = false,
-tags="@TC_UI_Zlaata_ASP_04"
+tags="@TC_UI_Zlaata_EEF_04"
 
 )
 

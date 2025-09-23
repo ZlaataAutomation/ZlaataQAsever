@@ -551,7 +551,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 
 	    // Wait for the product to appear in product cards
 	    FluentWait<WebDriver> wait = new FluentWait<>(driver)
-	            .withTimeout(Duration.ofMinutes(15))
+	            .withTimeout(Duration.ofMinutes(10))
 	            .pollingEvery(Duration.ofSeconds(3))
 	            .ignoring(NoSuchElementException.class)
 	            .ignoring(StaleElementReferenceException.class);
@@ -573,6 +573,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	    if (card != null && card.isDisplayed()) {
 	        System.out.println("✅ Product '" + expectedFirstProduct + "' is visible in User App for Styles in First Position ");
 	    } else {
+	    	System.out.println("Product not sorted  within time period ");
 	        throw new RuntimeException("❌ Product '" + expectedFirstProduct + "' not found in User App for Styles: " );
 	    }
 	}
@@ -800,6 +801,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 
 		        // Save sort
 		        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+		        Common.waitForElement(2);
 		        wait.until(ExpectedConditions.elementToBeClickable(saveButton)).click();
 		        System.out.println("✅ Sorting saved for AllProduct: " + AllProductName);
 		    

@@ -212,24 +212,6 @@ public class AdminPanelStepDef {
 					}
 
 
-//New Added Product Export Check
-					
-				
-	@When("I export products from first page with date range {string} and save as {string}")
-	public void i_export_products_from_first_page_with_date_range_and_save_as(String dateRange, String fileName) throws InterruptedException {
-		admin.exportFromFirstPage(dateRange, fileName);				    
-	}
-						
-	@When("I export products from second page with date range {string} and save as {string}")
-	public void i_export_products_from_second_page_with_date_range_and_save_as(String dateRange, String fileName) {
-		
-						   
-	}
-	@Then("I verify both exported files {string} and {string} have matching product names")
-	public void i_verify_both_exported_files_and_have_matching_product_names(String file1, String file2) {
-					   
-	}
-
 
 
 					

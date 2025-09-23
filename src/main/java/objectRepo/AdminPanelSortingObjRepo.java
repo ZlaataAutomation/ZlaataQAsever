@@ -58,6 +58,7 @@ public abstract class AdminPanelSortingObjRepo extends BasePage{
     protected WebElement searchProductSortMenu;
 
     // Product Sort line to click after typing
+    
     @FindBy(xpath = "//a[normalize-space()='Product Sorts']")  
     protected WebElement clickProductSort;
     

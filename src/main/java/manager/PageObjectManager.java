@@ -29,6 +29,7 @@ public class PageObjectManager {
     private CouponPage coupon;
     private AdminPanelPage admin;
     private AdminPanelSortingPage adminSort;
+    private AdminPanelExportExcelFileMatchPage adminExport;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -112,6 +113,9 @@ public class PageObjectManager {
 	public AdminPanelSortingPage getAdminPanelSortingPage() {
         return (adminSort == null) ? adminSort = new AdminPanelSortingPage(driver) : adminSort;
     
+	}
+	public AdminPanelExportExcelFileMatchPage getAdminPanelExportExcelFileMatchPage() {
+		return (adminExport == null) ? adminExport = new AdminPanelExportExcelFileMatchPage(driver) : adminExport;
 	}
 	
 	
