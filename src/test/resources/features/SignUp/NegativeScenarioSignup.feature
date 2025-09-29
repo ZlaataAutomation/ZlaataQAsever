@@ -6,6 +6,7 @@ Feature: This is Negative SignUp feature
   #ScenarioDescription : User Negative signup scenario
   #============================================================================
   
+  @Regression
    @TC_UI_Zlaata_Signup_01
 Scenario Outline: TC_UI_Zlaata_Signup_01 | User  signup scenario |"<TD_ID>"
     Given User Signup with all valid data
@@ -13,7 +14,7 @@ Scenario Outline: TC_UI_Zlaata_Signup_01 | User  signup scenario |"<TD_ID>"
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_01 |
   
-  
+  @sanity
   @TC_UI_Zlaata_Signup_02
 Scenario Outline: TC_UI_Zlaata_Signup_02 | User left name field Empty |"<TD_ID>"
     Given User left name field Empty
@@ -21,6 +22,7 @@ Scenario Outline: TC_UI_Zlaata_Signup_02 | User left name field Empty |"<TD_ID>"
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_02 |
 
+@sanity
    @TC_UI_Zlaata_Signup_03
 Scenario Outline: TC_UI_Zlaata_Signup_03 | User left phone number field Empty |"<TD_ID>"
     Given User left phone number field Empty
@@ -28,6 +30,7 @@ Scenario Outline: TC_UI_Zlaata_Signup_03 | User left phone number field Empty |"
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_03 |
 
+@sanity
   @TC_UI_Zlaata_Signup_04
 Scenario Outline: TC_UI_Zlaata_Signup_04 | User entered name with less than three characters |"<TD_ID>"
     Given User entered name with less than three characters
@@ -35,6 +38,7 @@ Scenario Outline: TC_UI_Zlaata_Signup_04 | User entered name with less than thre
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_04 |
 
+@sanity
       @TC_UI_Zlaata_Signup_05
 Scenario Outline: TC_UI_Zlaata_Signup_05 | User entered phone number with less than 10 digits |"<TD_ID>"
     Given User entered phone number with less than 10 digits
@@ -42,6 +46,7 @@ Scenario Outline: TC_UI_Zlaata_Signup_05 | User entered phone number with less t
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_05 |
 
+@sanity
       @TC_UI_Zlaata_Signup_06
 Scenario Outline: TC_UI_Zlaata_Signup_06 | User entered email with less than 3 characters |"<TD_ID>"
     Given User entered email with less than 3 characters
@@ -49,13 +54,15 @@ Scenario Outline: TC_UI_Zlaata_Signup_06 | User entered email with less than 3 c
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_06 |
 
+@sanity
             @TC_UI_Zlaata_Signup_07
 Scenario Outline: TC_UI_Zlaata_Signup_07 | User entered name with more than 50 characters |"<TD_ID>"
     Given User entered name with more than 50 characters
     Examples:
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_07 |
-
+              
+              @sanity
               @TC_UI_Zlaata_Signup_08
 Scenario Outline: TC_UI_Zlaata_Signup_08 | User entered phone number with more than 10 digits |"<TD_ID>"
     Given User entered phone number with more than 10 digits
@@ -63,6 +70,7 @@ Scenario Outline: TC_UI_Zlaata_Signup_08 | User entered phone number with more t
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_08 |
 
+           @sanity
            @TC_UI_Zlaata_Signup_09
 Scenario Outline: TC_UI_Zlaata_Signup_09 | User entered email with more than 50 characters |"<TD_ID>"
     Given User entered email with more than 50 characters
@@ -70,7 +78,7 @@ Scenario Outline: TC_UI_Zlaata_Signup_09 | User entered email with more than 50 
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_09|
 
-
+                  @sanity
                   @TC_UI_Zlaata_Signup_10
 Scenario Outline: TC_UI_Zlaata_Signup_10| User entered email in an invalid format |"<TD_ID>"
     Given User entered email in an invalid format
@@ -78,20 +86,23 @@ Scenario Outline: TC_UI_Zlaata_Signup_10| User entered email in an invalid forma
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_10 |
 
+                    @sanity
                     @TC_UI_Zlaata_Signup_11
 Scenario Outline: TC_UI_Zlaata_Signup_11 | User entered phone number with non-numeric characters |"<TD_ID>"
     Given User entered phone number with non-numeric characters
     Examples:
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_11 |
-
-                      @TC_UI_Zlaata_Signup_12
+                       
+ @sanity                      
+@TC_UI_Zlaata_Signup_12
 Scenario Outline: TC_UI_Zlaata_Signup_12 | User entered name with special characters |"<TD_ID>"
     Given User entered name with special characters
     Examples:
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_12 |
-      
+    
+    @sanity  
  @TC_UI_Zlaata_Signup_13
 Scenario Outline: TC_UI_Zlaata_Signup_13 | User entered the same phone number as twice |"<TD_ID>"
     Given User entered the same phone number as twice
@@ -99,14 +110,16 @@ Scenario Outline: TC_UI_Zlaata_Signup_13 | User entered the same phone number as
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_13 |
       
-                        @TC_UI_Zlaata_Signup_14
+@sanity
+@TC_UI_Zlaata_Signup_14
 Scenario Outline: TC_UI_Zlaata_Signup_14 | User entered phone number starting with 1,2,3,4,5 |"<TD_ID>"
     Given User entered phone number starting with 1,2,3,4,5
     Examples:
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_14 |
 
-                          @TC_UI_Zlaata_Signup_15
+@sanity
+@TC_UI_Zlaata_Signup_15
 Scenario Outline: TC_UI_Zlaata_Signup_15 | User entered name with numeric characters |"<TD_ID>"
     Given User entered name with numeric characters
     Examples:
@@ -120,21 +133,23 @@ Scenario Outline: TC_UI_Zlaata_Signup_16 | User entered phone number with invali
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_16 |
 
-                              @TC_UI_Zlaata_Signup_17
+@sanity
+@TC_UI_Zlaata_Signup_17
 Scenario Outline: TC_UI_Zlaata_Signup_17 | User entered email with invalid domain (e.g., missing "@" or incorrect domain) |"<TD_ID>"
     Given User entered email with invalid domain (e.g., missing "@" or incorrect domain)
     Examples:
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_17 |
 
-                                @TC_UI_Zlaata_Signup_18
+@sanity
+@TC_UI_Zlaata_Signup_18
 Scenario Outline: TC_UI_Zlaata_Signup_18 | User entered email with multiple '@' symbols |"<TD_ID>"
     Given User entered email with multiple '@' symbols
     Examples:
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_18 |
 
-
+@sanity
 @TC_UI_Zlaata_Signup_19
 Scenario Outline: TC_UI_Zlaata_Signup_19 | User entered name with mixed case and special characters |"<TD_ID>"
     Given User entered name with mixed case and special characters
@@ -142,14 +157,17 @@ Scenario Outline: TC_UI_Zlaata_Signup_19 | User entered name with mixed case and
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_19 |
 
+
+@sanity
   @TC_UI_Zlaata_Signup_20
 Scenario Outline: TC_UI_Zlaata_Signup_20 | User left all required fields empty (email is optional) |"<TD_ID>"
     Given User left all required fields empty (email is optional)
     Examples:
       | TD_ID                  |
       | TD_UI_Zlaata_Signup_20 |
-      
-        @TC_UI_Zlaata_Signup_21
+     
+@sanity 
+@TC_UI_Zlaata_Signup_21
 Scenario Outline: TC_UI_Zlaata_Signup_21 | User enters invalid OTP |"<TD_ID>"
     Given User enters invalid OTP while login
     Examples:
@@ -157,7 +175,7 @@ Scenario Outline: TC_UI_Zlaata_Signup_21 | User enters invalid OTP |"<TD_ID>"
       | TD_UI_Zlaata_Signup_21 |
       
 
-
+@sanity
      @TC_UI_Zlaata_Signup_22
 Scenario Outline: TC_UI_Zlaata_Signup_22 | User enters already verified mail |"<TD_ID>"
     Given User entering same mail id which is already registered

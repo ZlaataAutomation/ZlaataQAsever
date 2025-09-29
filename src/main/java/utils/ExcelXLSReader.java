@@ -766,6 +766,72 @@ public class ExcelXLSReader {
 	}
 
 	
+	public static List<Map<String, Object>> readProductsWithMultipleNames(String filePath) throws IOException {
+	    List<Map<String, Object>> productList = new ArrayList<>();
+	    FileInputStream fis = new FileInputStream(filePath);
+	    XSSFWorkbook workbook = new XSSFWorkbook(fis);
+	    XSSFSheet sheet = workbook.getSheetAt(0);
+
+	    DataFormatter formatter = new DataFormatter();
+	    Row headerRow = sheet.getRow(0);
+	    int rowCount = sheet.getPhysicalNumberOfRows();
+
+	    for (int i = 1; i < rowCount; i++) {
+	        Row row = sheet.getRow(i);
+	        if (row == null) continue;
+
+	        Map<String, Object> product = new HashMap<>();
+
+	        for (int j = 0; j < headerRow.getPhysicalNumberOfCells(); j++) {
+	            String header = formatter.formatCellValue(headerRow.getCell(j)).trim();
+	            String value = formatter.formatCellValue(row.getCell(j)).trim();
+
+	            // Split multiple product names into a list
+	            if (header.equalsIgnoreCase("Product Name")) {
+	                List<String> names = Arrays.stream(value.split(","))
+	                                           .map(String::trim)
+	                                           .filter(s -> !s.isEmpty())
+	                                           .toList();
+	                product.put(header, names);
+	            } else {
+	                product.put(header, value);
+	            }
+	        }
+
+	        productList.add(product);
+	    }
+
+	    workbook.close();
+	    fis.close();
+	    return productList;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

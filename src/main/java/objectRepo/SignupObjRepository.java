@@ -39,7 +39,7 @@ public abstract class SignupObjRepository extends BasePage {
 	@FindBy(xpath = "(//input[@class='loginOtpInputBox'])[1]")
 	protected WebElement otp;
 	
-	@FindBy(xpath = "//button[@class='verify__otp_btn btn___2']	")
+	@FindBy(xpath = "//button[@class='verify__otp_btn btn___2']")
 	protected WebElement verify;
 	
 	@FindBy(id ="err_name")

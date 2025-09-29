@@ -7,7 +7,7 @@ Feature: CheckOut Page Feature
   # Expected: Checkout page sanity
   #===========================================================================
   
-  
+  @sanity
   @TC_UI_Zlaata_COP_01
   Scenario Outline: TC_UI_Zlaata_COP_01 |Verify Bag Item Count Display|"<TD_ID>"
     Given User Verifies Bag Item Count
@@ -17,6 +17,7 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_01     |
 
+@sanity
   @TC_UI_Zlaata_COP_02
   Scenario Outline: TC_UI_Zlaata_COP_02 |Verify Display of Wishlist Button|"<TD_ID>"
     Given User Verifies Display of Wishlist Button
@@ -25,6 +26,7 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_02     |
 
+@sanity
   @TC_UI_Zlaata_COP_03
   Scenario Outline: TC_UI_Zlaata_COP_03 |Verify Display of Delete Button|"<TD_ID>"
     Given User Verifies Display of Delete Button
@@ -41,6 +43,7 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_04     |
 
+@sanity
   @TC_UI_Zlaata_COP_05
   Scenario Outline: TC_UI_Zlaata_COP_05 |Verify User Can Increase or Decrease Product Quantity|"<TD_ID>"
     Given User Verifies User Can Increase or Decrease Product Quantity
@@ -49,6 +52,7 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_05     |
 
+@sanity
    @TC_UI_Zlaata_COP_06
   Scenario Outline: TC_UI_Zlaata_COP_06 |Verify User Can Add New Product|"<TD_ID>"
     Given User Verifies User Can Add New Product
@@ -57,6 +61,7 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_06     |
 
+@sanity
    @TC_UI_Zlaata_COP_07
   Scenario Outline: TC_UI_Zlaata_COP_07 Verify That Adding Product to Bag Count is Displaying or Not Above Bag Icon|"<TD_ID>"
     Given User Verifies That Adding Product to Bag Count is Displaying or Not Above Bag Icon
@@ -65,6 +70,7 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_07     |
 
+@sanity
   @TC_UI_Zlaata_COP_08
   Scenario Outline: TC_UI_Zlaata_COP_08 |Verify That Adding New Product or Deleting Product Count Increases or Decreases|"<TD_ID>"
     Given User Verifies That Adding New Product or Deleting Product Count Increases or Decreases
@@ -73,7 +79,7 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_08     |
       
-      
+      @sanity
   @TC_UI_Zlaata_COP_09
   Scenario Outline: TC_UI_Zlaata_COP_09 |Verify That "Place Order" Button Functionality is Working|"<TD_ID>"
     Given User Verifies Checkout page calculation
@@ -82,6 +88,7 @@ Feature: CheckOut Page Feature
       | TD_ID                  |
       | TD_UI_Zlaata_COP_09     |
       
+      @sanity
       @TC_UI_Zlaata_COP_10
 Scenario Outline: TC_UI_Zlaata_COP_10 |Verify Accessories, Recently Viewed, and Top Selling buttons on Checkout page| "<TD_ID>"
   Given the user verifies that on the Checkout page the Accessories button, the Recently Viewed button, and the Top Selling button are all visible and clickable

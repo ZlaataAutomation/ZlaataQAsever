@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -213,5 +214,27 @@ public final class Common {
 		        return "";
 		    }
 		}
+		 // ✅ Shared map for storing values across steps
+	    private static Map<String, String> testDataMap = new HashMap<>();
+
+	    // ✅ Save value
+	    public static void setValueInTestDataMap(String key, String value) {
+	        testDataMap.put(key, value);
+	    }
+
+	 // Get value from the map
+	    public static String getValueFromTestData(String key) {
+	        if (testDataMap.containsKey(key)) {
+	            return testDataMap.get(key);
+	        } else {
+	            throw new RuntimeException("❌ Key '" + key + "' not found in test data map.");
+	        }
+	    }
+
+	    // ✅ Clear all values (optional)
+	    public static void clearTestDataMap() {
+	        testDataMap.clear();
+	    }
+		
    
 }

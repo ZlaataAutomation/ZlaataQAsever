@@ -7,6 +7,7 @@ Feature: SaleB1G1
   # Expected: B1G1 offer should be applied
   #===========================================================================
   
+
   @TC_UI_Zlaata_SALEB1G1_01
   Scenario Outline: TC_UI_Zlaata_SALEB1G1_01 |User verifiles Sale B1G1 offers|"<TD_ID>"
     
