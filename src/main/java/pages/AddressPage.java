@@ -86,12 +86,12 @@ public  final class AddressPage  extends AddressPageObjRepo
 		type(emailIDTextBox, value1);
 		String enteredname1 = emailIDTextBox.getAttribute("value");  // Fixed here
 		System.out.println("Entered email id in application : " + enteredname1);
-
-		String value2 = Common.getValueFromTestDataMap("Mobile Number");
-		System.out.println("Testing Mobile number: " + value2);
-		type(phoneNumberTextBox, value2);
-		String enteredname2 = phoneNumberTextBox.getAttribute("value");  // Fixed here
-		System.out.println("Entered Phonumber in application : " + enteredname2);
+//
+//		String value2 = Common.getValueFromTestDataMap("Mobile Number");
+//		System.out.println("Testing Mobile number: " + value2);
+//		type(phoneNumberTextBox, value2);
+//		String enteredname2 = phoneNumberTextBox.getAttribute("value");  // Fixed here
+//		System.out.println("Entered Phonumber in application : " + enteredname2);
 
 		String value3 = Common.getValueFromTestDataMap("Address");
 		System.out.println("Testing Address : " + value3);
@@ -134,7 +134,7 @@ public  final class AddressPage  extends AddressPageObjRepo
 
 	public void validateAllFields() {
 	    verify("Name", validationName.getText(), "Name should be between 3 and 50 characters.");
-	    verify("Phone", validationPhoneNumber.getText(), "Please enter a valid 10-digit phone number.");
+//	    verify("Phone", validationPhoneNumber.getText(), "Please enter a valid 10-digit phone number.");
 	    verify("Email", validationMailID.getText(), "Please enter a valid email address.");
 	    verify("Address", validationAddressTxtBox.getText(), "Address must be between 3 and 50 characters.");
 	    verify("Street", validationStreet.getText(), "Street must be between 3 and 50 characters.");
@@ -316,9 +316,11 @@ public  final class AddressPage  extends AddressPageObjRepo
 			public void addNewAddressOnCheckoutPage() {
 				
 				
-				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", checkoutpageContinueButton);
-
-				((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkoutpageContinueButton);
+				
+//				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", checkoutpageContinueButton);
+//
+//				((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkoutpageContinueButton);
+				
 
 				boolean isNewAddressAdded = false;
 
@@ -450,7 +452,7 @@ public  final class AddressPage  extends AddressPageObjRepo
 				System.out.println("---------------------------------------------");
 				nameTextBox.clear();
 				emailIDTextBox.clear();
-				phoneNumberTextBox.clear();
+//				phoneNumberTextBox.clear();
 				addressDetailsTextBox.clear();
 				streetTextBox.clear();
 				pinCodeTextBox.clear();
@@ -464,7 +466,10 @@ public  final class AddressPage  extends AddressPageObjRepo
 			public void radioButtonIsSelectedOnchangeAddressPage() {
 
 //				Common.waitForElement(2);
-			    click(checkoutpageContinueButton);
+//				((JavascriptExecutor) driver).executeScript("window.scrollBy(0, 700);");
+
+//				
+//			    click(checkoutpageContinueButton);
 			    boolean isNewAddressAdded = false;
 
 			    try {
@@ -516,11 +521,12 @@ public  final class AddressPage  extends AddressPageObjRepo
 				}
 
 			}
+		
+
 
 			//F : 7
 			public void estimateDeliveryAndPriceSection() {
 //				    Common.waitForElement(2);
-				    click(checkoutpageContinueButton);
 				    // Step 1: Check if Delivery Address heading is visible
 				    try {
 				        WebElement deliveryAddressHeading = driver.findElement(By.xpath("//h5[normalize-space()='Delivery address']"));
@@ -708,7 +714,165 @@ public  final class AddressPage  extends AddressPageObjRepo
 	        System.out.println("❌ Exception while handling Change Address flow: " + e.getMessage());
 	    }
 
-	}    
+	}  
+	
+	//10
+	
+	public void phoneNumberverfiyOnAddressPage() {
+	    click(profile);
+	    Common.waitForElement(2);
+
+	    // ✅ Get phone number from Account Settings
+	    click(MyprofileIconButton);
+
+	    String accountPhoneNumber = accountsettingMobileNumber.getAttribute("value").trim();
+	    System.out.println("📞 Account Settings Phone Number: " + accountPhoneNumber);
+
+	    click(profile);
+	    click(addressSideMenuButton);
+
+	    System.out.println("✅ Navigated to Address section.");
+
+	    String addressPhoneNumber = null;
+
+	    try {
+	        if (addAddressButtonOnCheckoutPage.isDisplayed()) {
+	            System.out.println("⚠️ No address found. Adding first address.");
+	            click(addAddressButtonOnCheckoutPage);
+                Common.waitForElement(5);
+
+
+	            addressPhoneNumber = phoneNumberTextBox.getAttribute("value").trim();
+	            System.out.println("📞 Address Page Phone Number: " + addressPhoneNumber);
+
+	            Common.waitForElement(5);
+	        }
+	    } catch (NoSuchElementException e) {
+	        System.out.println("ℹ️ 'No Address Found' button not available.");
+	    }
+
+	    if (addressPhoneNumber == null) {
+	        try {
+	            if (addNewAddressButtonOnAddresspage.isDisplayed()) {
+	                System.out.println("✅ 'Add New Address' button clicked.");
+	                click(addNewAddressButtonOnAddresspage);
+	                Common.waitForElement(5);
+
+	                addressPhoneNumber = phoneNumberTextBox.getAttribute("value").trim();
+	                System.out.println("📞 Address Page Phone Number: " + addressPhoneNumber);
+	            }
+	        } catch (NoSuchElementException e) {
+	            System.out.println("ℹ️ 'Add New Address' button not available.");
+	        }
+	    }
+
+	    if (addressPhoneNumber == null) {
+	        System.out.println("❌ No Add Address button found.");
+	    }
+
+	    // ✅ Compare both phone numbers
+	    if (addressPhoneNumber != null) {
+	        if (accountPhoneNumber.equals(addressPhoneNumber)) {
+	            System.out.println("✔️ Phone numbers MATCH (Account vs Address): " + accountPhoneNumber);
+	        } else {
+	            System.out.println("❌ Phone numbers DO NOT match! Account: " 
+	                + accountPhoneNumber + " | Address: " + addressPhoneNumber);
+	        }
+	    }
+	}
+//11	
+	public void VerifyPhoneNumberOnCheckoutAddress() {
+	    click(profile);
+	    Common.waitForElement(2);
+
+	    // ✅ Step 1: Get phone number from Address Page first
+	    String addressPhoneNumber = null;
+
+	    try {
+	        if (checkoutPageAddres.isDisplayed()) {
+	            System.out.println("🟡 No address found on checkout page. Adding a new address.");
+	            click(checkoutPageAddres);
+	            addressPhoneNumber = phoneNumberTextBox.getAttribute("value").trim();
+	            System.out.println("📞 Address Page Phone Number: " + addressPhoneNumber);
+	        }
+	    } catch (Exception e) {
+	        System.out.println("⚠️ checkoutPageAddres element not found: " + e.getMessage());
+	    }
+
+	    if (addressPhoneNumber == null) { 
+	        try {
+	            if (addNewAddressOnChekoutPage.isDisplayed()) {
+	                System.out.println("🟢 Existing address found. Adding another new address.");
+	                click(addNewAddressOnChekoutPage);
+	                addressPhoneNumber = phoneNumberTextBox.getAttribute("value").trim();
+	                System.out.println("📞 Address Page Phone Number: " + addressPhoneNumber);
+	            }
+	        } catch (Exception e) {
+	            System.out.println("⚠️ addNewAddressOnChekoutPage not found: " + e.getMessage());
+	        }
+	    }
+
+	    // ✅ Step 2: Close popup before going to profile
+	    try {
+	        if (AddaddresscloseButton.isDisplayed()) {   // <-- you need locator for popup close button
+	            click(AddaddresscloseButton);
+	            Common.waitForElement(2);
+	            System.out.println("🔒 Closed address popup before navigating to profile.");
+	        }
+	    } catch (Exception e) {
+	        System.out.println("ℹ️ No popup to close: " + e.getMessage());
+	    }
+	    
+	    try {
+	    	Common.waitForElement(5);
+	        System.out.println("🔄 Clicking 'Change Address' button.");
+	        click(changeAddressButtonOnCheckoutpage);
+
+	        Common.waitForElement(2);
+	        System.out.println("➕ Clicking 'Add Address' button inside Change Address page.");
+	        click(addAddressButtonOnChangAddressPage);
+
+	        // Fetch phone number again after opening Add Address
+	        addressPhoneNumber = phoneNumberTextBox.getAttribute("value").trim();
+	        System.out.println("📞 Address Page Phone Number (via Change Address flow): " + addressPhoneNumber);
+
+	    } catch (Exception e) {
+	        System.out.println("⚠️ Unable to click Change Address/Add Address: " + e.getMessage());
+	    }
+	    try {
+	        if (AddaddresscloseButton.isDisplayed()) {   // <-- you need locator for popup close button
+	            click(AddaddresscloseButton);
+	            Common.waitForElement(2);
+	            System.out.println("🔒 Closed address popup before navigating to profile.");
+	        }
+	    } catch (Exception e) {
+	        System.out.println("ℹ️ No popup to close: " + e.getMessage());
+	    }
+
+	    // ✅ Step 3: Now get phone number from Account Settings
+	    String accountPhoneNumber = null;
+	    try {
+	        click(profile);
+	        Common.waitForElement(1);
+	        click(MyprofileIconButton);
+	        accountPhoneNumber = accountsettingMobileNumber.getAttribute("value").trim();
+	        System.out.println("📞 Account Settings Phone Number: " + accountPhoneNumber);
+	    } catch (Exception e) {
+	        System.out.println("⚠️ Unable to fetch phone number from Account Settings: " + e.getMessage());
+	    }
+
+	    // ✅ Step 4: Compare
+	    if (addressPhoneNumber != null && accountPhoneNumber != null) {
+	        if (accountPhoneNumber.equals(addressPhoneNumber)) {
+	            System.out.println("✔️ Phone numbers MATCH ✅ (Account vs Address): " + accountPhoneNumber);
+	        } else {
+	            System.out.println("❌ Phone numbers DO NOT match! Account: "
+	                + accountPhoneNumber + " | Address: " + addressPhoneNumber);
+	        }
+	    } else {
+	        System.out.println("⚠️ Comparison skipped — one of the numbers is NULL.");
+	    }
+	}
 
 	@Override
 	public boolean verifyExactText(WebElement ele, String expectedText) {

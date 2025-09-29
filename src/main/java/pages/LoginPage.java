@@ -27,7 +27,7 @@ public final class LoginPage extends LoginObjRepository {
     }
     
     public void homeLaunch() {
-		driver.get(FileReaderManager.getInstance().getConfigReader().getPrdurl());
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 //				type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
 //				click(submit);
     }
@@ -38,7 +38,7 @@ public final class LoginPage extends LoginObjRepository {
     	Common.waitForElement(1);
     	click(profile);
         type(loginNumber, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Number"));
-        Common.waitForElement(1);
+//        Common.waitForElement(1);
         click(sendotp);
         Common.waitForElement(35);
 //      type(enterotp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));

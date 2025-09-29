@@ -60,9 +60,9 @@ public class HomePageStepdef {
 
 	@Given("User clicks on forward and backward arrows on  new arrivals")
 	public void user_clicks_on_forward_and_backward_arrows_on_new_arrivals() throws TimeoutException {
-		
+
 		home.newArrivalArrows();
-		
+
 	}
 
 
@@ -78,11 +78,20 @@ public class HomePageStepdef {
 	}
 
 
-	@Given("User clicks on inspired by images")
-	public void user_clicks_on_inspired_by_images() {
-		home.inspiredBy();
+	//	@Given("User clicks on inspired by images")
+	//	public void user_clicks_on_inspired_by_images() {
+	//		home.inspiredBy();
+	//
+	//	}
 
+
+	@Given("User clicks on See More button .")
+	public void user_clicks_on_see_more_button() {
+		home.seeMore();
 	}
+
+
+
 
 
 
@@ -109,6 +118,37 @@ public class HomePageStepdef {
 	public void user_verifying_all_the_available_headings_in_home_page() {
 		home.allsectionHomePage();
 	}
+
+
+
+
+	@Given("the user verifies that the logo is available on the Home Page")
+	public void the_user_verifies_that_the_logo_is_available_on_the_home_page() {
+		home.logoDisplay();
+	}
+
+
+
+	@Given("the user verifies that the Thread banner is available on the Home Page")
+	public void the_user_verifies_that_the_thread_banner_is_available_on_the_home_page() {
+		home.threadBanner();
+	}
+
+	@Given("the user verifies that the Category section is available on the Home Page")
+	public void the_user_verifies_that_the_category_section_is_available_on_the_home_page() {
+		home.categorySection();
+	}
+
+
+	@Given("the user verifies that the Monsoon Banner section is available on the Home Page")
+	public void the_user_verifies_that_the_monsoon_banner_section_is_available_on_the_home_page() {
+		home.verifyMonsoonBanner();
+	}
+
+
+
+
+
 
 
 

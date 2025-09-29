@@ -58,8 +58,8 @@ public abstract class HomePageObjRepo extends BasePage {
 	@FindBy(xpath = "//div[@class='carousel_cta']")
 	protected WebElement pause;
 	
-	@FindBy(xpath = "//a[@class='new_arrival_show_more_btn btn___2']")
-	protected WebElement showMore;
+	@FindBy(xpath = "//a[@class='seeMore__btn btn___1']")
+	protected WebElement seeMore;
 	
 	@FindBy(xpath = "//div[@class='products_img']")
 	protected WebElement productImage;
@@ -137,10 +137,10 @@ public abstract class HomePageObjRepo extends BasePage {
 	@FindBy(id = "whatsappIcon")
 	protected WebElement whatsApp;
 	
-	@FindBy(xpath = "//*[@class='swiper-button-next new_arrival_swiper_next']")
+	@FindBy(xpath = "//*[@class='swiper-button-next featured_next_btn']")
 	protected WebElement featureOnForward;
 	
-	@FindBy(xpath = "//*[@class='swiper-button-prev new_arrival_swiper_prev swiper-button-disabled']")
+	@FindBy(xpath = "//*[@class='swiper-button-prev featured_prev_btn']")
 	protected WebElement featureOnBack;
 	
 	@FindBy(xpath = "//a[@class='testimonial_cards_quick_view']")
@@ -152,6 +152,17 @@ public abstract class HomePageObjRepo extends BasePage {
 	@FindBy(xpath = "//div[@class='outfit_cards_list swiper-wrapper']")
 	protected WebElement partySection;
 	
+	@FindBy(xpath = "//img[@alt='zlaata Logo']")
+	protected WebElement logo;
+	
+	@FindBy(xpath = "//div[@class='thread_banner homepage_banner mb-80 home_section']")
+	protected WebElement threadBanner;
+	
+	@FindBy(xpath = "//div[contains(@class,'outfit_cards_list_box') and contains(@class,'swiper-slide')]")
+	protected WebElement category;
+	
+	@FindBy(xpath = "//div[@class='monsoon_banner homepage_banner mb-80 home_section']")
+	protected WebElement monsoonBanner;
 	
 	
 	
