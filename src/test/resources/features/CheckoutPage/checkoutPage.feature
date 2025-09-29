@@ -81,7 +81,7 @@ Feature: CheckOut Page Feature
       
       @sanity
   @TC_UI_Zlaata_COP_09
-  Scenario Outline: TC_UI_Zlaata_COP_09 |Verify That "Place Order" Button Functionality is Working|"<TD_ID>"
+  Scenario Outline: TC_UI_Zlaata_COP_09 |Verify Checkout page calculation|"<TD_ID>"
     Given User Verifies Checkout page calculation
 
     Examples:
