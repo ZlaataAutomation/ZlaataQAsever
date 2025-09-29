@@ -86,7 +86,7 @@ public abstract class AdminPanelExportExcelFileObjRepo extends BasePage {
     @FindBy(xpath = "//button[@data-type='sold_out_products']")
     protected WebElement exportBtnSoldOutProducts1;
     
-    @FindBy(xpath = "(//a[contains(text(),'View All')])[3]")
+    @FindBy(xpath = "(//a[contains(text(),'View All')])[2]")
     protected WebElement viewAllBtnSoldOutProducts;
     
     @FindBy(xpath = "//button[normalize-space()='Generate']")

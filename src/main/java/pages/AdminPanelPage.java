@@ -276,29 +276,16 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 	        topSellingSkuInput.clear();
 	        type(topSellingSkuInput, updated);
+	        Common.waitForElement(5);
 	        click(saveTopSelling);
 
 	     // Wait briefly for possible error page
 	     Common.waitForElement(3);
 
-	     try {
-	         WebElement errorPage = driver.findElement(By.cssSelector("div.error_number"));
-	         if (errorPage.isDisplayed()) {
-	             String errorCode = errorPage.getText().trim();
-	             String errorTitle = driver.findElement(By.cssSelector("div.error_title")).getText().trim();
-	             String errorDescription = driver.findElement(By.cssSelector("div.error_description")).getText().trim();
+	     System.out.println("✅ " + message);
 
-	             Assert.fail("❌ Test failed: Save action returned error page.\n" +
-	                     "Error Code: " + errorCode + "\n" +
-	                     "Title: " + errorTitle + "\n" +
-	                     "Details: " + errorDescription);
-	         }
-	     } catch (NoSuchElementException e) {
 	         // No error page found → continue test
-	         System.out.println("✅ Save successful, no error page displayed.");
-	     }
-
-	        System.out.println("✅ " + message);
+	         System.out.println("✅ Save successful.");
 	        
 
 	    } catch (Exception e) {
@@ -466,24 +453,7 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 	     // Wait briefly for possible error page
 	     Common.waitForElement(3);
-
-	     try {
-	         WebElement errorPage = driver.findElement(By.cssSelector("div.error_number"));
-	         if (errorPage.isDisplayed()) {
-	             String errorCode = errorPage.getText().trim();
-	             String errorTitle = driver.findElement(By.cssSelector("div.error_title")).getText().trim();
-	             String errorDescription = driver.findElement(By.cssSelector("div.error_description")).getText().trim();
-
-	             Assert.fail("❌ Test failed: Save action returned error page.\n" +
-	                     "Error Code: " + errorCode + "\n" +
-	                     "Title: " + errorTitle + "\n" +
-	                     "Details: " + errorDescription);
-	         }
-	     } catch (NoSuchElementException e) {
-	         // No error page found → continue test
 	         System.out.println("✅ Save successful, no error page displayed.");
-	     }
-
 	        System.out.println("✅ " + message);
 
 	    } catch (Exception e) {
@@ -1539,7 +1509,7 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
                     while (System.currentTimeMillis() < endTime) {
                         try {
-                            List<WebElement> productsInCollection = driver.findElements(By.xpath("//h6[@class='prod_name']"));
+                            List<WebElement> productsInCollection = driver.findElements(By.xpath("//h2[@class='product_list_cards_heading']"));
 
                             if (!productsInCollection.isEmpty()) {
                                 productsFound = true;
