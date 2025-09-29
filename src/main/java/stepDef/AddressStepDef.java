@@ -95,6 +95,27 @@ public class AddressStepDef {
 
 
 
+	@Given("User opens the address page")
+	public void user_opens_the_address_page() {
+		login.userLogin();
+		address.phoneNumberverfiyOnAddressPage();
+	}
+
+
+
+	@Given("User opens the checkout page address")
+	public void user_opens_the_checkout_page_address() {
+		login.userLogin();
+		
+		address.addToCart();
+		address.VerifyPhoneNumberOnCheckoutAddress();
+
+		
+
+		
+	}
+
+
 
 
 

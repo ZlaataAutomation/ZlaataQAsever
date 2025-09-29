@@ -20,6 +20,9 @@ public abstract class SearchBarObjRepo extends BasePage {
 	@FindBy(xpath = "//h5[.='TRENDINGS']")
 	protected WebElement headingTrendings;
 	
+	@FindBy(xpath = "//h5[.='Related Products']")
+	protected WebElement headingRelatedProducts;
+	
 	@FindBy(xpath = "//h5[normalize-space()='RELATED QUERIES']")
 	protected WebElement relatedQueries;
 	
@@ -29,8 +32,8 @@ public abstract class SearchBarObjRepo extends BasePage {
 	@FindBy(xpath = "//div[@class='nav_search_result_list']")
 	protected WebElement newTrendings;
 
-	@FindBy(xpath = "//h5[.='Related Products']")
-	protected WebElement headingRelatedProducts;
+	@FindBy(xpath = "//div[@class='nav_search_result_wrap Cls_searchlist active']")
+	protected WebElement clickOnSearchBar;
 
 	@FindBy(xpath = "//div[@class='nav_search_result_list']")
 	protected List<WebElement> trendingsOptionList;

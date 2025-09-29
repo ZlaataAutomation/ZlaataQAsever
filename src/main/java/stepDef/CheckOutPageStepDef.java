@@ -70,7 +70,7 @@ public class CheckOutPageStepDef {
 	public void user_verifies_user_can_add_new_product() {
 		cOp.newProductToBag();
 	}
-	
+
 	@Given("User Verifies That Adding Product to Bag Count is Displaying or Not Above Bag Icon")
 	public void user_verifies_that_adding_product_to_bag_count_is_displaying_or_not_above_bag_icon() {
 		cOp.verifyBagCount();
@@ -91,10 +91,42 @@ public class CheckOutPageStepDef {
 
 
 	@Given("the user verifies that on the Checkout page the Accessories button, the Recently Viewed button, and the Top Selling button are all visible and clickable")
-public void the_user_verifies_that_on_the_checkout_page_the_accessories_button_the_recently_viewed_button_and_the_top_selling_button_are_all_visible_and_clickable() {
-	
+	public void the_user_verifies_that_on_the_checkout_page_the_accessories_button_the_recently_viewed_button_and_the_top_selling_button_are_all_visible_and_clickable() {
+
 		cOp.allButtonOnCheckoutPage();
-}
+	}
+
+	@Given("the user verifies that on the Checkout page, when an invalid gift card number is entered, a validation message is displayed")
+	public void the_user_verifies_that_on_the_checkout_page_when_an_invalid_gift_card_number_is_entered_a_validation_message_is_displayed() {
+
+		cOp.enterInvalidGiftCardNumberCheckValidationMessage();
+	}
+
+
+	@Given("the user verifies that on the Gift Wrapping popup, the mandatory fields are left empty")
+	public void the_user_verifies_that_on_the_gift_wrapping_popup_the_mandatory_fields_are_left_empty() {
+		cOp.verifyMandatoryFieldsInGiftWrapPopup();
+	}
+
+
+
+	@Given("the user verifies that on the Gift Wrapping popup, the user enters fewer characters for all fields")
+	public void the_user_verifies_that_on_the_gift_wrapping_popup_the_user_enters_fewer_characters_for_all_fields() {
+		cOp.verifyLessCharacterFieldsInGiftWrapPopup();
+	}
+
+
+
+		@Given("the user verifies that a valid gift card number is entered in the Gift Card field")
+	public void the_user_verifies_that_a_valid_gift_card_number_is_entered_in_the_gift_card_field() {
+		  cOp.entervalidGiftCardNumberCheckGiftCardAmount();
+	}
+
+
+
+
+
+
 
 
 

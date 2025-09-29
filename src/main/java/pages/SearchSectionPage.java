@@ -33,7 +33,7 @@ public final class SearchSectionPage  extends SearchBarObjRepo{
 		
 		click(searchBarInput);
 		try {
-			if (headingRelatedProducts.isDisplayed()) 
+			if (clickOnSearchBar.isDisplayed()) 
 			{
 				System.out.println("the Search bar cliked");
 			}
@@ -59,50 +59,57 @@ public final class SearchSectionPage  extends SearchBarObjRepo{
 	
 	//TC 03
 
-	public void clickAllTrendingProductsAndVerify() throws InterruptedException, TimeoutException {
-		searchbarClikable();
-		// XPath for trending product links
-		String trendingLinksXPath = "//a[@class='product-redirect-tag cls_search_collection']";
-		// XPath for product page heading - replace with actual XPath of the heading on product page
-		String productHeadingXPath = "//h3[@class='prod_list_topic']"; 
-		String trendings1 = headingTrendings.getText();
-		System.out.println("heading is displaying:"+trendings1);
-		// Fetch the trending product links initially
-		List<WebElement> trendingsOptionList = driver.findElements(By.xpath(trendingLinksXPath));
-		int total = trendingsOptionList.size();
-		System.out.println("🔥 Total Trending Products: " + total);
+	public void clickAllTrendingProductsAndVerify() throws InterruptedException {
+	    String trendingLinksXPath = "//div[@class='product-redirect-tag cls_search_collection']"; 
+	    String productHeadingXPath = "//h3[@class='prod_list_topic']"; 
 
-		for (int i = 0; i < total; i++) {
-			// Re-fetch the list each time, because DOM reloads after navigation
-			trendingsOptionList = driver.findElements(By.xpath(trendingLinksXPath));
-			WebElement product = trendingsOptionList.get(i);
+	    // Open search bar
+	    searchbarClikable();
+	    Thread.sleep(1000);
 
-			String productName = product.getText().trim();
-			System.out.println("👉 Clicking on Trendings sub options: " + productName);
+	    // Get trending options
+	    List<WebElement> trendingsOptionList = driver.findElements(By.xpath(trendingLinksXPath));
+	    int total = trendingsOptionList.size();
+	    System.out.println("🔥 Total Trending Options: " + total);
 
-			// Scroll into view and click using JavaScript (safer)
-			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", product);
-			Thread.sleep(500);
+	    // Print all trending names
+	    for (int i = 0; i < total; i++) {
+	        System.out.println("   " + (i + 1) + ". " + trendingsOptionList.get(i).getText().trim());
+	    }
 
-			try {
-				((JavascriptExecutor) driver).executeScript("arguments[0].click();", product);
-			} catch (Exception e) {
-				System.out.println("Normal click failed, trying JavaScript click...");
-				((JavascriptExecutor) driver).executeScript("arguments[0].click();", product);
+	    // Loop through each trending option
+	    for (int i = 0; i < total; i++) {
+	        // Re-fetch options each time (DOM refresh after click)
+	        trendingsOptionList = driver.findElements(By.xpath(trendingLinksXPath));
+	        WebElement product = trendingsOptionList.get(i);
+	        String productName = product.getText().trim();
 
-			}
+	        System.out.println("\n➡️ Clicking on option " + (i + 1) + ": " + productName);
 
-			// Wait for product page heading to appear and verify
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(productHeadingXPath)));
-			String headingText = driver.findElement(By.xpath(productHeadingXPath)).getText();
-			System.out.println("✔️ Product page heading verified: " + headingText);
+	        // Click option
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", product);
 
-			// Navigate back to trending/search page
-			searchbarClikable();
-			Thread.sleep(1000);
-		}
+	        // Verify heading on product page
+	        try {
+	            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+	            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(productHeadingXPath)));
+
+	            String headingText = driver.findElement(By.xpath(productHeadingXPath)).getText().trim();
+	            if (headingText.equalsIgnoreCase(productName)) {
+	                System.out.println("✔️ Heading matches for: " + productName);
+	            } else {
+	                System.out.println("❌ Heading mismatch! Expected: " + productName + " | Found: " + headingText);
+	            }
+	        } catch (Exception e) {
+	            System.out.println("❌ Could not verify heading for: " + productName);
+	        }
+
+	        // Re-click search bar for next iteration (no navigate back)
+	        searchbarClikable();
+	        Thread.sleep(1000);
+	    }
 	}
+
 //TC 04
 
 	public void searchKeyWordRedirectToCorrectpage() {
@@ -145,54 +152,74 @@ public final class SearchSectionPage  extends SearchBarObjRepo{
 	
 	//Tc 05
 
+	// TC 04
 	public void validateRelatedQueriesAndHeadings() throws InterruptedException {
-		String keyword = Common.getValueFromTestDataMap("Search bar"); // e.g., "yellow"
-		System.out.println("🔍 Searching for keyword: " + keyword);
+	    String keyword = Common.getValueFromTestDataMap("Search bar"); // e.g., "yellow"
+	    System.out.println("🔍 Searching for keyword: " + keyword);
 
-		click(searchBarInput);
-		Common.waitForElement(3);
-		searchbaractive.sendKeys(keyword);
-//		Common.waitForElement(10); // Wait for related queries dropdown
+	    // Open search bar and type keyword
+	    click(searchBarInput);
+	    Common.waitForElement(2);
+	    searchbaractive.clear();
+	    searchbaractive.sendKeys(keyword);
+	    Common.waitForElement(2);
 
-		List<WebElement> queries = driver.findElements(By.xpath("//a[@class='product-redirect-tag cls_search_collection']"));
-		int totalQueries = queries.size();
-		System.out.println("🔽 Total related queries found: " + totalQueries);
+	    // Capture all related queries
+	    String relatedQueriesXPath = "//div[@class='product-redirect-tag cls_search_collection']";
+	    String productHeadingXPath = "//h3[@class='prod_list_topic']";
 
-		for (int i = 0; i < totalQueries; i++) {
-			queries = driver.findElements(By.xpath("//a[@class='product-redirect-tag cls_search_collection']"));
-			WebElement query = queries.get(i);
-			String expectedHeading = query.getText().trim();
-			System.out.println("👉 Clicking related query: " + expectedHeading);
+	    List<WebElement> queries = driver.findElements(By.xpath(relatedQueriesXPath));
+	    int totalQueries = queries.size();
+	    System.out.println("🔽 Total related queries found: " + totalQueries);
 
-			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", query);
-			Thread.sleep(500);
-			try {
-				((JavascriptExecutor) driver).executeScript("arguments[0].click();", query);
-			} catch (Exception e) {
-				System.out.println("⚠️ Normal click failed. Trying JS click.");
-				((JavascriptExecutor) driver).executeScript("arguments[0].click();", query);
-			}
-			Common.waitForElement(2);
-			String actualHeading = heading.getText().trim();
+	    // Print all related query names
+	    for (int i = 0; i < totalQueries; i++) {
+	        System.out.println("   " + (i + 1) + ". " + queries.get(i).getText().trim());
+	    }
 
-			if (actualHeading.equalsIgnoreCase(expectedHeading)) {
-				System.out.println("✅ Heading matched: " + actualHeading);
-			} else {
-				System.err.println("❌ Heading mismatch! Expected: '" + expectedHeading + "' but found: '" + actualHeading + "'");
-				Assert.fail("Heading mismatch for: " + expectedHeading);
-			}
-			Common.waitForElement(1);
-			driver.navigate().back();
+	    // Loop through each related query
+	    for (int i = 0; i < totalQueries; i++) {
+	        // Re-fetch each time (DOM refreshes after click)
+	        queries = driver.findElements(By.xpath(relatedQueriesXPath));
+	        WebElement query = queries.get(i);
 
-			click(searchBarInput);
-			searchbaractive.sendKeys(keyword);
-			Common.waitForElement(1);
-		}
-		
+	        String expectedHeading = query.getText().trim();
+	        System.out.println("\n➡️ Clicking related query " + (i + 1) + ": " + expectedHeading);
 
-	System.out.println("🏁 Validation completed for all related queries.");
+	        // Click the related query
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", query);
+	        Thread.sleep(500);
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", query);
 
-		}
+	        // Verify heading on product page
+	        try {
+	            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+	            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(productHeadingXPath)));
+
+	            String actualHeading = driver.findElement(By.xpath(productHeadingXPath)).getText().trim();
+
+	            if (actualHeading.equalsIgnoreCase(expectedHeading)) {
+	                System.out.println("✔️ Heading matches for: " + expectedHeading);
+	            } else {
+	                System.err.println("❌ Heading mismatch! Expected: " + expectedHeading + " | Found: " + actualHeading);
+	                throw new AssertionError("Heading mismatch! Expected: " + expectedHeading + " | Found: " + actualHeading);
+	            }
+	        } catch (Exception e) {
+	            System.err.println("❌ Could not verify heading for: " + expectedHeading);
+	            throw new AssertionError("Heading not found for: " + expectedHeading, e);
+	        }
+
+	        // Reopen search bar & type keyword again (NO navigate back)
+	        click(searchBarInput);
+	        Common.waitForElement(1);
+	        searchbaractive.clear();
+	        searchbaractive.sendKeys(keyword);
+	        Common.waitForElement(1);
+	    }
+
+	    System.out.println("\n🏁 Validation completed for all related queries.");
+	}
+
 	//TC 06
 	public void verifySearchSuggestionHeading() {
 		searchbarClikable();

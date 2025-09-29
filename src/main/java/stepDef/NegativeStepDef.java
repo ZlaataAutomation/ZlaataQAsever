@@ -16,11 +16,11 @@ public class NegativeStepDef {
 
 	}
 	
-	@Given("User Signup with all valid data")
-	public void user_signup_with_all_valid_data() throws TimeoutException {
-
-		negsignup.signUp();
-	}
+//	@Given("User Signup with all valid data")
+//	public void user_signup_with_all_valid_data() throws TimeoutException {
+//
+//		negsignup.signUp();
+//	}
 
 		@Given("User left name field Empty")
 		public void user_left_name_field_empty() {
@@ -28,8 +28,9 @@ public class NegativeStepDef {
 				negsignup.launchZltV7();
 				negsignup.ClickProfileIcon();
 				negsignup.signupbutton();
+				negsignup.nametxtBoxEmpty();
 				negsignup.userNumber();
-				negsignup.contbtn();
+//				negsignup.contbtn();
 				
 			} catch (Exception e) {
 				  ExceptionTracker.capture(e); // Capture the exact exception
@@ -44,7 +45,8 @@ public class NegativeStepDef {
 				negsignup.ClickProfileIcon();
 				negsignup.signupbutton();
 				negsignup.userName();
-				negsignup.contbtn();
+				negsignup.phoneNumbertxtBoxEmpty();
+//				negsignup.contbtn();
 			}
 
 		
@@ -257,6 +259,7 @@ public class NegativeStepDef {
 				negsignup.ClickProfileIcon();
 				negsignup.signupbutton();
 				negsignup.contbtn();
+				negsignup.leftAllMandatory();
 			}
 			
 				@Given("User enters invalid OTP while login")
