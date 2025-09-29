@@ -31,7 +31,7 @@ public abstract class LoginObjRepository extends BasePage {
 	@FindBy(id = "userNumber")
 	protected WebElement loginNumber;
 	
-	@FindBy(xpath = "//button[@class='send_otp_btn btn___2 send_otp']")
+	@FindBy(xpath = "//button[@class='send_otp_btn btn___2']")
 	protected WebElement sendotp;
 	
 	@FindBy(xpath = "//form[@class='digit-group login_otp_input_form']")
