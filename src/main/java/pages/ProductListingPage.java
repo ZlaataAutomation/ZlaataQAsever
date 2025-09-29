@@ -284,40 +284,59 @@ public final class ProductListingPage extends ProductListObjRepo {
 	    click(closeShowFilter);
 	}
 	public void allsortBy() {
-		Common.waitForElement(5);
-		Actions actions = new Actions(driver);
-		actions.moveToElement(shopMenu);
-		actions.moveToElement(category).click().build().perform();
-		Common.waitForElement(2);
-		click(sortBy);
-		actions.moveToElement(sortByWhatsNew).click().build().perform();;
+	    Common.waitForElement(5);
+	    Actions actions = new Actions(driver);
+	    actions.moveToElement(shopMenu);
+	    actions.moveToElement(category).click().build().perform();
+	    Common.waitForElement(2);
+	    click(sortBy);
+	    actions.moveToElement(sortByWhatsNew).click().build().perform();
 
+	    String sortOptionXpath = "//li[contains(@class,'filter_sort_list_item ') or contains(@class,'filter_sort_')]";
 
-		String sortOptionXpath ="//li[contains(@class,'filter_sort_list_item ') or contains(@class,'filter_sort_')]";
+	    List<WebElement> options = driver.findElements(By.xpath(sortOptionXpath));
+	    int totalOptions = options.size();
 
-		 List<WebElement> options = driver.findElements(By.xpath(sortOptionXpath));
-		    int totalOptions = options.size();
+	    for (int i = 0; i < totalOptions; i++) {
+	        // Re-click the Sort By dropdown before each selection
+	        sortBy.click();
+	        Common.waitForElement(1);
 
-		    for (int i = 0; i < totalOptions; i++) {
-		        // Re-click the Sort By dropdown before each selection
-		        sortBy.click();
-		        Common.waitForElement(1);
+	        // Re-fetch the sort options to avoid stale elements
+	        List<WebElement> currentOptions = driver.findElements(By.xpath(sortOptionXpath));
 
-		        // Re-fetch the sort options to avoid stale elements
-		        List<WebElement> currentOptions = driver.findElements(By.xpath(sortOptionXpath));
+	        if (i < currentOptions.size()) {
+	            WebElement option = currentOptions.get(i);
+	            String optionText = option.getText().trim();
+	            System.out.println("🟢 Clicking Sort Option [" + (i + 1) + "]: " + optionText);
 
-		        if (i < currentOptions.size()) {
-		            WebElement option = currentOptions.get(i);
-		            String optionText = option.getText().trim();
-		            System.out.println("🟢 Clicking Sort Option [" + (i + 1) + "]: " + optionText);
+	            option.click();
+	            Common.waitForElement(2);
 
-		            option.click();
-			        Common.waitForElement(1);
-		        } else {
-		            System.out.println("❌ Index " + i + " is out of range!");
-		        }
-		    }
-		}
+	         // ✅ Special check for Best Seller
+	            if (optionText.equalsIgnoreCase("Best Seller")) {
+	                try {
+	                    // Locate product cards with Best Seller label
+	                    List<WebElement> bestSellerProducts = driver.findElements(By.xpath(
+	                        "//div[@class='product_list_cards_wrpr']//div[contains(@class,'product_list_cards_list')][.//span[.='Best Seller']]"
+	                    ));
+
+	                    if (!bestSellerProducts.isEmpty()) {
+	                        System.out.println("✔️ Best Seller product(s) found. Count: " + bestSellerProducts.size());
+
+	                    } else {
+	                        System.out.println("❌ No Best Seller products found after selecting 'Best Seller' sort.");
+	                    }
+
+	                } catch (Exception e) {
+	                    System.out.println("⚠️ Error while checking Best Seller products: " + e.getMessage());
+	                }
+	            }
+	        }
+	    }
+	    
+	}
+
 //		try {
 
 			

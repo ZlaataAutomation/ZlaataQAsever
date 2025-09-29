@@ -30,19 +30,16 @@ public class SearchBarStepDef {
 	public void user_verifies_that_they_can_click_on_the_search_bar() {
 		home.homeLaunch();
 		search.searchbarClikable();
-		
+
 	}
 
 	@Given("User focuses on the search bar and verifies the display of TRENDING and Related Products headings.")
 	public void user_focuses_on_the_search_bar_and_verifies_the_display_of_trending_and_related_products_headings()
 	{
 		home.homeLaunch();
-		try {
-			search.TrendingAndRelatedHeading();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		search.TrendingAndRelatedHeading();
+
 
 	}
 
@@ -56,8 +53,8 @@ public class SearchBarStepDef {
 	@Given("User enters a valid search keyword and verifies redirection to the correct page")
 	public void user_enters_a_valid_search_keyword_and_verifies_redirection_to_the_correct_page() {
 		home.homeLaunch();
-        search.searchKeyWordRedirectToCorrectpage();
-		
+		search.searchKeyWordRedirectToCorrectpage();
+
 	}
 
 	@Given("User verifies that Related Queries are displayed under the search results")
@@ -107,7 +104,7 @@ public class SearchBarStepDef {
 
 	}
 
-	
+
 
 
 

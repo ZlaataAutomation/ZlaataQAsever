@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import basePage.BasePage;
+import basePage.BasePage;import groovyjarjarantlr4.v4.runtime.tree.xpath.XPath;
 
 public abstract class CheckOutPageObjRepo extends BasePage {
 
@@ -170,5 +170,49 @@ public abstract class CheckOutPageObjRepo extends BasePage {
 	@FindBy(xpath ="//*[@class='swiper-button-prev cart_suggestion_recently_viewed_prev']" )
 	protected WebElement recentlyViewedBackwardArrow;
 	
+	@FindBy(xpath = "//div[@class='checkout_details_container gift_card_box_wrap ']")
+	protected WebElement clickOnUseAGiftCardOption;
+	
+	@FindBy(xpath = "//input[@name='GiftCardInput']")
+	protected WebElement giftCardTextBox;
+	
+	@FindBy(xpath = "//button[@class='gift_card_box_input_status_btn ClsGCapplyButton']")
+	protected WebElement giftCardApplyButton;
+	
+    @FindBy(xpath = "//div[@class='checkout_details_container gift_card_box_wrap active']//p[@class='error__msg gift_card_error__msg active']")	
+    protected WebElement giftCardInvalidValidationMessage;
+    
+    @FindBy(xpath = "//input[@type='checkbox']")
+    protected WebElement clickOnGiftWRAPPINGPopup;
+    
+    @FindBy(xpath = "//button[@class='gift__submit btn___2']")
+    protected WebElement giftWrappingSubmitButton;
+    
+    @FindBy(id = "recipient-name")
+    protected WebElement enterrecipientName;
+    
+    @FindBy(id ="giftMessages")
+    protected WebElement enterdesName;
+    
+    @FindBy(id = "sender-name")
+    protected WebElement entersenderName;
+     
+    
+    @FindBy(xpath = "//span[@class='error__msg recipient-name_error_msg active']")
+    protected WebElement recipientNameValidationMessage;
+
+    @FindBy(xpath = "//span[@class='error__msg message_error_msg active']")
+    protected WebElement giftWrapPopupDescriptionTextBox;
+    
+    @FindBy(xpath = "//span[@class='error__msg sender-name_error_msg active']")
+    protected WebElement senderNameValidationMessage;
+    
+    @FindBy(xpath = "//p[@class='gift_card_box_input_balance ClsGCAvailableBalance']")
+    protected WebElement giftcardBalance;
+    
+    @FindBy(xpath = "//p[@class='error__msg gift_card_error__msg active']")
+    protected WebElement invalidGiftcardNumber;
+
+  
 
 }
