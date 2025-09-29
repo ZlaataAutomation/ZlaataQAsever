@@ -40,8 +40,8 @@ public final class NegativeSignupPages extends SignupObjRepository {
 	public void launchZltV7() {
 
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
-		click(submit);
+//		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
+//		click(submit);
 		//        popup();
 	}
 	private void popup() {
@@ -107,26 +107,26 @@ public final class NegativeSignupPages extends SignupObjRepository {
 
 
 	}
-	public void signUp() throws TimeoutException {
-		// Open application
-		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-
-		// Enter access code and submit
-		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
-		click(submit);
-		Common.waitForElement(2);
-		// Open profile and signup
-		click(profile);
-		click(signupButton);
-		// Enter name
-		type(name, FileReaderManager.getInstance().getJsonReader().getValueFromJson("UserName"));
-		// Try entering phone number, retry once if validation fails
-		userNumber();
-		click(continueButton);
-		otp.sendKeys(FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
-		click(verify);
-		System.out.println("✅ OTP entered and verified");
-	}
+//	public void signUp() throws TimeoutException {
+//		// Open application
+//		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+//
+//		// Enter access code and submit
+////		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
+////		click(submit);
+//		Common.waitForElement(2);
+//		// Open profile and signup
+//		click(profile);
+//		click(signupButton);
+//		// Enter name
+//		type(name, FileReaderManager.getInstance().getJsonReader().getValueFromJson("UserName"));
+//		// Try entering phone number, retry once if validation fails
+//		userNumber();
+//		click(continueButton);
+//		otp.sendKeys(FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
+//		click(verify);
+//		System.out.println("✅ OTP entered and verified");
+//	}
 
 
 	public void nametxtBoxEmpty() {
@@ -361,7 +361,7 @@ public final class NegativeSignupPages extends SignupObjRepository {
 	}
 
 	public void leftAllMandatory() {
-		contbtn();
+//		contbtn();
 
 		String actualMessage = validationMsgName.getText();
 		Assert.assertTrue("Name should be between 3 and 50 characters.", actualMessage.equals(actualMessage));

@@ -53,17 +53,17 @@ public class CouponFunctionality {
 	}
 
 	//2 FeedBack before order
-	@Given("User is on the checkout page with items in the cart")
-	public void user_is_on_the_checkout_page_with_items_in_the_cart() throws Exception {
-		try {
-			signup.signUp();
-			coupon.CheckOutNavigation();
-		}
-		catch (Exception e) {
-			ExceptionTracker.capture(e); // Capture the exact exception
-			throw e; // re-throw so test still fails
-		}
-	}
+//	@Given("User is on the checkout page with items in the cart")
+//	public void user_is_on_the_checkout_page_with_items_in_the_cart() throws Exception {
+//		try {
+//			signup.signUp();
+//			coupon.CheckOutNavigation();
+//		}
+//		catch (Exception e) {
+//			ExceptionTracker.capture(e); // Capture the exact exception
+//			throw e; // re-throw so test still fails
+//		}
+//	}
 
 	@And("User enters the Feedback coupon code")
 	public void user_enters_the_feedback_coupon_code() {
@@ -246,17 +246,17 @@ public class CouponFunctionality {
 
 
 	//8th test case
-	@Given("User adding lowest product to the cart")
-	public void user_adding_lowest_product_to_the_cart() throws Exception {
-		try {
-			signup.signUp();			
-
-		}
-		catch (Exception e) {
-			ExceptionTracker.capture(e); // Capture the exact exception
-			throw e; // re-throw so test still fails
-		}
-	}
+//	@Given("User adding lowest product to the cart")
+//	public void user_adding_lowest_product_to_the_cart() throws Exception {
+//		try {
+//			signup.signUp();			
+//
+//		}
+//		catch (Exception e) {
+//			ExceptionTracker.capture(e); // Capture the exact exception
+//			throw e; // re-throw so test still fails
+//		}
+//	}
 
 
 	@And("User try to apply normal percentage coupon and calculating")

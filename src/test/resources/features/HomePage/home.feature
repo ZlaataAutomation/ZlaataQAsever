@@ -8,6 +8,8 @@ Feature: This is HomePage feature
   #ScenarioDescription : Complete HomePage
   #Expected: HomePage sanity 
   #============================================================================
+  
+  @sanity
   @TC_UI_Zlaata_Home_01
   Scenario Outline: TC_UI_Zlaata_Home_01 |Verify if the user is able to click on the homepage banner.|"<TD_ID>"
      
@@ -18,6 +20,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_01 |
     
+    @sanity
     @TC_UI_Zlaata_Home_02
   Scenario Outline: TC_UI_Zlaata_Home_02 |Verify if the user is able to click on the forward and backward arrows on the homepage banner.|"<TD_ID>"
      
@@ -38,6 +41,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_03 |
       
+      @sanity
        @TC_UI_Zlaata_Home_04
   Scenario Outline: TC_UI_Zlaata_Home_04 |Verify if the user is able to click on the "Top Selling" section forward and backward arrows.|"<TD_ID>"
      
@@ -48,6 +52,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_04 |
       
+      @sanity
        @TC_UI_Zlaata_Home_05
   Scenario Outline: TC_UI_Zlaata_Home_05 |Verify if the user is able to click on the product image in the "Top Selling" section.|"<TD_ID>"
      
@@ -58,6 +63,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_05 |
       
+      @sanity
        @TC_UI_Zlaata_Home_06
   Scenario Outline: TC_UI_Zlaata_Home_06 |Verify if the user is able to click on the "New Arrival" section forward and backward arrows.|"<TD_ID>"
      
@@ -68,6 +74,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_06 |
       
+      @sanity
        @TC_UI_Zlaata_Home_07
   Scenario Outline: TC_UI_Zlaata_Home_07 |Verify if the user is able to click on the product image in the "New Arrival" section.|"<TD_ID>"
      
@@ -78,6 +85,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_07 |
       
+      @sanity
        @TC_UI_Zlaata_Home_08
   Scenario Outline: TC_UI_Zlaata_Home_08 |Verify if the user is able to click on the "Quick View" button in the "New Arrival" section.|"<TD_ID>"
      
@@ -88,6 +96,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_08 |
       
+      @sanity
        @TC_UI_Zlaata_Home_09
   Scenario Outline: TC_UI_Zlaata_Home_09 |Verify if the user is able to click on images in the "Inspired By" section.|"<TD_ID>"
      
@@ -99,7 +108,7 @@ Feature: This is HomePage feature
       | TD_UI_Zlaata_Home_09 |
       
 
-
+@sanity
      @TC_UI_Zlaata_Home_10
   Scenario Outline: TC_UI_Zlaata_Home_10 |Verify if the user is able to give a feedback successfully|"<TD_ID>"
      
@@ -110,7 +119,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_10 |
  
-      
+      @sanity
        @TC_UI_Zlaata_Home_11
   Scenario Outline: TC_UI_Zlaata_Home_11 |Verify if the user is able to click on the WhatsApp icon on all pages.|"<TD_ID>"
      
@@ -121,6 +130,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_11 |
       
+      @sanity
        @TC_UI_Zlaata_Home_12
   Scenario Outline: TC_UI_Zlaata_Home_12 |Verify if the user is able to click on the forward and backward arrows in the "Feature On" section.|"<TD_ID>"
      
@@ -130,6 +140,7 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_12 |
       
+      @sanity
        @TC_UI_Zlaata_Home_13
   Scenario Outline: TC_UI_Zlaata_Home_13 |Verify if the all home page fields are avilable once page load|"<TD_ID>"
      

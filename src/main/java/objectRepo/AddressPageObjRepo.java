@@ -12,7 +12,7 @@ public abstract class AddressPageObjRepo extends BasePage {
 	@FindBy(xpath = "//div[@class='navigation_cta_icon_list account_icon_btn open__popup']")
 	protected WebElement wishlistButton;
 	
-	@FindBy(xpath = "//a[.='Saved Address']")
+	@FindBy(xpath = "//a[normalize-space()='Saved Address']")
 	protected WebElement addressSideMenuButton;
 	
 	
@@ -221,4 +221,10 @@ public abstract class AddressPageObjRepo extends BasePage {
 	
 	@FindBy(xpath = "//div[@class='address_card Cls_addr_data_section']")
 	protected WebElement totalAddressCount;
+	
+	@FindBy(xpath = "//a[@class='account_sidebar_user_profile_link_acc_settings']")
+	protected WebElement MyprofileIconButton;
+	
+	@FindBy(id ="mobileNumber")
+	protected WebElement accountsettingMobileNumber;
 }

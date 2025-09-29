@@ -227,5 +227,12 @@ public final class ConfigFileReader  {
 			throw new RuntimeException(
 					"Application Url not specified in the application.properties file for the Key: " + url);
 	}
-	
+	public String getPrdurl() {
+		String url = properties.getProperty("Prdurl");
+		if (Objects.nonNull(url))
+			return url;
+		else
+			throw new RuntimeException(
+					"Application Url not specified in the application.properties file for the Key: " + url);
+	}
 }
