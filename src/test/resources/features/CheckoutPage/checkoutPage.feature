@@ -97,6 +97,43 @@ Scenario Outline: TC_UI_Zlaata_COP_10 |Verify Accessories, Recently Viewed, and 
     | TD_ID               |
     | TD_UI_Zlaata_COP_10 |
 
+  @sanity
+@TC_UI_Zlaata_COP_11
+Scenario Outline: TC_UI_Zlaata_COP_11 | Verify Validation Message for Invalid Gift Card Number | "<TD_ID>"
+  Given the user verifies that on the Checkout page, when an invalid gift card number is entered, a validation message is displayed
+
+  Examples:
+    | TD_ID               |
+    | TD_UI_Zlaata_COP_11 |
+
+   @sanity   
+@TC_UI_Zlaata_COP_12
+Scenario Outline: TC_UI_Zlaata_COP_12 | Verify Validation Message in Gift Wrapping Popup when Mandatory Fields Are Not Entered | "<TD_ID>"
+  Given the user verifies that on the Gift Wrapping popup, the mandatory fields are left empty
+
+  Examples:
+    | TD_ID               |
+    | TD_UI_Zlaata_COP_12 |
+
+   @sanity     
+@TC_UI_Zlaata_COP_13
+Scenario Outline: TC_UI_Zlaata_COP_13 |Verify Validation Message in Gift Wrapping Popup if the user enters fewer characters in Description or Sender Name| "<TD_ID>"
+  Given the user verifies that on the Gift Wrapping popup, the user enters fewer characters for all fields
+
+  Examples:
+    | TD_ID               |
+    | TD_UI_Zlaata_COP_13 |
+    
+   @sanity   
+ @TC_UI_Zlaata_COP_14
+Scenario Outline: TC_UI_Zlaata_COP_14 | Verify Gift Card Balance Display when Correct Gift Card is Entered | "<TD_ID>"
+  Given the user verifies that a valid gift card number is entered in the Gift Card field
+
+  Examples:
+    | TD_ID               |
+    | TD_UI_Zlaata_COP_14 |
+ 
+
       
 
   

@@ -85,6 +85,25 @@ Scenario Outline: TC_UI_Zlaata_ADDP_09 | Verify Delete  address functionality | 
 Examples:  
   | TD_ID                  |  
   | TD_UI_Zlaata_ADDP_09   |  
+  
+  @sanity
+  @TC_UI_Zlaata_ADDP_10
+Scenario Outline: TC_UI_Zlaata_ADDP_10 | Verify that while opening address page having phone number | "<TD_ID>"
+  Given User opens the address page
+
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_ADDP_10 |
+
+@sanity
+@TC_UI_Zlaata_ADDP_11
+Scenario Outline: TC_UI_Zlaata_ADDP_11 | Verify that while opening address page having phone number on checkout Page Address | "<TD_ID>"
+  Given User opens the checkout page address
+
+Examples:
+  | TD_ID                |
+  | TD_UI_Zlaata_ADDP_11 |
+  
 
     
   
