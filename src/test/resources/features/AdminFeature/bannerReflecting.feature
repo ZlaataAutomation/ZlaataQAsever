@@ -11,7 +11,7 @@ Examples:
   
   
     @Positive
-    @Regression
+  @Regression
     @TC_UI_Zlaata_ADM_02
 Scenario Outline: TC_UI_Zlaata_ADM_02 |Verify Top Selling Section Product Display on Homepage.| "<TD_ID>"  
  
@@ -24,6 +24,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_02   |
   
+  @Regression
   @TC_UI_Zlaata_ADM_03
 Scenario Outline: TC_UI_Zlaata_ADM_03 |Verify New Arrivals Section Product Display on Homepage.| "<TD_ID>"  
  
@@ -36,6 +37,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_03   |
  
+ @Regression
    @TC_UI_Zlaata_ADM_04
 Scenario Outline: TC_UI_Zlaata_ADM_04 |Verify Category Section Display on Website.| "<TD_ID>"  
    Given admin is logged in
@@ -46,6 +48,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_04   |
   
+  @Regression
    @TC_UI_Zlaata_ADM_05
 Scenario Outline: TC_UI_Zlaata_ADM_05 |Verify bulk product upload and visibility.| "<TD_ID>" 
    Given admin is logged in
@@ -57,7 +60,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_05   |
   
-     @Negative
+    @Regression
      @TC_UI_Zlaata_ADM_06
 Scenario Outline: TC_UI_Zlaata_ADM_06 |Remove product SKU from Top Selling and verify on User App.| "<TD_ID>" 
      Given admin is logged in
@@ -68,6 +71,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_06   |
   
+  @Regression
     @TC_UI_Zlaata_ADM_07
 Scenario Outline: TC_UI_Zlaata_ADM_07 |Verify all uploaded Special Timer products appear in Admin and User App.| "<TD_ID>" 
      Given admin is logged in
@@ -79,6 +83,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_07   |
   
+  @Regression
   @TC_UI_Zlaata_ADM_08
 Scenario Outline: TC_UI_Zlaata_ADM_08 |Verify uploaded categories appear in Admin and User App.| "<TD_ID>"
      Given admin is logged in
@@ -91,6 +96,7 @@ Examples:
   
   
  
+ @Regression
     @TC_UI_Zlaata_ADM_09
 Scenario Outline: TC_UI_Zlaata_ADM_09 |Verify bulk uploaded Collection appear in Admin and User App.| "<TD_ID>" 
      Given admin is logged in
@@ -102,14 +108,5 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADM_09   |
   
-  @TC_UI_Zlaata_ADM_10
-Scenario Outline: TC_UI_Zlaata_ADM_10 |Verify New Product added match between two exports.| "<TD_ID>" 
-     Given admin is logged in
-    When I export products from first page with date range "2025-09-17 - 2025-09-19" and save as "Export1.xlsx"
-    And I export products from second page with date range "2025-09-18 - 2025-09-19" and save as "Export2.xlsx"
-    Then I verify both exported files "Export1.xlsx" and "Export2.xlsx" have matching product names
-
-Examples:  
-  | TD_ID                  |  
-  | TD_UI_Zlaata_ADM_10   |
+  
   

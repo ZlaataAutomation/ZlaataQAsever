@@ -3,6 +3,7 @@ package manager;
 
 import context.TestContext;
 import pages.*;
+import stepDef.AdminGoogleMerchantStepDef;
 import stepDef.Hooks;
 
 
@@ -30,6 +31,8 @@ public class PageObjectManager {
     private AdminPanelPage admin;
     private AdminPanelSortingPage adminSort;
     private AdminPanelExportExcelFileMatchPage adminExport;
+    private AdminGoogleMerchantPage adminGoogle;
+    private AdminPanelAllImortPage adminImport;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -117,6 +120,14 @@ public class PageObjectManager {
 	public AdminPanelExportExcelFileMatchPage getAdminPanelExportExcelFileMatchPage() {
 		return (adminExport == null) ? adminExport = new AdminPanelExportExcelFileMatchPage(driver) : adminExport;
 	}
+	
+	public AdminGoogleMerchantPage getAdminGoogleMerchantPage() {
+		return (adminGoogle == null) ? adminGoogle = new AdminGoogleMerchantPage(driver) : adminGoogle;
+	}
+	public AdminPanelAllImortPage getAdminPanelAllImortPage() {
+		return (adminImport == null) ? adminImport = new AdminPanelAllImortPage(driver) : adminImport;
+	}
+	
 	
 	
 }
