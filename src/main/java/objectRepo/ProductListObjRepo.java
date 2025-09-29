@@ -96,6 +96,9 @@ public abstract  class ProductListObjRepo extends BasePage {
 	@FindBy(xpath = "(//div[@class='popup_containers_cls_btn'])[2]")
 	protected WebElement closeShowFilter;
 	
+	@FindBy(xpath = "//div[@class='prod_price_row ']")
+	protected WebElement productPrice;
+	
 	
 	
 	

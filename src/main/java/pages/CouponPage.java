@@ -803,7 +803,7 @@ public void checkout() {
 			System.out.println("Signup  popup appeared successfully!");
 		 
 		 
-		 sign.signUp();
+//		 sign.signUp();
 		
 		
 

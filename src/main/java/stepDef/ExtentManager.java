@@ -10,9 +10,7 @@ public class ExtentManager {
 
     public static ExtentReports getExtentReports() {
         if (extent == null) {
-            //ExtentSparkReporter spark = new ExtentSparkReporter("C:\\Users\\Ranjith\\Desktop\\Zlaata PRoject\\ZlaataUpdated\\reports\\Extent-Report\\Zlaata-QAResults.html");
-        	ExtentSparkReporter spark = new ExtentSparkReporter("test-output/ExtentReport.html");
-        	
+            ExtentSparkReporter spark = new ExtentSparkReporter("C:\\Users\\Ranjith\\Desktop\\Zlaata PRoject\\ZlaataUpdated\\reports\\Extent-Report\\Zlaata-QAResults.html");
             extent = new ExtentReports();
             extent.attachReporter(spark);
         }
