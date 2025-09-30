@@ -209,7 +209,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_25 | Verify Display of "Recently Viewed" Sect
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_25   |
 
-@sanity
+@sanity 
 @TC_UI_Zlaata_PDP_26
 Scenario Outline: TC_UI_Zlaata_PDP_26 | Verify that on Review Popup without Enter All Data Click on Submit | "<TD_ID>"
   Given User Verifies that on Review Popup without Enter All Data Click on Submit
@@ -217,7 +217,7 @@ Scenario Outline: TC_UI_Zlaata_PDP_26 | Verify that on Review Popup without Ente
     | TD_ID                  |
     | TD_UI_Zlaata_PDP_26   |
   
-  @sanity  
+  @sanity
  @TC_UI_Zlaata_PDP_27
 Scenario Outline: TC_UI_Zlaata_PDP_27 | Verify that user can submit a review after entering all data | "<TD_ID>"
   Given User on Product details page and gives a review

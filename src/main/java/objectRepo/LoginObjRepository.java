@@ -106,6 +106,11 @@ public abstract class LoginObjRepository extends BasePage {
    @FindBy(xpath = "//span[@class='x1lliihq x193iq5w x6ikm8r x10wlt62 xlyipyv xuxw1ft']")
    protected WebElement captchaContinueButton;
 	
+   @FindBy(xpath = "//div[@class='navigation_cta_icon_list account_icon_btn open__popup ']")
+   protected WebElement profileicon;
+   
+   @FindBy(xpath = "//a[@class='account_sidebar_user_profile_link_acc_settings']")
+   protected WebElement myProfiletext;
 	
 	
 	
