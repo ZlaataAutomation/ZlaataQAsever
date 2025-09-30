@@ -834,6 +834,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 			        
 			    }
 	
+				String productName;
 	public void verifySearchKeyboardProductsInAdmin(String filePath) throws IOException {
 					Common.waitForElement(2);
 					driver.navigate().refresh();
@@ -845,35 +846,34 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 						    })
 						    .collect(Collectors.toList());
 				    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-
+				    
 				    for (Map<String, Object> product : products) {
 				        String sku = (String) product.get("sku");
 
-				        // Click SKU menu
+				        // Click collection menu
 				        wait.until(ExpectedConditions.elementToBeClickable(clickSKU)).click();
 
-				        // Wait for search boxes
-				        List<WebElement> searchBoxes = wait.until(d -> {
-				            List<WebElement> elements = d.findElements(By.xpath("//input[@id='text-filter-sku']"));
-				            return elements.size() >= 2 ? elements : null;
-				        });
-				        WebElement adminSearchBox = searchBoxes.get(1);
-
-				        // Type SKU
+				        // Search collection
 				        wait.until(ExpectedConditions.elementToBeClickable(adminSearchBox));
 				        adminSearchBox.clear();
 				        adminSearchBox.sendKeys(sku);
 				        adminSearchBox.sendKeys(Keys.ENTER);
 
-				        // ✅ Print only once per SKU
 				        System.out.println("✅ Searched for SKU: " + sku);
+				       
 
 				        // Wait for SKU to appear in table
-				        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@title='" + sku + "']")));
+				        WebElement skuElement=  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@title='" + sku + "']")));
 				        System.out.println("✅ SKU is visible in Admin panel: " + sku);
-
-				        // Click outside after confirming visibility (optional)
-				        wait.until(ExpectedConditions.elementToBeClickable(clickBlankSpace)).click();
+				        
+				     // Copy product name
+				        productName = skuElement.findElement(
+				        	    By.xpath("./ancestor::tr//td[2]/span[@title]") // find span with title in 2nd column of same row
+				        	).getAttribute("title");
+				        	System.out.println("✅ Product Name: " + productName);
+				        	
+				        	 // Click outside after confirming visibility (optional)
+					        wait.until(ExpectedConditions.elementToBeClickable(clickBlankSpace)).click();
 				    }
 				    
 				    //Clear Catch
@@ -885,39 +885,35 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 				}
 	
 	// Method to verify that the Search Keyboard Product 
-			public void verifySearchKeyboardProductInUserApp(String filePath) throws InterruptedException {
-			    // Get the expected first product from test data
-			    String expectedSearchProduct = Common.getValueFromTestData("ExpectedMicroPageFirstProduct"); 
+			public void verifySearchKeyboardProductInUserApp(String filePath) throws InterruptedException, IOException {
+				// ✅ Step 1: Open User App
+			    switchToWindow(1);
+			    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+			    Common.waitForElement(3);
 
-			    // Scroll a bit to make products visible
-			    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,340);");
-			    Common.waitForElement(2);
+			    // ✅ Step 2: Read expected product from Excel
+			    List<Map<String, Object>> excelProducts = ExcelXLSReader.readProductsWithMultipleListing(filePath);
+			    String expectedSearchKeyword = excelProducts.get(0).get("keywords").toString().trim();
+			    System.out.println("🔍 Searching for product from Excel: " + expectedSearchKeyword);
 
-			    // Wait for the product to appear in product cards
-			    FluentWait<WebDriver> wait = new FluentWait<>(driver)
-			            .withTimeout(Duration.ofMinutes(10))
-			            .pollingEvery(Duration.ofSeconds(3))
-			            .ignoring(NoSuchElementException.class)
-			            .ignoring(StaleElementReferenceException.class);
+			    // ✅ Step 3: Search with WebDriverWait
+			    Common.waitForElement(3);
+			    WebDriverWait wait = new WebDriverWait(driver, Duration.ofMinutes(2));
+			    wait.until(ExpectedConditions.elementToBeClickable(searchBox));
+			    searchBox.clear();
+			    searchBox.sendKeys(expectedSearchKeyword);
 
-			    WebElement card = wait.until(d -> {
-			        driver.navigate().refresh();
-			        try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+			    // ✅ Step 4: Wait for the search result using WebDriverWait
+			    WebElement collectionElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+			            By.xpath("//div[normalize-space(text())='" + productName + "']")
+			    ));
 
-			        List<WebElement> elements = d.findElements(By.xpath(
-			                "//div[@id='cls_newproduct_sec_dev']/div[contains(@class,'product_list_cards_list')][1]//h2[@class='product_list_cards_heading']"
-			            ));
-
-			            if (!elements.isEmpty() && elements.get(0).getText().trim().equals(expectedSearchProduct)) {
-			                return elements.get(0);
-			            }
-			            return null;
-			    });
-
-			    if (card != null && card.isDisplayed()) {
-			        System.out.println("✅ Product '" + expectedSearchProduct + "' is visible in User App for MicroPage in First Position ");
+			    // ✅ Step 5: Verify and Click
+			    if (collectionElement != null && collectionElement.isDisplayed()) {
+			        System.out.println("✅ Product '" + productName + "' found in search results.");
+			        collectionElement.click(); // 👉 Clicking matched product
 			    } else {
-			        throw new RuntimeException("❌ Product '" + expectedSearchProduct + "' not found in User App for MicroPage: " );
+			        throw new RuntimeException("❌ Product '" + productName + "' not found in search results.");
 			    }
 			}
 
@@ -945,7 +941,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 		        
 		    }
 
-			public void verifySearchKeyboardCollectionInAdmin(String filePath) throws IOException {
+		public void verifySearchKeyboardCollectionInAdmin(String filePath) throws IOException {
 			    Common.waitForElement(2);
 			    driver.navigate().refresh();
 			    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath)
@@ -1026,7 +1022,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 			}
 			
 
-			//Import Search keyboard Style  
+//Import Search keyboard Style  
 			public void ImportSearchKeyboardStyleExcel(String excelPath) {
 				Common.waitForElement(2);
 			    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
