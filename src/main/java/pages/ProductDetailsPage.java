@@ -40,10 +40,10 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 		Actions actions = new Actions(driver);
 		actions.moveToElement(shopMenu);
-		actions.moveToElement(category).click().build().perform();
 		actions.moveToElement(sortBy).click().build().perform();
 		Common.waitForElement(5);
 		click(sortByPriceHightoLow);
+		Common.waitForElement(5);
 
 		//		List<WebElement> clickRandomProduct = driver.findElements(By.xpath("//div[@class='product_list_cards_list ']"));
 		//		Collections.shuffle(clickRandomProduct);
@@ -1265,51 +1265,51 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 		}
 	}
 
-//	public void ReviewPopupEnterAllData() {
-//		
-//		Common.waitForElement(5);
-//		Actions actions = new Actions(driver);
-//		actions.moveToElement(shopMenu);
-//		actions.moveToElement(category).click().build().perform();
-//
-//		List<WebElement> addProduct = driver.findElements(By.xpath("//div[@class='product_list_cards_list ']"));
-//		Collections.shuffle(addProduct);
-//
-//		if (!addProduct.isEmpty()) {
-//			WebElement randomProduct = addProduct.get(0);
-//			actions.moveToElement(randomProduct).click().build().perform();
-//			Common.waitForElement(2);
-//
-//			click(clickOnWriteReviewButton);
-//			Common.waitForElement(2);
-//			
-//			click(starCount);
-//			
-//			
-//			type(reviewUserName, FileReaderManager.getInstance().getJsonReader().getValueFromJson("UserName"));
-//
-//			Common.waitForElement(2);
-//			type(reviewEmailID, FileReaderManager.getInstance().getJsonReader().getValueFromJson("MailID"));
-//
-//			Common.waitForElement(2);
-//
-//			click(clickOnSubmitButton);
-//			
-//			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // wait max 10 seconds
-//			wait.until(ExpectedConditions.visibilityOf(reviewSuccessMessage));
-//
-//			// Get and verify the text
-//			String successText = reviewSuccessMessage.getText();
-//			if (successText.contains("Review updated successfully!")) {
-//			    System.out.println("✅ Verified success message: " + successText);
-//			} else {
-//			    System.out.println("❌ Unexpected message: " + successText);
-//			}
-//		}
-//
-//
-//	}
-//	
+	public void ReviewPopupEnterAllData() {
+		
+		Common.waitForElement(5);
+		Actions actions = new Actions(driver);
+		actions.moveToElement(shopMenu);
+		actions.moveToElement(category).click().build().perform();
+
+		List<WebElement> addProduct = driver.findElements(By.xpath("//div[@class='product_list_cards_list ']"));
+		Collections.shuffle(addProduct);
+
+		if (!addProduct.isEmpty()) {
+			WebElement randomProduct = addProduct.get(0);
+			actions.moveToElement(randomProduct).click().build().perform();
+			Common.waitForElement(2);
+
+			click(clickOnWriteReviewButton);
+			Common.waitForElement(2);
+			
+			click(starCount);
+			
+			
+			type(reviewUserName, FileReaderManager.getInstance().getJsonReader().getValueFromJson("UserName"));
+
+			Common.waitForElement(2);
+			type(reviewEmailID, FileReaderManager.getInstance().getJsonReader().getValueFromJson("MailID"));
+
+			Common.waitForElement(2);
+
+			click(clickOnSubmitButton);
+			
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // wait max 10 seconds
+			wait.until(ExpectedConditions.visibilityOf(reviewSuccessMessage));
+
+			// Get and verify the text
+			String successText = reviewSuccessMessage.getText();
+			if (successText.contains("Review updated successfully!")) {
+			    System.out.println("✅ Verified success message: " + successText);
+			} else {
+			    System.out.println("❌ Unexpected message: " + successText);
+			}
+		}
+
+
+	}
+	
 
 
 	

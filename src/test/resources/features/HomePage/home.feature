@@ -96,16 +96,18 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_08 |
       
-      @sanity
+      @sanity 
        @TC_UI_Zlaata_Home_09
-  Scenario Outline: TC_UI_Zlaata_Home_09 |Verify if the user is able to click on images in the "Inspired By" section.|"<TD_ID>"
+  Scenario Outline: TC_UI_Zlaata_Home_09 |Verify if the user is able to click on  See More button on New Arrival Sectioin.|"<TD_ID>"
      
-     Given User clicks on inspired by images
+     Given User clicks on see more button on New Arrival
     
 
     Examples: 
       | TD_ID                  |
       | TD_UI_Zlaata_Home_09 |
+      
+
       
 
 @sanity
