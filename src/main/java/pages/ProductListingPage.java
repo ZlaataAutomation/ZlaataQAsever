@@ -219,7 +219,7 @@ public final class ProductListingPage extends ProductListObjRepo {
 	        }
 	    }
 	    // Wait for sub-filters to appear and get only the visible sub-filters
-	    List<WebElement> filterOptions = driver.findElements(By.xpath("//p[@class='prod_filter_value_name']"));
+	    List<WebElement> filterOptions = driver.findElements(By.xpath("//span[@class='prod_filter_value_name']"));
 	    List<WebElement> visibleOptions = filterOptions.stream()
 	            .filter(WebElement::isDisplayed)
 	            .filter(WebElement::isEnabled)

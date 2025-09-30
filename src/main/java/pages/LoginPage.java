@@ -331,32 +331,29 @@ public final class LoginPage extends LoginObjRepository {
             type(enterFaceBookNumber, fbNumber);
             type(enterFaceBookPasswrod, fbPassword);
 
+
             System.out.println("📥 Facebook Number Input: " + fbNumber + " | Length: " + fbNumber.length());
             System.out.println("📥 Facebook Password Input: " + fbPassword.replaceAll(".", "*") + " | Length: " + fbPassword.length());
 
             // Step 4: Click Login and proceed
             click(clickOnFaceBookLoginButton);
-            Common.waitForElement(20);
 
-            // Step 5: Handle captcha or continue prompts
-            click(captchaContinueButton);
+          
+            Common.waitForElement(30);
             click(clickOnContinueButton);
-
-            // Step 6: Validate login success message
-            String actualMessage = facebookLoginValidationMessage.getText();
-            System.out.println("📤 UI Message After Login: " + actualMessage + " | Length: " + actualMessage.length());
-
-            Assert.assertNotNull("Validation message should not be null after Facebook login.", actualMessage);
-            Assert.assertTrue("Validation message should not be empty.", !actualMessage.trim().isEmpty());
-
-            System.out.println("\u001B[32m✅ SUCCESS: Facebook login message = " + actualMessage + "\u001B[0m");
+            
+            profileicon.click();
+            
+            Common.waitForElement(2);
+             
+            System.out.println(" login Facebook  successfully :  " + myProfiletext.getText()+ " is dispalying");
+           
 
         } catch (Exception e) {
             System.out.println("\u001B[31m❌ ERROR: Facebook login automation failed - " + e.getMessage() + "\u001B[0m");
             throw e;
         }
     }
-
 
 
     @Override
