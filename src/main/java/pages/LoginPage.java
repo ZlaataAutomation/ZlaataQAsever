@@ -40,8 +40,8 @@ public final class LoginPage extends LoginObjRepository {
         type(loginNumber, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Number"));
 //        Common.waitForElement(1);
         click(sendotp);
-        Common.waitForElement(35);
-//      type(enterotp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
+//        Common.waitForElement(35);
+      type(enterotp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
         click(verifyotp);
         Common.waitForElement(3); // small buffer
 

@@ -12,11 +12,10 @@ import java.util.logging.Logger;
 
 @RunWith(Cucumber.class)
 @CucumberOptions( plugin = {"pretty","com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:","html:target/cucumber-reports.html"},
-features = {"src/test/resources/features"},
+features = {"src/test/resources/features/AdminFeature/bannerReflecting.feature"},
 glue = "stepDef",	
 monochrome = true,	
-dryRun = false,
-tags="@TC_UI_Zlaata_ADI_07"
+dryRun = false
 
 )
 
@@ -37,7 +36,7 @@ public class TestRunner {
 @AfterClass
 public static void generateExcelReport() {
 	 ExcelReportUtil.generateExcelReport();
-	// EmailSendUtils.sendEmail();
+//	 EmailSendUtils.sendEmail();
 }
 }
 
