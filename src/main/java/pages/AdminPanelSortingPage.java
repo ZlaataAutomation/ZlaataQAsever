@@ -742,7 +742,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	
 	
 	
-		//Sort All Product
+//Sort All Product
 		public void sortTheAllProductInAdminPanel() throws IOException {
 		    Common.waitForElement(2);  
 		    String AllProductName = Common.getValueFromTestDataMap("Shop Name");
@@ -762,6 +762,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 
 		        click(categoryType);
 		        type(categorySearchTextBox, "All Product");
+		        categorySearchTextBox.sendKeys(Keys.ENTER);
 		        System.out.println("✅ AllProduct selected for Product Sort");
 
 		     // All product cards

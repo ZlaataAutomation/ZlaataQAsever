@@ -15,7 +15,8 @@ import java.util.logging.Logger;
 features = {"src/test/resources/features/AdminFeature/bannerReflecting.feature"},
 glue = "stepDef",	
 monochrome = true,	
-dryRun = false
+dryRun = false,
+tags= "@TC_UI_Zlaata_ADM_03"
 
 )
 
