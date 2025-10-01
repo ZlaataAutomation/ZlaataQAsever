@@ -1,5 +1,6 @@
 Feature: Google Merchant Product Push
  
+ 
      @TC_UI_Zlaata_AGM_01
 Scenario Outline: TC_UI_Zlaata_AGM_01 |Verify product SKU can be pushed to Google Merchant and status updates.| "<TD_ID>"  
   

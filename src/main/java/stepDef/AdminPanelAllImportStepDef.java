@@ -102,7 +102,7 @@ public class AdminPanelAllImportStepDef {
 				adminGoogle.verifySearchKeyboardProductsInAdmin(excelPath);
 						}
 			@Then("Admin verify Search Keyboard Product  from {string} should be visible in user app")
-			public void admin_verify_search_keyboard_product_from_should_be_visible_in_user_app(String filePath) throws InterruptedException {
+			public void admin_verify_search_keyboard_product_from_should_be_visible_in_user_app(String filePath) throws InterruptedException, IOException {
 				String excelPath = System.getProperty("user.dir") + "/src/test/resources/ImportFile/" + filePath;
 				adminGoogle.verifySearchKeyboardProductInUserApp(excelPath);   
 						}
@@ -127,17 +127,20 @@ public class AdminPanelAllImportStepDef {
 
 //Import Search Style Keywords
 					@When("Admin upload the Search Keyboard Style  excel {string}")
-					public void admin_upload_the_search_keyboard_style_excel(String string) {
-					 
+					public void admin_upload_the_search_keyboard_style_excel(String filePath) {
+						String excelPath = System.getProperty("user.dir") + "/src/test/resources/ImportFile/" + filePath;
+						adminGoogle.ImportSearchKeyboardStyleExcel(excelPath); 
 					}
 
 					@Then("Admin verify Search Keyboard Style  in Admin panel with {string}")
-					public void admin_verify_search_keyboard_style_in_admin_panel_with(String string) {
-					  
+					public void admin_verify_search_keyboard_style_in_admin_panel_with(String filePath) throws IOException {
+						String excelPath = System.getProperty("user.dir") + "/src/test/resources/ImportFile/" + filePath;
+						adminGoogle.verifySearchKeyboardStyleInAdmin(excelPath); 
 					}
 					@Then("Admin verify Search Keyboard Style  from {string} should be visible in user app")
-					public void admin_verify_search_keyboard_style_from_should_be_visible_in_user_app(String string) {
-					 
+					public void admin_verify_search_keyboard_style_from_should_be_visible_in_user_app(String filePath) throws InterruptedException, IOException {
+						String excelPath = System.getProperty("user.dir") + "/src/test/resources/ImportFile/" + filePath;
+						adminGoogle.verifySearchKeyboardStyleInUserApp(excelPath); 
 					}
 
 
