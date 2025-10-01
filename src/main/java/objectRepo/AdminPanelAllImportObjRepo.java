@@ -125,6 +125,10 @@ public abstract class AdminPanelAllImportObjRepo extends BasePage {
     
     @FindBy(xpath = "//a[normalize-space()='Style Name']")
     protected WebElement clickedStyle;
+    
+    @FindBy(xpath = "//input[@id='text-filter-sku']")
+    protected WebElement adminSearchBox;
+  
   
   
  

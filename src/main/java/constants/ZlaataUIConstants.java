@@ -16,9 +16,8 @@ public final class ZlaataUIConstants {
 	    static {
 	    	SUBJECTS = "Zlaata Excel Automation Report";
 	        PROJECT_NAME = "ZLAATA";
-//	        REPORTS_CUCUMBER_LOCATION = "C:\\Users\\Ranjith\\Desktop\\ZlaataProduction\\reports\\Extent-Report\\Zlaata-QAResults.html";
-	        REPORTS_CUCUMBER_LOCATION = "C:\\Users\\Sarojkumar\\Desktop\\ZlaataProduction\\reports\\Extent-Report\\Automation_Report.xlsx";
-//	        REPORTS_CUCUMBER_LOCATION ="C:\\Users\\Ranjith\\Downloads\\ZlaataProductionPGR (3)\\ZlaataProductionPGR\\reports\\Automation_Report.xlsx";
+	        REPORTS_CUCUMBER_LOCATION = "C:\\Users\\Ranjith\\git\\ZlaataQAsever0001\\reports\\Automation_Report.xlsx";
+//	        REPORTS_CUCUMBER_LOCATION = "C:\\Users\\Sarojkumar\\Desktop\\ZlaataProduction\\reports\\Extent-Report\\Automation_Report.xlsx";
 	        REPORTS_CUCUMBER_LOCAL = REPORTS_CUCUMBER_LOCATION + "report.html";
 	        REPORTS_ZIPPED_FILE_NAME = "./target/ZlaataAutomation.zip";
 	       

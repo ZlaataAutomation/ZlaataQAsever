@@ -712,6 +712,19 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 		System.out.println("✅ Clicked '+' button");
 
 		//  In the products list, find SKU & drag to first position
+		 // All product cards
+        List<WebElement> allProducts = driver.findElements(By.xpath("//div[contains(@class,'sortable-card')]"));
+        if (allProducts.size() < 3) {
+            System.out.println("❌ Less than 3 products available, cannot perform reorder.");
+            return;
+        }
+
+        WebElement thirdProduct = driver.findElement(By.xpath("(//div[contains(@class,'sortable-card')])[3]"));
+        WebElement firstProduct = driver.findElement(By.xpath("(//div[contains(@class,'sortable-card')])[1]"));
+
+        Actions action = new Actions(driver);
+
+     // Perform drag & drop to above the first card
 		// XPath to locate card by SKU text
 		Common.waitForElement(3);
 		By skuCard = By.xpath("//div[contains(@class,'sortable-card')]//span[contains(text(),'" + copiedSku + "')]/ancestor::div[contains(@class,'sortable-card')]");
@@ -727,13 +740,14 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 		    try {
 		        // try native Selenium drag & drop
-		        Actions actions = new Actions(driver);
-		        actions.clickAndHold(from)
-		               .moveToElement(firstPosition, 0, 0) // move inside first card
-		               .release()
-		               .build()
-		               .perform();
-
+		    	Actions actions = new Actions(driver);
+		    	action.clickAndHold(from)
+		        .pause(Duration.ofMillis(500))
+		        .moveToElement(firstPosition, 0, -30) // Drop 30px above the first card
+		        .pause(Duration.ofMillis(500))
+		        .release()
+		        .build()
+		        .perform();
 		        System.out.println("✅ Dragged product '" + copiedSku + "' to first position (Selenium).");
 
 		    } catch (Exception e) {

@@ -3,7 +3,7 @@ Feature: Import Functionality Verify that different entities (Categories, Produc
 
 Background:
     Given admin is logged in
-    
+    @Regression
     @TC_UI_Zlaata_ADI_01
 Scenario Outline: TC_UI_Zlaata_ADI_01 |Verify Categories import uploaded appear in Admin and User App.| "<TD_ID>" 
     When Admin upload the categories excel "Catagories1.xlsx"
@@ -13,7 +13,8 @@ Scenario Outline: TC_UI_Zlaata_ADI_01 |Verify Categories import uploaded appear 
 Examples:  
   | TD_ID                  |  
   | TD_UI_Zlaata_ADI_01   |
- 
+  
+    @Regression
   @TC_UI_Zlaata_ADI_02
 Scenario Outline: TC_UI_Zlaata_ADI_02 |Verify Collection import uploaded appear in Admin and User App.| "<TD_ID>" 
     When Admin upload the Collection excel "Collection1.xlsx"
@@ -23,7 +24,8 @@ Scenario Outline: TC_UI_Zlaata_ADI_02 |Verify Collection import uploaded appear 
 Examples:  
   | TD_ID                  |  
   | TD_UI_Zlaata_ADI_02   |
-  
+
+@Regression
   @TC_UI_Zlaata_ADI_03
 Scenario Outline: TC_UI_Zlaata_ADI_03 |Verify Product Style import uploaded appear in Admin and User App.| "<TD_ID>" 
     When Admin upload the Product Style excel "Style5.xlsx"
@@ -34,6 +36,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADI_03   |
   
+  @Regression
    @TC_UI_Zlaata_ADI_04
 Scenario Outline: TC_UI_Zlaata_ADI_04 |Verify All Product import uploaded appear in Admin and User App.| "<TD_ID>" 
     When Admin upload the All Product  excel "AllProduct5.xlsx"
@@ -44,6 +47,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADI_04   |
   
+  @Regression
   @TC_UI_Zlaata_ADI_05
 Scenario Outline: TC_UI_Zlaata_ADI_05 |Verify Search Keyboard Product import uploaded appear in Admin and User App.| "<TD_ID>" 
     When Admin upload the Search Keyboard Product  excel "SearchProduct.xlsx"
@@ -54,6 +58,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADI_05   |
   
+  @Regression
   @TC_UI_Zlaata_ADI_06
 Scenario Outline: TC_UI_Zlaata_ADI_06 |Verify Search Keyboard Collection import uploaded appear in Admin and User App.| "<TD_ID>" 
     When Admin upload the Search Keyboard Collection  excel "SearchCollection.xlsx"
@@ -64,6 +69,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADI_06   |
   
+  @Regression
   @TC_UI_Zlaata_ADI_07
 Scenario Outline: TC_UI_Zlaata_ADI_07 |Verify Search Keyboard Style import uploaded appear in Admin and User App.| "<TD_ID>" 
     When Admin upload the Search Keyboard Style  excel "SearchStyle.xlsx"
