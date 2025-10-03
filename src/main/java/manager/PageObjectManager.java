@@ -33,6 +33,7 @@ public class PageObjectManager {
     private AdminPanelExportExcelFileMatchPage adminExport;
     private AdminGoogleMerchantPage adminGoogle;
     private AdminPanelAllImortPage adminImport;
+    private AdminPanelInfluencerPage adminInflu;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -126,6 +127,10 @@ public class PageObjectManager {
 	}
 	public AdminPanelAllImortPage getAdminPanelAllImortPage() {
 		return (adminImport == null) ? adminImport = new AdminPanelAllImortPage(driver) : adminImport;
+	}
+	
+	public AdminPanelInfluencerPage getAdminPanelInfluencerPage() {
+		return (adminInflu == null) ? adminInflu = new AdminPanelInfluencerPage(driver) : adminInflu;
 	}
 	
 	

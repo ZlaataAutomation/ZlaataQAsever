@@ -66,7 +66,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
         waitFor(submitButton);
         submitButton.click();
         System.out.println("✅ Excel uploaded successfully");
-	    Common.waitForElement(3);
+	    Common.waitForElement(5);
 	    waitFor(clearCatchButton);
 	    click(clearCatchButton);
 	    System.out.println("✅ Successful click Clear Catch Button");
