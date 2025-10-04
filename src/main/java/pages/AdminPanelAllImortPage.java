@@ -66,7 +66,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
         waitFor(submitButton);
         submitButton.click();
         System.out.println("✅ Excel uploaded successfully");
-	    Common.waitForElement(3);
+	    Common.waitForElement(5);
 	    waitFor(clearCatchButton);
 	    click(clearCatchButton);
 	    System.out.println("✅ Successful click Clear Catch Button");
@@ -416,7 +416,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 	                        Thread.sleep(refreshInterval * 1000);
 	                    }
 
-	                    // ✅ Final check
+	                    //✅ Final check
 	                    if (productsFound) {
 	                        System.out.println("✅ Products available under collection: " + collection);
 	                        test.pass("Products found in collection: " + collection);

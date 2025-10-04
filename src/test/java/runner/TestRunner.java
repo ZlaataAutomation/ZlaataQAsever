@@ -12,12 +12,11 @@ import java.util.logging.Logger;
 
 @RunWith(Cucumber.class)
 @CucumberOptions( plugin = {"pretty","com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:","html:target/cucumber-reports.html"},
-features = {"src/test/resources/features/AdminFeature/bannerReflecting.feature"},
+features = {"src/test/resources/features"},
 glue = "stepDef",	
 monochrome = true,	
 dryRun = false,
-tags= "@TC_UI_Zlaata_ADM_03"
-
+tags= "@Regression"
 )
 
 		
