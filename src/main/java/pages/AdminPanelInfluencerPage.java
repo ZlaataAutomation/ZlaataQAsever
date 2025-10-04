@@ -289,7 +289,7 @@ public class AdminPanelInfluencerPage extends AdminPanelInfluencerObjRepo {
 	    click(clickInfluencer);
 	    System.out.println("✅ Clicked  Influencer ");
 	    
-	    // Scroll a bit to make products visible
+  // Scroll a bit to make products visible
 	    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,200);");
 	    Common.waitForElement(2);
 
