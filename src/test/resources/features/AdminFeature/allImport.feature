@@ -47,7 +47,7 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_ADI_04   |
   
-  @Regression
+ 
   @TC_UI_Zlaata_ADI_05
 Scenario Outline: TC_UI_Zlaata_ADI_05 |Verify Search Keyboard Product import uploaded appear in Admin and User App.| "<TD_ID>" 
     When Admin upload the Search Keyboard Product  excel "SearchProduct.xlsx"
