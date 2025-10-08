@@ -124,47 +124,49 @@ public  final class FooterPage  extends FooterObjRepo{
 //	}
 	
 	public void paymentMethods() {
-	    try {
-	        // Locate payment section div
-	        WebElement paymentSection = driver.findElement(
-	            By.xpath("//div[@class='foot_navigation footer_payment_wrap']")
-	        );
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    String sectionXpath = "//div[@class='foot_navigation footer_payment_wrap']";
+	    WebElement paymentSection = null;
 
-	        // Scroll to the heading inside the section
-	        WebElement paymentHeading = paymentSection.findElement(
-	            By.xpath(".//h4[@class='foot_nav_heading']")
-	        );
-	        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", paymentHeading);
-	        Thread.sleep(500);
-
-	        // Check if the section is visible
-	        if (paymentSection.isDisplayed()) {
-	            System.out.println("✅ Payment section is displayed.");
-
-	            // Find all payment icons inside the section
-	            List<WebElement> paymentIcons = paymentSection.findElements(
-	                By.xpath(".//img[@alt='Cash On Delivery' or @alt='Internet Banking' or @alt='Master Card' or @alt='Visa']")
-	            );
-
-	            if (paymentIcons.isEmpty()) {
-	                System.out.println("⚠️ No payment icons found in the section.");
-	            } else {
-	                System.out.println("✅ Found " + paymentIcons.size() + " payment icons:");
-	                for (WebElement icon : paymentIcons) {
-	                    System.out.println(" - " + icon.getAttribute("alt"));
-	                }
+	    // Scroll loop: max 20 attempts
+	    for (int i = 0; i < 20; i++) {
+	        try {
+	            paymentSection = driver.findElement(By.xpath(sectionXpath));
+	            if (paymentSection.isDisplayed()) {
+	                // Scroll into view with offset
+	                js.executeScript("arguments[0].scrollIntoView(true); window.scrollBy(0, -100);", paymentSection);
+	                Thread.sleep(500);
+	                break; // exit loop if visible
 	            }
-
-	        } else {
-	            System.out.println("⚠️ Payment section is present but not visible.");
+	        } catch (Exception ignored) {
+	            // Scroll the page gradually if not found yet
+	            js.executeScript("window.scrollBy(0, 400);");
+	            try { Thread.sleep(500); } catch (InterruptedException e) {}
 	        }
+	    }
 
-	    } catch (NoSuchElementException e) {
-	        System.out.println("❌ Payment section is NOT present on the page.");
-	    } catch (Exception e) {
-	        System.out.println("❌ An unexpected error occurred: " + e.getMessage());
+	    if (paymentSection == null || !paymentSection.isDisplayed()) {
+	        System.out.println("❌ Payment section is NOT visible after scrolling.");
+	        return;
+	    }
+
+	    System.out.println("✅ Payment section is displayed.");
+
+	    // Find all payment icons inside the section
+	    List<WebElement> paymentIcons = paymentSection.findElements(
+	        By.xpath(".//img[@alt='Cash On Delivery' or @alt='Internet Banking' or @alt='Master Card' or @alt='Visa']")
+	    );
+
+	    if (paymentIcons.isEmpty()) {
+	        System.out.println("⚠️ No payment icons found in the section.");
+	    } else {
+	        System.out.println("✅ Found " + paymentIcons.size() + " payment icons:");
+	        for (WebElement icon : paymentIcons) {
+	            System.out.println(" - " + icon.getAttribute("alt"));
+	        }
 	    }
 	}
+
 
 	public void socialMedia() {
 	    Common.waitForElement(2);
