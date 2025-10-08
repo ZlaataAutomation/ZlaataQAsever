@@ -53,9 +53,9 @@ Examples:
    @TC_UI_Zlaata_ADM_05
 Scenario Outline: TC_UI_Zlaata_ADM_05 |Verify bulk product upload and visibility.| "<TD_ID>" 
    Given admin is logged in
-    When I upload the product excel "Auto Product2.xlsx"
-    Then the products from "Auto Product2.xlsx" should be visible in admin panel
-    And the products from "Auto Product2.xlsx" should be visible in user app
+    When I upload the product excel "AllProduct.xlsx"
+    Then the products from "AllProduct.xlsx" should be visible in admin panel
+    And the products from "AllProduct.xlsx" should be visible in user app
 
 Examples:  
   | TD_ID                  |  
