@@ -39,9 +39,9 @@ Examples:
   @Regression
    @TC_UI_Zlaata_ADI_04
 Scenario Outline: TC_UI_Zlaata_ADI_04 |Verify All Product import uploaded appear in Admin and User App.| "<TD_ID>" 
-    When Admin upload the All Product  excel "AllProduct5.xlsx"
-    Then Admin verify All Product  in Admin panel with "AllProduct5.xlsx"
-    And Admin verify All Product  from "AllProduct5.xlsx" should be visible in user app
+    When Admin upload the All Product  excel "AllProduct.xlsx"
+    Then Admin verify All Product  in Admin panel with "AllProduct.xlsx"
+    And Admin verify All Product  from "AllProduct.xlsx" should be visible in user app
 
 Examples:  
   | TD_ID                  |  
