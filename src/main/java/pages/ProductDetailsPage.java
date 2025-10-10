@@ -40,6 +40,8 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 
 		Actions actions = new Actions(driver);
 		actions.moveToElement(shopMenu);
+		actions.moveToElement(category).click().build().perform();
+
 		actions.moveToElement(sortBy).click().build().perform();
 		Common.waitForElement(5);
 		click(sortByPriceHightoLow);
@@ -944,39 +946,55 @@ public final class ProductDetailsPage extends ProductDetailsPageObjRepo {
 //		}
 //	}
 	
- 	public void viewMoreButton() {
- 	// Select a random product
- 		RandomProduct();
- 		Common.waitForElement(1);
+	public void viewMoreButton() {
+	    // Select a random product
+	    RandomProduct();
+	    Common.waitForElement(1);
 
- 		// -------------------- MORE FOR YOU --------------------
- 		// Scroll to More For You button and click
- 		((JavascriptExecutor) driver).executeScript(
- 		    "arguments[0].scrollIntoView(true); window.scrollBy(0, -100);", 
- 		    moreForYouSectionViewAllButton
- 		);
- 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", moreForYouSectionViewAllButton);
+	    // -------------------- MORE FOR YOU --------------------
+	    scrollUntilVisibleAndClick(moreForYouSectionViewAllButton);
+	    String headingText = heading.getText();
+	    System.out.println("📌 Heading displayed in application (More For You): " + headingText);
 
- 		// Get and print heading
- 		String headingText = heading.getText();
- 		System.out.println("📌 Heading displayed in application (More For You): " + headingText);
+	    // -------------------- NAVIGATE BACK --------------------
+	    driver.navigate().back();
+	    Common.waitForElement(1);
 
- 		// -------------------- NAVIGATE BACK --------------------
- 		driver.navigate().back(); // Go back to previous page
- 		Common.waitForElement(1); // Wait for page to load
+	    // -------------------- SUGGESTED FOR YOU --------------------
+	    scrollUntilVisibleAndClick(suggestedForYouSectionViewAllButton);
+	    String headingText1 = heading.getText();
+	    System.out.println("📌 Heading displayed in application (Suggested For You): " + headingText1);
+	}
 
- 		// -------------------- SUGGESTED FOR YOU --------------------
- 		// Scroll to Suggested For You button and click
- 		((JavascriptExecutor) driver).executeScript(
- 		    "arguments[0].scrollIntoView(true); window.scrollBy(0, -100);", 
- 		    suggestedForYouSectionViewAllButton
- 		);
- 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", suggestedForYouSectionViewAllButton);
+	
+	public void scrollUntilVisibleAndClick(WebElement element) {
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
 
- 		// Get and print heading
- 		String headingText1 = heading.getText();
- 		System.out.println("📌 Heading displayed in application (Suggested For You): " + headingText1);
- 	}
+	    for (int i = 0; i < 15; i++) { // max 15 scroll attempts
+	        try {
+	            if (element.isDisplayed()) {
+	                js.executeScript("arguments[0].scrollIntoView(true); window.scrollBy(0, -120);", element);
+	                Common.waitForElement(1);
+
+	                // Try normal click; fallback to JS click silently
+	                try {
+	                    element.click();
+	                } catch (Exception ignored) {
+	                    js.executeScript("arguments[0].click();", element);
+	                }
+
+	                System.out.println("✅ Clicked element successfully.");
+	                return;
+	            }
+	        } catch (Exception ignored) {
+	            // ignore exceptions silently
+	        }
+
+	        js.executeScript("window.scrollBy(0, 400);");
+	        Common.waitForElement(1);
+	    }
+	}
+
 	
 	public void productDescriptionDropDDown() {
 		RandomProduct();
