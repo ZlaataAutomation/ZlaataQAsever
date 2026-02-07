@@ -1098,7 +1098,10 @@ public void orderReturnForUserSide() {
 	    Assert.assertTrue("Return success message not displayed!", returnMsg.isDisplayed());
 	    
 	    System.out.println("✅ Return was successful — message verified.");
-	    
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(viewOrderDetails));
+        click(viewOrderDetails);
+        System.out.println(GREEN + "🧾 Clicked View Order Details" + RESET);
 			  
 }
 
@@ -1188,8 +1191,10 @@ public void orderExchangeForUserSide() {
 	    Assert.assertTrue("Exchange success message not displayed!", exchangeMsg.isDisplayed());
 
 	    System.out.println("✅ Exchange was successful — message verified.");
-	    
-	    
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(viewOrderDetails));
+        click(viewOrderDetails);
+        System.out.println(GREEN + "🧾 Clicked View Order Details" + RESET);
 	    
 	    
 	    
@@ -2589,6 +2594,120 @@ public void orderExchangeForUserSide() {
 		    
 		 	
 	}
+	
+	public void verifyOrderLabel(String expectedOrderLabel) {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String RESET  = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+	    // 🔍 Locate order label (update locator if needed)
+	    WebElement orderLabelElement = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("//h4[contains(@class,'order_status')]")
+	            )
+	    );
+
+	    String uiOrderLabel = orderLabelElement.getText().trim();
+
+	    // 🔁 Normalize both values
+	    String expectedNorm = normalizeText(expectedOrderLabel);
+	    String uiNorm       = normalizeText(uiOrderLabel);
+
+	    if (uiNorm.contains(expectedNorm)) {
+	        System.out.println(GREEN + "✅ ORDER LABEL MATCHED → UI: "
+	                + uiOrderLabel + RESET);
+	    } else {
+	        System.out.println(RED + "❌ ORDER LABEL MISMATCH → UI: "
+	                + uiOrderLabel + " | Expected: " + expectedOrderLabel + RESET);
+
+	        Assert.fail("ORDER LABEL MISMATCH → UI: "
+	                + uiOrderLabel + " | Expected: " + expectedOrderLabel);
+	    }
+	}
+	public void verifyOrderLabelforExchange(String expectedOrderLabel) {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String RESET  = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+	    // 🔍 Locate order label (update locator if needed)
+	    WebElement orderLabelElement = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("(//h4[contains(@class,'order_status')])[2]")
+	            )
+	    );
+
+	    String uiOrderLabel = orderLabelElement.getText().trim();
+
+	    // 🔁 Normalize both values
+	    String expectedNorm = normalizeText(expectedOrderLabel);
+	    String uiNorm       = normalizeText(uiOrderLabel);
+
+	    if (uiNorm.contains(expectedNorm)) {
+	        System.out.println(GREEN + "✅ ORDER LABEL MATCHED → UI: "
+	                + uiOrderLabel + RESET);
+	    } else {
+	        System.out.println(RED + "❌ ORDER LABEL MISMATCH → UI: "
+	                + uiOrderLabel + " | Expected: " + expectedOrderLabel + RESET);
+
+	        Assert.fail("ORDER LABEL MISMATCH → UI: "
+	                + uiOrderLabel + " | Expected: " + expectedOrderLabel);
+	    }
+	}
+	
+	private String normalizeText(String text) {
+	    if (text == null) return "";
+
+	    return text
+	            .toLowerCase()
+	            .replaceAll("[^a-z0-9]", "") // removes spaces & symbols
+	            .trim();
+	}
+
+	public void openUserApp() {
+		 String CYAN = "\u001B[36m";
+		    String YELLOW = "\u001B[33m";
+		    String GREEN = "\u001B[32m";
+		    String RED = "\u001B[31m";
+		    String RESET = "\u001B[0m";
+		    String line = "──────────────────────────────────────────────────────────────";
+
+		    System.out.println(CYAN + line + RESET);
+		    System.out.println(GREEN + "🚀 Starting Open App Flow..." + RESET);
+		    System.out.println(CYAN + line + RESET);
+		    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+		    Common.waitForElement(3);
+		    wait.until(ExpectedConditions.elementToBeClickable(myProfileIcon));
+		    waitFor(myProfileIcon);
+			click(myProfileIcon);
+			Common.waitForElement(1);
+		    wait.until(ExpectedConditions.elementToBeClickable(myOrdersBtn));
+		    waitFor(myOrdersBtn);
+			click(myOrdersBtn);
+//			Common.waitForElement(2);
+//			wait.until(ExpectedConditions.elementToBeClickable(myOrderSearchBox));
+//		    waitFor(myOrderSearchBox);
+//		    myOrderSearchBox.clear();
+//		    myOrderSearchBox.sendKeys(productName);
+//		    Common.waitForElement(1);
+//		    myOrderSearchBox.sendKeys(Keys.ENTER);
+		    Common.waitForElement(2);
+		 		// Build dynamic XPath
+		 		String xpath = "(//a[contains(@class,'order_placed_redirect_btn')])[1]";
+		 		WebElement btn = driver.findElement(By.xpath(xpath));
+
+		 		// 1️⃣ Scroll to the element
+		 		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
+		 		
+		 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+		    
+		    Common.waitForElement(3);
+	}
 
 //String totalMRF="₹1999", discountedMRP="₹999", youSaved="₹1000", totalAmount="₹999", orderId="ZLTQA/25-26/18079";
 //TC01 Verify Order Placed Confirm
@@ -2598,15 +2717,25 @@ public void orderExchangeForUserSide() {
 			
 			addProductToCartAndPlacedTheOrder();
 			
+			verifyOrderLabel("Order Placed");
+			
 			verifyOrderConfirmationMail("Order Confirmation");
 			
 			//Order Shipped
 			updateOrderStatusToShipped();
 			
+			openUserApp();
+			
+			verifyOrderLabel("Order Shipped");
+			
 			verifyOrderConfirmationMail("Order Shipped");
 			
 			//Order Delivered
 			orderStatusShippedToDelivered();
+
+			openUserApp();
+			
+			verifyOrderLabel("Order Delivered");
 			
 			verifyOrderConfirmationMail("Order Delivered Confirmation");
 		}
@@ -2617,6 +2746,8 @@ public void orderExchangeForUserSide() {
 			addProductToCartAndPlacedTheOrder();
 			
 			cancelOrderFromUser();
+			
+			verifyOrderLabel("Order Cancelled");
 			
 			verifyOrderConfirmationMail("Order Cancellation Confirmation");
 			
@@ -2638,16 +2769,26 @@ public void orderExchangeForUserSide() {
 			
 			orderExchangeForUserSide();
 			
+			verifyOrderLabel("Exchanged");
+			
+			verifyOrderLabelforExchange("Exchange Requested");
+			
 			orderExchangeRequestAcceptByAdmin();
 			
 			verifyOrderExchangeEmail("Order Exchange Request");
 			
 			updateExchangeRequestToShipped();
 			
+			openUserApp();
+			verifyOrderLabelforExchange("Exchange Order Shipped");
+			
 			verifyOrderExchangeEmail("Exchange Order Shipped");
 			
 			updateExchangeShippedToExchangeDelivered();
 			
+			openUserApp();
+			verifyOrderLabelforExchange("Exchange Order Delivered");
+
 			verifyOrderExchangeEmail("Exchange Order Delivered Confirmation");
 			
 		}
@@ -2663,11 +2804,17 @@ public void orderExchangeForUserSide() {
 			
 			orderReturnForUserSide();
 			
+			verifyOrderLabel("Return Requested");
+			
 			orderReturnRequestAcceptByAdmin();
 			
 			verifyOrderConfirmationMail("Order Return Request");
 			
 			orderReturnRefundInitiateByAdmin();
+			
+			openUserApp();
+			
+			verifyOrderLabel("Refund Credited");
 			
 			verifyRefundCreditedEmail("Refund Credited");
 						
@@ -2680,6 +2827,10 @@ public void orderExchangeForUserSide() {
 			addProductToCartAndPlacedTheOrder();
 			
 			orderCancelByAdminSide();
+			
+			openUserApp();
+			
+			verifyOrderLabel("Order Cancelled");
 			
 			verifyOrderConfirmationMail("Cancellation of Your Order");
 				
