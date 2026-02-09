@@ -202,8 +202,8 @@ Scenario Outline: TC_UI_Zlaata_CP_18 | Verify same applied coupon amount is disp
     
     
     
-        
-    @hihi
+     @gow   
+       
     @TC_UI_Zlaata_CP_19
  Scenario Outline: TC_UI_Zlaata_CP_19 |Verify the functionality for FirstBuy coupon in User Application.| "<TD_ID>"
 		Given I sign up with a new phone number
@@ -216,27 +216,30 @@ Scenario Outline: TC_UI_Zlaata_CP_18 | Verify same applied coupon amount is disp
       
       
       
-    @hihi   
+    @gow   
    @TC_UI_Zlaata_CP_20
  Scenario Outline: TC_UI_Zlaata_CP_20 |Verify the functionality for news letter coupon in User Application.| "<TD_ID>"   
  
-   Given I sign up with a new phone number
+   Given I sign up with a new phone numbers
     And I subscribe to the newsletter with a random email
-    Then I add a product to the cart and apply the coupon
+    Then I add a product to the cart and apply the coupon 
+    And place the order afetr  that coupon disapper from application are not
     
     Examples:
     | TD_ID                  |
     | TD_UI_Zlaata_CP_20    |
       
-    @hihi        
-   @TC_UI_Zlaata_CP_21
+     @gow       
+   @TC_UI_Zlaata_CP_21	
  Scenario Outline: TC_UI_Zlaata_CP_21 |Verify the functionality for feedback  coupon in User Application.| "<TD_ID>"   
  
-   Given I sign up with a new phone number
+   Given I sign up with  new phone number 
     And I subscribe to the feedback with a random email
     Then I add a products to the cart and apply the feedback coupon
     
     Examples:
     | TD_ID                  |
     | TD_UI_Zlaata_CP_21    |
+      
+
       

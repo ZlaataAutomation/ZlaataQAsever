@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,13 +14,17 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import io.cucumber.java.Scenario;
 import manager.FileReaderManager;
 import objectRepo.CouponObjRepo;
 import stepDef.ExceptionTracker;
@@ -1120,7 +1125,7 @@ public final class CouponPage extends CouponObjRepo {
 	}
 
 
-	public void fixedAmountAppliedSuccessfullForNormalCoupon() {
+	public void fixedAmountAppliedSuccessfullForNormalCoupon() throws TimeoutException {
 
 
 		Common.waitForElement(5);
@@ -1139,22 +1144,30 @@ public final class CouponPage extends CouponObjRepo {
 		}
 
 
-
 	}
 
+
 	public void afterSignUpFirstBuy() throws TimeoutException {
-		CheckOutNavigation();
-		 List<WebElement> couponCheck = driver.findElements(
-		            By.xpath("//div[@class='coupon__code__title' and text()='FIRSTBUY200']")
-		    );
+		//		CheckOutNavigation();
 
-		    if (!couponCheck.isEmpty()) {
-		        System.out.println(RED + "🚫 FIRSTBUY200 Coupon Not Present → Subscription Failed ❌" + RESET);
-		    } else {
-		        System.out.println(PURPLE + "🎉 FIRSTBUY200 Coupon Present → Subscription Successful ✔" + RESET);
-		    }
+		profile.click();
+		Common.waitForElement(2);
 
-		    bagIcon.click();
+		couponsideMenu.click();
+		Common.waitForElement(2);
+
+
+		List<WebElement> couponCheck = driver.findElements(
+				By.xpath("//div[@class='coupon__code__title' and text()='FIRSTBUY200']")
+				);
+
+		if (!couponCheck.isEmpty()) {
+			System.out.println(RED + "🚫 FIRSTBUY200 Coupon Not Present → Subscription Failed ❌" + RESET);
+		} else {
+			System.out.println(PURPLE + "🎉 FIRSTBUY200 Coupon Present → Subscription Successful ✔" + RESET);
+		}
+
+		bagIcon.click();
 
 		// Step 1: Click to view coupon
 		wait.until(ExpectedConditions.elementToBeClickable(searchBox));
@@ -1188,22 +1201,254 @@ public final class CouponPage extends CouponObjRepo {
 		}
 	}
 
+	String  orderId;
+	public void palceTheOrder() throws Exception {
+		Common.waitForElement(2);
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+		wait.until(ExpectedConditions.elementToBeClickable(continueBtn));
+		click(continueBtn);
+		System.out.println(GREEN + "✅ Clicked Continue Button" + RESET);
+
+		AddressPage add = new AddressPage(driver);
+		add.newAddressData();
+
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(continueBtn));
+		click(continueBtn);
+		System.out.println(GREEN + "✅ Clicked Address Page Continue Button" + RESET);
+
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(selectNetBank));
+		click(selectNetBank);
+		System.out.println(GREEN + "✅ Select Netbanking" + RESET);
+
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(placeOrderBtn));
+		click(placeOrderBtn);
+		System.out.println(GREEN + "✅ Clicked Place Order" + RESET);
+
+		Common.waitForElement(3); 	 // ✅ 1. Switch to Razorpay iframe (you already have this)
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(
+				By.xpath("//iframe[contains(@name,'razorpay') or contains(@id,'razorpay') or contains(@src,'razorpay')]")
+				));
+		System.out.println("✅ Switched to Razorpay iframe");
+
+		// ✅ 3. Select Netbanking option
+		Common.waitForElement(4);
+		wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//span[@data-testid='Netbanking']")
+				)).click();
+
+		// ✅ 4. Select HDFC Bank
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("(//div[@role='button' and .//span[contains(text(),'HDFC Bank')]])[1]")
+				)).click();
+
+		// ⬅️ Optional: Switch back to main page after selecting
+		driver.switchTo().defaultContent();
+		// Switch to Razorpay window
+		String mainWindow = driver.getWindowHandle();
+		Common.waitForElement(3); 
+		Set<String> allWindows = driver.getWindowHandles();
+		for (String window : allWindows) {
+			if (!window.equals(mainWindow)) {
+				driver.switchTo().window(window);
+				System.out.println(GREEN + "✅ Switched to Razorpay window" + RESET);
+				break;
+			}
+		}
+
+		// ✅ Click Success button
+		WebElement successBtn = wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//button[@data-val='S' and normalize-space(text())='Success']")
+				));
+		successBtn.click();
+		System.out.println(GREEN + "💳 Payment Success clicked" + RESET);
+
+		Common.waitForElement(3); 
+		driver.switchTo().window(mainWindow);
+		System.out.println(GREEN + "🔙 Switched back to main window" + RESET);
+
+		// ✅ Confirm order
+		Common.waitForElement(3); 
+		WebElement confirmMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//h5[@class='checkout_success_heading' and normalize-space()='Order Confirmed']")
+				));
+
+		if (confirmMsg.isDisplayed()) {
+			System.out.println(GREEN + "🎉 Order Confirmed Successfully!" + RESET);
+
+
+			wait.until(ExpectedConditions.elementToBeClickable(viewOrderDetails));
+			click(viewOrderDetails);
+			System.out.println(GREEN + "🧾 Clicked View Order Details" + RESET);
+
+			WebElement cancelBtn = driver.findElement(By.xpath("//button[@class='prod_cancel_btn']"));
+			if (cancelBtn.isDisplayed()) {
+				System.out.println("❌ Cancel Button: Displayed ✅");
+			}
+			WebElement orderIdElement = driver.findElement(By.xpath("//div[@class='prod_order_id_value']"));
+			orderId = orderIdElement.getText().trim();
+			System.out.println(YELLOW + "🆔 Order ID: " + orderId + RESET);
+
+
+
+		} else {
+			System.out.println(RED + "❌ Order confirmation message not visible" + RESET);
+			Assert.fail("⏰ Order confirmation message not found within timeout");
+		}
+		// Click Cancel button
+		WebElement cancelButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@class='prod_cancel_btn']")));
+		if (cancelButton.isDisplayed()) {
+			System.out.println(" Cancel Button: Displayed ✅");
+			cancelButton.click();
+			System.out.println(GREEN + "🛑 Clicked Cancel Order button" + RESET);
+		}
+
+
+		// Select cancellation reason
+
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(selectReason));
+		click(selectReason);
+		System.out.println(GREEN + "📌 Selected Cancel Reason: " + selectReason + RESET);
+
+		// 3 Click Continue / Confirm Cancel
+		Common.waitForElement(1);
+		wait.until(ExpectedConditions.elementToBeClickable(continueReturnBtn));
+		click(continueReturnBtn);
+		System.out.println(GREEN + "✅ Clicked Continue button" + RESET);
+
+		//  Verify Order Cancelled message
+		try {
+			WebElement successMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+					By.xpath("//h4[contains(@class,'order_status') and normalize-space()='Order Cancelled']")));
+			System.out.println(GREEN + "🎉 Order cancelled successfully: " + successMsg.getText() + RESET);
+		} catch (Exception e) {
+			System.out.println(RED + "❌ Order cancellation message not found!" + RESET);
+			throw e;
+		}
+		profile.click();
+		Common.waitForElement(2);
+
+		couponsideMenu.click();
+		Common.waitForElement(2);
+
+
+		List<WebElement> couponCheck = driver.findElements(
+				By.xpath("//div[@class='coupon__code__title' and text()='FIRSTBUY200']")
+				);
+
+		if (!couponCheck.isEmpty()) {
+			System.out.println(RED + "🚫 FIRSTBUY200 Coupon Not Present → Subscription Failed ❌" + RESET);
+		} else {
+			System.out.println(PURPLE + "🎉 FIRSTBUY200 Coupon Present → Subscription Successful ✔" + RESET);
+		}
+
+		orderRefundInitiateByAdmin(); 
+		HomePage home = new HomePage(driver);
+		home.homeLaunch();
+
+		//		click(profile);
+		//		loginNumber.sendKeys(storedMobileNumber);
+		//        click(sendotp);
+		////      Common.waitForElement(35);
+		//    type(enterotp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
+		//      click(verifyotp);
+		//      Common.waitForElement(3);
+		//      
+		Actions actions = new Actions(driver);
+		actions.moveToElement(shopMenu).perform();
+		actions.moveToElement(category).click().perform();
+		actions.moveToElement(sortBy).click().build().perform();
+		Common.waitForElement(5);
+		click(sortByPriceHightoLow);
+		Common.waitForElement(5);
+
+		List<WebElement> products = driver.findElements(By.xpath(
+				"//div[contains(@class,'product_list_cards_list') and " +
+						"not(.//h2[contains(text(),'OUT OF STOCK')])]"
+				));
+
+		Collections.shuffle(products);
+
+		if (!products.isEmpty()) {
+
+			WebElement product = products.get(0);
+
+			WebElement productNameEl = product.findElement(
+					By.xpath(".//h2[contains(@class,'product_list_cards_heading')]")
+					);
+
+			currentProductName = productNameEl.getText().trim();
+
+			actions.moveToElement(productNameEl).click().perform();
+
+			System.out.println("✅ Opened product: " + currentProductName);
+
+		} else {
+			Assert.fail("❌ No in-stock products available to open");
+		}
+
+
+		afterSignUpFirstBuy();
+
+	}
+
+
+
+
 
 
 	//20
 
+	String currentProductName;
 
-	public void signupAllCoupon() throws TimeoutException {
-//		LoginPage login = new LoginPage(driver);
-//		login.userLogin();  // Assuming userLogin handles login 
+	public void signupAllCoupon() throws TimeoutException  {
+
 		NegativeSignupPages sigu = new NegativeSignupPages(driver);
 		sigu.signUp();
-		
-		
+		Common.waitForElement(5);
 
+		Actions actions = new Actions(driver);
+		actions.moveToElement(shopMenu).perform();
+		actions.moveToElement(category).click().perform();
+		actions.moveToElement(sortBy).click().build().perform();
+		Common.waitForElement(5);
+		click(sortByPriceHightoLow);
+		Common.waitForElement(5);
 
+		List<WebElement> products = driver.findElements(By.xpath(
+				"//div[contains(@class,'product_list_cards_list') and " +
+						"not(.//h2[contains(text(),'OUT OF STOCK')])]"
+				));
+
+		Collections.shuffle(products);
+
+		if (!products.isEmpty()) {
+
+			WebElement product = products.get(0);
+
+			WebElement productNameEl = product.findElement(
+					By.xpath(".//h2[contains(@class,'product_list_cards_heading')]")
+					);
+
+			currentProductName = productNameEl.getText().trim();
+
+			actions.moveToElement(productNameEl).click().perform();
+
+			System.out.println("✅ Opened product: " + currentProductName);
+
+		} else {
+			Assert.fail("❌ No in-stock products available to open");
+		}
+
+		buyNowbutton.click();
+		Common.waitForElement(2);
 	}
-
 	// Subscribe to the newsletter and verify the coupon message
 	// ANSI color codes for console output
 	public static final String RESET = "\u001B[0m";
@@ -1214,165 +1459,167 @@ public final class CouponPage extends CouponObjRepo {
 	public static final String PURPLE = "\u001B[35m";
 
 	public void subscribeForNewsletter() {
-	    // Step 3: Apply the newsletter coupon and verify the snackbar message
-	    CheckOutNavigation();
+		// Step 3: Apply the newsletter coupon and verify the snackbar message
+		//		CheckOutNavigation();
 
-	    wait.until(ExpectedConditions.elementToBeClickable(searchBox));
-	    click(searchBox);
-	    searchBox.sendKeys("NEWSLETTER10");
-	    click(applyBtn);
 
-	    WebElement snackbarElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//div[@class='snackbar-container  snackbar-pos top-right']")));
-	    String snackbarText = snackbarElement.getText().trim();
+		wait.until(ExpectedConditions.elementToBeClickable(searchBox));
+		click(searchBox);
+		searchBox.sendKeys("NEWSLETTER10");
+		click(applyBtn);
 
-	    String expectedText = "Subscribe to our newsletter to use this coupon.";
+		WebElement snackbarElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//div[@class='snackbar-container  snackbar-pos top-right']")));
+		String snackbarText = snackbarElement.getText().trim();
 
-	    System.out.println(YELLOW + "Captured Snackbar Text: " + snackbarText + RESET);
-	    System.out.println(BLUE + "Expected Text: '" + expectedText + "'" + RESET);
-	    System.out.println(PURPLE + "Actual Text: '" + snackbarText + "'" + RESET);
+		String expectedText = "Subscribe to our newsletter to use this coupon.";
 
-	    Assert.assertTrue(RED + "❌ The expected text was not found in the snackbar message. Actual: " + snackbarText + RESET,
-	            snackbarText.trim().equalsIgnoreCase(expectedText.trim()));
-	    System.out.println(GREEN + "✅ Coupon message is correct: " + snackbarText + RESET);
 
-	    // Step 1: Enter random email in the subscription field
-	    Common.waitForElement(2);
-	    click(profile);
-	    click(couponsideMenu);
-	    List<WebElement> couponCheck = driver.findElements(
-	            By.xpath("//div[@class='coupon__code__title' and text()='NEWSLETTER10']"));
+		System.out.println(YELLOW + "Captured Snackbar Text: " + snackbarText + RESET);
+		System.out.println(BLUE + "Expected Text: '" + expectedText + "'" + RESET);
+		System.out.println(PURPLE + "Actual Text: '" + snackbarText + "'" + RESET);
 
-	    if (couponCheck.isEmpty()) {
-	        System.out.println(RED + "🚫 Newsletter coupon not present → need subscribe ..." + RESET);
-	    }
-	    
-	    
+		Assert.assertTrue(RED + "❌ The expected text was not found in the snackbar message. Actual: " + snackbarText + RESET,
+				snackbarText.trim().equalsIgnoreCase(expectedText.trim()));
+		System.out.println(GREEN + "✅ Coupon message is correct: " + snackbarText + RESET);
+
+		// Step 1: Enter random email in the subscription field
+		Common.waitForElement(2);
+		click(profile);
+		click(couponsideMenu);
+		List<WebElement> couponCheck = driver.findElements(
+				By.xpath("//div[@class='coupon__code__title' and text()='NEWSLETTER10']"));
+
+		if (couponCheck.isEmpty()) {
+			System.out.println(RED + "🚫 Newsletter coupon not present → need subscribe ..." + RESET);
+		}
+
+
 	}
-	
-	  
+
+
 
 	public void verifyEmailAndNewsletterSubscription() {
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-	    Common.waitForElement(2);
-	    click(profile);
-	    Common.waitForElement(5);
-	    click(accountsSideMenuButton);
-	    Common.waitForElement(5);
+		Common.waitForElement(2);
+		click(profile);
+		Common.waitForElement(5);
+		click(accountsSideMenuButton);
+		Common.waitForElement(5);
 
-	    WebElement emailInput = driver.findElement(By.id("cls_emailID"));
-	    WebElement verifyBtn = driver.findElement(By.id("email_verification"));
+		WebElement emailInput = driver.findElement(By.id("cls_emailID"));
+		WebElement verifyBtn = driver.findElement(By.id("email_verification"));
 
-	    int maxRetries = 5;
-	    String validEmail = "";
+		int maxRetries = 5;
+		String validEmail = "";
 
-	    for (int i = 0; i < maxRetries; i++) {
-	        emailInput.clear();
-	        String email = generateRandomEmail1();
-	        System.out.println(YELLOW + "Trying Email: " + email + RESET);
-	        emailInput.sendKeys(email);
-	        verifyBtn.click();
-	        Common.waitForElement(2);
+		for (int i = 0; i < maxRetries; i++) {
+			emailInput.clear();
+			String email = generateRandomEmail1();
+			System.out.println(YELLOW + "Trying Email: " + email + RESET);
+			emailInput.sendKeys(email);
+			verifyBtn.click();
+			Common.waitForElement(2);
 
-	        List<WebElement> errorList = driver.findElements(By.id("errorMsg"));
-	        if (!errorList.isEmpty() && errorList.get(0).isDisplayed()) {
-	            System.out.println(RED + "❌ Error shown. Retrying..." + RESET);
-	            continue;
-	        } else {
-	            validEmail = email;
-	            System.out.println(GREEN + "✅ No error. Proceeding to OTP for: " + validEmail + RESET);
-	            break;
-	        }
-	    }
+			List<WebElement> errorList = driver.findElements(By.id("errorMsg"));
+			if (!errorList.isEmpty() && errorList.get(0).isDisplayed()) {
+				System.out.println(RED + "❌ Error shown. Retrying..." + RESET);
+				continue;
+			} else {
+				validEmail = email;
+				System.out.println(GREEN + "✅ No error. Proceeding to OTP for: " + validEmail + RESET);
+				break;
+			}
+		}
 
-	    if (validEmail.isEmpty()) {
-	        throw new RuntimeException(RED + "❌ Failed to generate a valid email after " + maxRetries + " attempts!" + RESET);
-	    }
+		if (validEmail.isEmpty()) {
+			throw new RuntimeException(RED + "❌ Failed to generate a valid email after " + maxRetries + " attempts!" + RESET);
+		}
 
-	    System.out.println(BLUE + "🔐 Entering OTP for: " + validEmail + RESET);
-	    type(enterotp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
-	    click(verifyOTPButton);
-	    System.out.println(GREEN + "🎉 SUCCESS: Email Verified → " + validEmail + RESET);
+		System.out.println(BLUE + "🔐 Entering OTP for: " + validEmail + RESET);
+		type(enterotp, FileReaderManager.getInstance().getJsonReader().getValueFromJson("OTP"));
+		click(verifyOTPButton);
+		System.out.println(GREEN + "🎉 SUCCESS: Email Verified → " + validEmail + RESET);
 
-	    WebElement letterInput = driver.findElement(By.id("subscribeletter"));
-	    letterInput.clear();
-	    letterInput.sendKeys(validEmail);
-	    System.out.println(YELLOW + "📨 Using Verified Email for Newsletter: " + validEmail + RESET);
+		WebElement letterInput = driver.findElement(By.id("subscribeletter"));
+		letterInput.clear();
+		letterInput.sendKeys(validEmail);
+		System.out.println(YELLOW + "📨 Using Verified Email for Newsletter: " + validEmail + RESET);
 
-	    WebElement subscribeButton =
-	            wait.until(ExpectedConditions.elementToBeClickable(By.id("subscribeletterbtn")));
-	    subscribeButton.click();
-	    System.out.println(BLUE + "📬 Subscribe Button Clicked" + RESET);
+		WebElement subscribeButton =
+				wait.until(ExpectedConditions.elementToBeClickable(By.id("subscribeletterbtn")));
+		subscribeButton.click();
+		System.out.println(BLUE + "📬 Subscribe Button Clicked" + RESET);
 
-	    click(profile);
-	    Common.waitForElement(2);
-	    click(couponsideMenu);
-	    Common.waitForElement(3);
+		click(profile);
+		Common.waitForElement(2);
+		click(couponsideMenu);
+		Common.waitForElement(3);
 
-	    List<WebElement> couponCheck = driver.findElements(
-	            By.xpath("//div[@class='coupon__code__title' and text()='NEWSLETTER10']")
-	    );
+		List<WebElement> couponCheck = driver.findElements(
+				By.xpath("//div[@class='coupon__code__title' and text()='NEWSLETTER10']")
+				);
 
-	    if (!couponCheck.isEmpty()) {
-	        System.out.println(RED + "🚫 NEWSLETTER10 Coupon Not Present → Subscription Failed ❌" + RESET);
-	    } else {
-	        System.out.println(PURPLE + "🎉 NEWSLETTER10 Coupon Present → Subscription Successful ✔" + RESET);
-	    }
+		if (!couponCheck.isEmpty()) {
+			System.out.println(RED + "🚫 NEWSLETTER10 Coupon Not Present → Subscription Failed ❌" + RESET);
+		} else {
+			System.out.println(PURPLE + "🎉 NEWSLETTER10 Coupon Present → Subscription Successful ✔" + RESET);
+		}
 
-	    bagIcon.click();
-	    wait.until(ExpectedConditions.elementToBeClickable(searchBox));
-	    click(searchBox);
-	    searchBox.sendKeys("NEWSLETTER10");
-	    click(applyBtn);
+		bagIcon.click();
+		wait.until(ExpectedConditions.elementToBeClickable(searchBox));
+		click(searchBox);
+		searchBox.sendKeys("NEWSLETTER10");
+		click(applyBtn);
 
-	    By messageLocator = By.xpath("//div[@class='acc_details_wrap']");
-	    WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(messageLocator));
-	    String messageText = messageElement.getText().trim();
-	    System.out.println(YELLOW + "Captured coupon applied message: " + messageText + RESET);
+		By messageLocator = By.xpath("//div[@class='acc_details_wrap']");
+		WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(messageLocator));
+		String messageText = messageElement.getText().trim();
+		System.out.println(YELLOW + "Captured coupon applied message: " + messageText + RESET);
 	}
-              
 
 
-	    
-	  public void subscribeForfeedback() {
-		  
-		  
-		  CheckOutNavigation();
-	 wait.until(ExpectedConditions.elementToBeClickable(searchBox));
-	    click(searchBox);
-	    searchBox.sendKeys("THANKYOU100");
-	    click(applyBtn);
 
-	    WebElement snackbarElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//div[@class='snackbar-container  snackbar-pos top-right']")));
-	    String snackbarText = snackbarElement.getText().trim();
 
-	    String expectedText = "Share your feedback to use this coupon.";
+	public void subscribeForfeedback() {
 
-	    System.out.println(YELLOW + "Captured Snackbar Text: " + snackbarText + RESET);
-	    System.out.println(BLUE + "Expected Text: '" + expectedText + "'" + RESET);
-	    System.out.println(PURPLE + "Actual Text: '" + snackbarText + "'" + RESET);
 
-	    Assert.assertTrue(RED + "❌ The expected text was not found in the snackbar message. Actual: " + snackbarText + RESET,
-	            snackbarText.trim().equalsIgnoreCase(expectedText.trim()));
-	    System.out.println(GREEN + "✅ Coupon message is correct: " + snackbarText + RESET);
+//		CheckOutNavigation();
+		wait.until(ExpectedConditions.elementToBeClickable(searchBox));
+		click(searchBox);
+		searchBox.sendKeys("THANKU100");
+		click(applyBtn);
 
-	    // Step 1: Enter random email in the subscription field
-	    Common.waitForElement(2);
-	    click(profile);
-	    click(couponsideMenu);
-	    List<WebElement> couponCheck = driver.findElements(
-	            By.xpath("//div[@class='coupon__code__title' and text()='THANKYOU100']"));
+		WebElement snackbarElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//div[@class='snackbar-container  snackbar-pos top-right']")));
+		String snackbarText = snackbarElement.getText().trim();
 
-	    if (couponCheck.isEmpty()) {
-	        System.out.println(RED + "🚫 feedback  coupon not present → need subscribe ..." + RESET);
-	    }
+		String expectedText = "Share your feedback to use this coupon.";
+
+		System.out.println(YELLOW + "Captured Snackbar Text: " + snackbarText + RESET);
+		System.out.println(BLUE + "Expected Text: '" + expectedText + "'" + RESET);
+		System.out.println(PURPLE + "Actual Text: '" + snackbarText + "'" + RESET);
+
+		Assert.assertTrue(RED + "❌ The expected text was not found in the snackbar message. Actual: " + snackbarText + RESET,
+				snackbarText.trim().equalsIgnoreCase(expectedText.trim()));
+		System.out.println(GREEN + "✅ Coupon message is correct: " + snackbarText + RESET);
+
+		// Step 1: Enter random email in the subscription field
+		Common.waitForElement(2);
+		click(profile);
+		click(couponsideMenu);
+		List<WebElement> couponCheck = driver.findElements(
+				By.xpath("//div[@class='coupon__code__title' and text()='THANKYOU100']"));
+
+		if (couponCheck.isEmpty()) {
+			System.out.println(RED + "🚫 feedback  coupon not present → need subscribe ..." + RESET);
+		}
 	}
-	  public void verifyEmailAndNewsforfeedback() {
-		
-	  
-	   
+	public void verifyEmailAndNewsforfeedback() {
+
+
+
 		Common.waitForElement(2);
 		click(profile);
 		Common.waitForElement(5);
@@ -1386,26 +1633,26 @@ public final class CouponPage extends CouponObjRepo {
 		String validEmail = "";
 
 		for (int i = 0; i < maxRetries; i++) {
-		    emailInput.clear();
-		    String email = generateRandomEmail1();
-		    System.out.println(YELLOW + "Trying Email: " + email + RESET);
-		    emailInput.sendKeys(email);
-		    verifyBtn.click();
-		    Common.waitForElement(2);
+			emailInput.clear();
+			String email = generateRandomEmail1();
+			System.out.println(YELLOW + "Trying Email: " + email + RESET);
+			emailInput.sendKeys(email);
+			verifyBtn.click();
+			Common.waitForElement(2);
 
-		    List<WebElement> errorList = driver.findElements(By.id("errorMsg"));
-		    if (!errorList.isEmpty() && errorList.get(0).isDisplayed()) {
-		        System.out.println(RED + "❌ Error shown. Retrying..." + RESET);
-		        continue;
-		    } else {
-		        validEmail = email;  // store the verified email
-		        System.out.println(GREEN + "✅ No error. Proceeding to OTP for: " + validEmail + RESET);
-		        break;
-		    }
+			List<WebElement> errorList = driver.findElements(By.id("errorMsg"));
+			if (!errorList.isEmpty() && errorList.get(0).isDisplayed()) {
+				System.out.println(RED + "❌ Error shown. Retrying..." + RESET);
+				continue;
+			} else {
+				validEmail = email;  // store the verified email
+				System.out.println(GREEN + "✅ No error. Proceeding to OTP for: " + validEmail + RESET);
+				break;
+			}
 		}
 
 		if (validEmail.isEmpty()) {
-		    throw new RuntimeException(RED + "❌ Failed to generate a valid email after " + maxRetries + " attempts!" + RESET);
+			throw new RuntimeException(RED + "❌ Failed to generate a valid email after " + maxRetries + " attempts!" + RESET);
 		}
 
 		System.out.println(BLUE + "🔐 Entering OTP for: " + validEmail + RESET);
@@ -1441,39 +1688,39 @@ public final class CouponPage extends CouponObjRepo {
 		Common.waitForElement(2);
 		clickUsingJavaScript(feedBack);
 
-	    click(profile);
-	    Common.waitForElement(2);
-	    click(couponsideMenu);
-	    Common.waitForElement(3);
+		click(profile);
+		Common.waitForElement(2);
+		click(couponsideMenu);
+		Common.waitForElement(3);
 
-	    List<WebElement> couponCheck = driver.findElements(
-	            By.xpath("//div[@class='coupon__code__title' and text()='THANKYOU100']")
-	    );
+		List<WebElement> couponCheck = driver.findElements(
+				By.xpath("//div[@class='coupon__code__title' and text()='THANKYOU100']")
+				);
 
-	    if (!couponCheck.isEmpty()) {
-	        System.out.println(RED + "🚫 feedback  Coupon Not Present → Subscription Failed ❌" + RESET);
-	    } else {
-	        System.out.println(PURPLE + "🎉 feedback Coupon Present → Subscription Successful ✔" + RESET);
-	    }
+		if (!couponCheck.isEmpty()) {
+			System.out.println(RED + "🚫 feedback  Coupon Not Present → Subscription Failed ❌" + RESET);
+		} else {
+			System.out.println(PURPLE + "🎉 feedback Coupon Present → Subscription Successful ✔" + RESET);
+		}
 
-	    bagIcon.click();
-	    wait.until(ExpectedConditions.elementToBeClickable(searchBox));
-	    click(searchBox);
-	    searchBox.sendKeys("THANKYOU100");
-	    click(applyBtn);
+		bagIcon.click();
+		wait.until(ExpectedConditions.elementToBeClickable(searchBox));
+		click(searchBox);
+		searchBox.sendKeys("THANKU100");
+		click(applyBtn);
 
-	    By messageLocator = By.xpath("//div[@class='acc_details_wrap']");
-	    WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(messageLocator));
-	    String messageText = messageElement.getText().trim();
-	    System.out.println(YELLOW + "Captured coupon applied message: " + messageText + RESET);
+		By messageLocator = By.xpath("//div[@class='acc_details_wrap']");
+		WebElement messageElement = wait.until(ExpectedConditions.visibilityOfElementLocated(messageLocator));
+		String messageText = messageElement.getText().trim();
+		System.out.println(YELLOW + "Captured coupon applied message: " + messageText + RESET);
 	}
 
 	// Generate a random email address with a fixed prefix and 4 random digits
 	private static String generateRandomEmail1() {
-//		String prefix = "ranjith";
-//		String digits = "0123456789";
-		String prefix = "hhh";
-		String digits = "236";
+		String prefix = "ranjith";
+		String digits = "0123456789";
+		//		String prefix = "hhh";
+		//		String digits = "236";
 
 		Random rnd = new Random();
 		StringBuilder email = new StringBuilder(prefix);
@@ -1488,20 +1735,20 @@ public final class CouponPage extends CouponObjRepo {
 		return lastGeneratedEmail;
 	}
 
-//	private static String generateRandomEmail1() {
-//	    String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-//	    Random rnd = new Random();
-//	    StringBuilder email = new StringBuilder();
-//
-//	    // Generate random 8-character local part
-//	    for (int i = 0; i < 8; i++) {
-//	        email.append(chars.charAt(rnd.nextInt(chars.length())));
-//	    }
-//
-//	    email.append("@gmail.com");
-//	    lastGeneratedEmail = email.toString();
-//	    return lastGeneratedEmail;
-//	}
+	//	private static String generateRandomEmail1() {
+	//	    String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+	//	    Random rnd = new Random();
+	//	    StringBuilder email = new StringBuilder();
+	//
+	//	    // Generate random 8-character local part
+	//	    for (int i = 0; i < 8; i++) {
+	//	        email.append(chars.charAt(rnd.nextInt(chars.length())));
+	//	    }
+	//
+	//	    email.append("@gmail.com");
+	//	    lastGeneratedEmail = email.toString();
+	//	    return lastGeneratedEmail;
+	//	}
 
 	// Retrieve the last generated email
 	public static String getLastGeneratedEmail1() {
@@ -1511,6 +1758,7 @@ public final class CouponPage extends CouponObjRepo {
 
 
 
+	//div[@class='snackbar-container  snackbar-pos top-right']
 
 
 
@@ -1522,9 +1770,342 @@ public final class CouponPage extends CouponObjRepo {
 
 
 
+	String referenceNo;
+
+	public void orderRefundInitiateByAdmin() throws TimeoutException {
+		String CYAN = "\u001B[36m";
+		String YELLOW = "\u001B[33m";
+		String GREEN = "\u001B[32m";
+		String RED = "\u001B[31m";
+		String RESET = "\u001B[0m";
+		String line = "──────────────────────────────────────────────────────────────";
+		System.out.println(line);
+		System.out.println(GREEN + "🚚 Giving  Refund  for Order ID: " + orderId + RESET);
+		System.out.println(line);
+
+		adminLoginApp();
+
+
+		driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+		System.out.println("Redirect to Canceled Order Page");
+		Common.waitForElement(1);
+
+		// ✅ Go to order search box and search order ID
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(orderIdbtn));
+		waitFor(orderIdbtn);
+		click(orderIdbtn);
+		Common.waitForElement(1);
+		wait.until(ExpectedConditions.elementToBeClickable(orderSearchBox));
+		Common.waitForElement(1);
+		waitFor(orderSearchBox);
+		orderSearchBox.clear();
+		orderSearchBox.sendKeys(orderId);
+		Common.waitForElement(1);
+		orderSearchBox.sendKeys(Keys.ENTER);
+		Common.waitForElement(2);
+
+		WebElement orderRow = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//td/span[normalize-space(text())='" + orderId + "']")));
+		System.out.println(GREEN + "✅ Order found in table!" + RESET);
+
+		// ✅ Click Edit button
+		wait.until(ExpectedConditions.elementToBeClickable(editBtn));
+		Common.waitForElement(2);
+		waitFor(editBtn);
+		click(editBtn);
+		System.out.println(GREEN + "✅ Clicked Edit" + RESET);
+
+		// ✅ Shipment Status → Order Accept
+		wait.until(ExpectedConditions.elementToBeClickable(paymentRefundBtn));
+		Common.waitForElement(2);
+		waitFor(paymentRefundBtn);
+		click(paymentRefundBtn);
+		Common.waitForElement(2);
+		Select select6 = new Select(paymentRefundBtn);
+		select6.selectByVisibleText("Refund request");
+		System.out.println(GREEN + "✅ Selected 'Refund request'" + RESET);
+
+		// ✅ Save & Back
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+		waitFor(saveButton);
+		click(saveButton);
+		System.out.println(GREEN + "💰 Refund Initiated Successfully" + RESET);
+
+		// ✅ Again click Edit for second update
+		Common.waitForElement(7);
+		wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+		System.out.println(GREEN + "✅ Re-opened Edit Page (For Refund)" + RESET);
+
+		// ✅ Extract Refund Reference Number
+		Common.waitForElement(2);
+		WebElement referenceElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//label[normalize-space()='Refund Transaction Id']/following-sibling::input")));
+		//input[@name='item[0][refund_transaction_id]']
+
+		referenceNo = referenceElement.getAttribute("value").trim();
+		System.out.println(GREEN + "🔢 Refund Reference No: " + referenceNo + RESET);
+		// ✅ Save & Back
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+		waitFor(saveButton);
+		click(saveButton);
+		System.out.println("✅ Saved  changes");
+
+		System.out.println(GREEN + "🎉 Refund Initiated Successfully!" + RESET);
+		System.out.println(line);
+
+		System.out.println(line);
+		System.out.println(YELLOW + "🔢 Refund Reference No: " + referenceNo + RESET);
+		System.out.println(line);
+
+	}
+	public void adminLoginApp() {
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationAdminUrl());
+		type(adminEmail, FileReaderManager.getInstance().getJsonReader().getValueFromJson("AdminName"));
+		type(adminPassword, FileReaderManager.getInstance().getJsonReader().getValueFromJson("AdminPassword"));
+		click(adminLogin);
+		System.out.println("✅ Admin Login Successful");
+	}
+	public static String storedMobileNumber;
+
+	private static Random rnd = new Random();
+
+	public static String generate10DigitNumber() {
+		int firstDigit = 6 + rnd.nextInt(4);
+		long remaining = (long) (rnd.nextDouble() * 1_000_000_000L);
+
+		String number = firstDigit + String.format("%09d", remaining);
+
+		System.out.println("Generated user number: " + number);
+		return number;
+	}
+
+	public void palceTheOrderforNewletter() throws Exception {
+		Common.waitForElement(2);
+
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+		wait.until(ExpectedConditions.elementToBeClickable(continueBtn));
+		click(continueBtn);
+		System.out.println(GREEN + "✅ Clicked Continue Button" + RESET);
+
+		AddressPage add = new AddressPage(driver);
+		add.newAddressData();
+
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(continueBtn));
+		click(continueBtn);
+		System.out.println(GREEN + "✅ Clicked Address Page Continue Button" + RESET);
+
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(selectNetBank));
+		click(selectNetBank);
+		System.out.println(GREEN + "✅ Select Netbanking" + RESET);
+
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(placeOrderBtn));
+		click(placeOrderBtn);
+		System.out.println(GREEN + "✅ Clicked Place Order" + RESET);
+
+		Common.waitForElement(3); 	 // ✅ 1. Switch to Razorpay iframe (you already have this)
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(
+				By.xpath("//iframe[contains(@name,'razorpay') or contains(@id,'razorpay') or contains(@src,'razorpay')]")
+				));
+		System.out.println("✅ Switched to Razorpay iframe");
+
+		// ✅ 3. Select Netbanking option
+		Common.waitForElement(4);
+		wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//span[@data-testid='Netbanking']")
+				)).click();
+
+		// ✅ 4. Select HDFC Bank
+		Common.waitForElement(2);
+		wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("(//div[@role='button' and .//span[contains(text(),'HDFC Bank')]])[1]")
+				)).click();
+
+		// ⬅️ Optional: Switch back to main page after selecting
+		driver.switchTo().defaultContent();
+		// Switch to Razorpay window
+		String mainWindow = driver.getWindowHandle();
+		Common.waitForElement(3); 
+		Set<String> allWindows = driver.getWindowHandles();
+		for (String window : allWindows) {
+			if (!window.equals(mainWindow)) {
+				driver.switchTo().window(window);
+				System.out.println(GREEN + "✅ Switched to Razorpay window" + RESET);
+				break;
+			}
+		}
+
+		// ✅ Click Success button
+		WebElement successBtn = wait.until(ExpectedConditions.elementToBeClickable(
+				By.xpath("//button[@data-val='S' and normalize-space(text())='Success']")
+				));
+		successBtn.click();
+		System.out.println(GREEN + "💳 Payment Success clicked" + RESET);
+
+		Common.waitForElement(3); 
+		driver.switchTo().window(mainWindow);
+		System.out.println(GREEN + "🔙 Switched back to main window" + RESET);
+
+		// ✅ Confirm order
+		Common.waitForElement(3); 
+		WebElement confirmMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//h5[@class='checkout_success_heading' and normalize-space()='Order Confirmed']")
+				));
+
+		if (confirmMsg.isDisplayed()) {
+			System.out.println(GREEN + "🎉 Order Confirmed Successfully!" + RESET);
+			Common.waitForElement(5); 
+		}
+	}
+
+	public void afterPlaceOrderVerifynewletter() {
 
 
 
+		Actions actions = new Actions(driver);
+		actions.moveToElement(shopMenu).perform();
+		actions.moveToElement(category).click().perform();
+		actions.moveToElement(sortBy).click().build().perform();
+		Common.waitForElement(5);
+		click(sortByPriceHightoLow);
+		Common.waitForElement(5);
+
+		List<WebElement> products = driver.findElements(By.xpath(
+				"//div[contains(@class,'product_list_cards_list') and " +
+						"not(.//h2[contains(text(),'OUT OF STOCK')])]"
+				));
+
+		Collections.shuffle(products);
+
+		if (!products.isEmpty()) {
+
+			WebElement product = products.get(0);
+
+			WebElement productNameEl = product.findElement(
+					By.xpath(".//h2[contains(@class,'product_list_cards_heading')]"));
+
+			currentProductName = productNameEl.getText().trim();
+			actions.moveToElement(productNameEl).click().perform();
+
+			System.out.println("✅ Opened product: " + currentProductName);
+
+		} else {
+			Assert.fail("❌ No in-stock products available to open");
+		}
+
+		// ✅ ALWAYS RUN AFTER PRODUCT OPEN
+		Common.waitForElement(5);
+		wait.until(ExpectedConditions.elementToBeClickable(buyNowbutton));
+		buyNowbutton.click();
+
+
+
+
+
+		// Step 1: Enter random email in the subscription field
+		Common.waitForElement(2);
+		click(profile);
+		click(couponsideMenu);
+		List<WebElement> couponCheck = driver.findElements(
+				By.xpath("//div[@class='coupon__code__title' and normalize-space()='NEWSLETTER10']"));
+
+		if (!couponCheck.isEmpty()) {
+			Assert.fail("❌ Newsletter coupon NEWSLETTER10 is present — test should fail (already used case)");
+		} else {
+			System.out.println(GREEN + "✅ Newsletter coupon not present — correct behavior" + RESET);
+		}
+
+		wait.until(ExpectedConditions.elementToBeClickable(searchBox));
+		click(searchBox);
+		searchBox.sendKeys("NEWSLETTER10");
+		click(applyBtn);
+
+		WebElement snackbarElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//div[@class='snackbar-container  snackbar-pos top-right']")));
+
+		String actualText = snackbarElement.getText().trim();
+		String expectedText = "This coupon has reached its maximum usage limit.";
+
+		Assert.assertEquals(actualText, expectedText, "Snackbar error message does not match!");
+
+
+	}
+
+	public void afterPlaceOrderVerifyfeedBackcoupon() {
+
+
+		Actions actions = new Actions(driver);
+		actions.moveToElement(shopMenu).perform();
+		actions.moveToElement(category).click().perform();
+		actions.moveToElement(sortBy).click().build().perform();
+		Common.waitForElement(5);
+		click(sortByPriceHightoLow);
+		Common.waitForElement(5);
+
+		List<WebElement> products = driver.findElements(By.xpath(
+				"//div[contains(@class,'product_list_cards_list') and " +
+						"not(.//h2[contains(text(),'OUT OF STOCK')])]"
+				));
+
+		Collections.shuffle(products);
+
+		if (!products.isEmpty()) {
+
+			WebElement product = products.get(0);
+
+			WebElement productNameEl = product.findElement(
+					By.xpath(".//h2[contains(@class,'product_list_cards_heading')]"));
+
+			currentProductName = productNameEl.getText().trim();
+			actions.moveToElement(productNameEl).click().perform();
+
+			System.out.println("✅ Opened product: " + currentProductName);
+
+		} else {
+			Assert.fail("❌ No in-stock products available to open");
+		}
+
+		// ✅ ALWAYS RUN AFTER PRODUCT OPEN
+		Common.waitForElement(5);
+		wait.until(ExpectedConditions.elementToBeClickable(buyNowbutton));
+		buyNowbutton.click();
+
+		// Step 1: Enter random email in the subscription field
+		Common.waitForElement(2);
+		click(profile);
+		click(couponsideMenu);
+		List<WebElement> couponCheck = driver.findElements(
+				By.xpath("//div[@class='coupon__code__title' and normalize-space()='THANKU100']"));
+
+		if (!couponCheck.isEmpty()) {
+			Assert.fail("❌ Feedback coupon THANKU100 is present — test should fail (already used case)");
+		} else {
+			System.out.println(GREEN + "✅ Newsletter coupon not present — correct behavior" + RESET);
+		}
+
+		wait.until(ExpectedConditions.elementToBeClickable(searchBox));
+		click(searchBox);
+		searchBox.sendKeys("THANKU100");
+		click(applyBtn);
+
+		WebElement snackbarElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//div[@class='snackbar-container  snackbar-pos top-right']")));
+
+		String actualText = snackbarElement.getText().trim();
+		String expectedText = "You have already used this coupon.";
+
+		Assert.assertEquals(actualText, expectedText, "Snackbar error message does not match!");
+
+
+
+
+	}
 
 
 
