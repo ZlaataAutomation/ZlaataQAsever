@@ -114,3 +114,15 @@ Scenario Outline: TC_UI_Admin_OEV_12 |Verify that Exchange Order Cancellation em
 Examples:  
   | TD_ID                  |  
   | TD_UI_Admin_OEV_12   |
+  
+  
+  
+     @Mail
+ @TC_UI_Admin_OEV_13
+Scenario Outline: TC_UI_Admin_OEV_13 | Verify that a newsletter email is received after subscribing to the newsletter | "<TD_ID>"
+  Given User subscribes to the newsletter and verifies that the newsletter email is received.
+
+Examples:
+  | TD_ID               |
+  | TD_UI_Admin_OEV_13  |
+ 

@@ -163,5 +163,23 @@ public abstract class AdminEmailVerifyOrderFlowObjRepo extends BasePage {
 	 @FindBy(xpath="//button[@class='prod_cancel_btn']")
 	    protected WebElement cancelBtn;
 	
-	
+	 @FindBy(xpath = "//div[@class='snackbar-container  snackbar-pos top-right']")
+		protected WebElement mailValidationMessage;
+	 
+	 @FindBy(xpath = "//a[normalize-space()='Email']")
+	 protected WebElement clickONEmail;
+	 
+	 @FindBy(xpath = "//input[@role='searchbox']")
+	 protected WebElement enterEmail;
+	 
+	 @FindBy(xpath = "//i[@class='las la-trash']")
+	 protected WebElement deletTheEmailID;
+	 
+	 @FindBy(xpath = "//button[@class='swal-button swal-button--confirm swal-button--danger']")
+	 protected WebElement deleteButton;
+	 
+	 @FindBy(xpath = "//div[@class='noty_body']")
+	 protected WebElement deleteMessage;
+
 }
+
