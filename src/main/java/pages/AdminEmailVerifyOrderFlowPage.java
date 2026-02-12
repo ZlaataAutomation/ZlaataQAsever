@@ -943,8 +943,8 @@ public void orderRefundInitiateByAdmin() {
 
     adminLoginApp();
     
-	
-    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+    Common.waitForElement(2);
+    driver.get(Common.getValueFromTestDataMap("Link"));
 	System.out.println("Redirect to Canceled Order Page");
 	Common.waitForElement(1);
 	
@@ -1749,7 +1749,7 @@ public void orderExchangeForUserSide() {
 		    System.out.println(line);
 
 		    adminLoginApp();
-
+		    Common.waitForElement(2);
 		    System.out.println(GREEN + "✅ Navigated to Orders page" + RESET);
 		    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
 
@@ -1784,7 +1784,7 @@ public void orderExchangeForUserSide() {
 		    Select step3 = new Select(returnStatus);
 		    step3.selectByVisibleText("Order Cancelled by Admin");
 		    System.out.println(GREEN + "✅ Status changed → Order Cancelled by Admin" + RESET);
-		    
+		    Common.waitForElement(2);
 		    WebElement descriptionField = driver.findElement(By.xpath("//input[@name='item[0][description]']"));
 		    click(descriptionField);
 		    descriptionField.sendKeys("Product Not Available");
@@ -2683,6 +2683,7 @@ public void orderExchangeForUserSide() {
 		    System.out.println(CYAN + line + RESET);
 		    System.out.println(GREEN + "🚀 Starting Open App Flow..." + RESET);
 		    System.out.println(CYAN + line + RESET);
+		    Common.waitForElement(2);
 		    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 		    Common.waitForElement(3);
 		    wait.until(ExpectedConditions.elementToBeClickable(myProfileIcon));
@@ -2963,6 +2964,102 @@ public void orderExchangeForUserSide() {
 	    }
 	}
 
+	public void cancelOrderRefundInitiateByAdmin() {
+		String CYAN = "\u001B[36m";
+		String YELLOW = "\u001B[33m";
+		String GREEN = "\u001B[32m";
+		String RED = "\u001B[31m";
+		String RESET = "\u001B[0m";
+		String line = "──────────────────────────────────────────────────────────────";
+		System.out.println(line);
+	    System.out.println(GREEN + "🚚 Giving  Refund  for Order ID: " + orderId + RESET);
+	    System.out.println(line);
+
+	  
+	    
+	    Common.waitForElement(2);
+	    driver.get(Common.getValueFromTestDataMap("Link"));
+		System.out.println("Redirect to Canceled Order Page");
+		Common.waitForElement(1);
+		
+	    // ✅ Go to order search box and search order ID
+		Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(orderIdbtn));
+	    waitFor(orderIdbtn);
+		click(orderIdbtn);
+		 Common.waitForElement(1);
+		wait.until(ExpectedConditions.elementToBeClickable(orderSearchBox));
+	    Common.waitForElement(1);
+		waitFor(orderSearchBox);
+	    orderSearchBox.clear();
+	    orderSearchBox.sendKeys(orderId);
+	    Common.waitForElement(1);
+	    orderSearchBox.sendKeys(Keys.ENTER);
+	    Common.waitForElement(2);
+
+	    // ✅ Verify order is displayed
+	    try {
+	        WebElement orderRow = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("//td/span[normalize-space(text())='" + orderId + "']")));
+	        System.out.println(GREEN + "✅ Order found in table!" + RESET);
+	    } catch (TimeoutException e) {
+	        System.out.println(RED + "❌ Order not found! Stopping execution." + RESET);
+	        return;
+	    }
+
+	    // ✅ Click Edit button
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn));
+	    Common.waitForElement(2);
+		waitFor(editBtn);
+		click(editBtn);
+	    System.out.println(GREEN + "✅ Clicked Edit" + RESET);
+
+	    // ✅ Shipment Status → Order Accept
+	    wait.until(ExpectedConditions.elementToBeClickable(paymentRefundBtn));
+	    Common.waitForElement(2);
+		waitFor(paymentRefundBtn);
+		click(paymentRefundBtn);
+		Common.waitForElement(2);
+		Select select6 = new Select(paymentRefundBtn);
+		select6.selectByVisibleText("Refund request");
+		System.out.println(GREEN + "✅ Selected 'Refund request'" + RESET);
+
+		 // ✅ Save & Back
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+	    waitFor(saveButton);
+	    click(saveButton);
+	    System.out.println(GREEN + "💰 Refund Initiated Successfully" + RESET);
+
+	    // ✅ Again click Edit for second update
+	    Common.waitForElement(7);
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+	    System.out.println(GREEN + "✅ Re-opened Edit Page (For Refund)" + RESET);
+
+	    // ✅ Extract Refund Reference Number
+	    Common.waitForElement(2);
+	    WebElement referenceElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//label[normalize-space()='Refund Transaction Id']/following-sibling::input")));
+	  //input[@name='item[0][refund_transaction_id]']
+
+	    referenceNo = referenceElement.getAttribute("value").trim();
+	    System.out.println(GREEN + "🔢 Refund Reference No: " + referenceNo + RESET);
+	 // ✅ Save & Back
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+	    waitFor(saveButton);
+	    click(saveButton);
+	    System.out.println("✅ Saved  changes");
+
+	    System.out.println(GREEN + "🎉 Refund Initiated Successfully!" + RESET);
+	    System.out.println(line);
+	    
+	    System.out.println(line);
+	    System.out.println(YELLOW + "🔢 Refund Reference No: " + referenceNo + RESET);
+	    System.out.println(YELLOW + "🪙 Total Amount: " + totalAmount + RESET);
+	    System.out.println(line);
+
+	}
 //String totalMRF="₹1999", discountedMRP="₹999", youSaved="₹1000", totalAmount="₹999", orderId="ZLTQA/25-26/18079";
 //TC01 Verify Order Placed Confirm
 		public void verifyOrderPlacedEmail() throws InterruptedException {
@@ -3089,7 +3186,7 @@ public void orderExchangeForUserSide() {
 			
 			orderCancelByAdminSide();
 			
-			orderReturnRefundInitiateByAdmin();
+			cancelOrderRefundInitiateByAdmin();
 			
 			openUserApp();
 			
