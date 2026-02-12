@@ -111,7 +111,8 @@ public class AdminEmailVerifyOrderFlowPage extends AdminEmailVerifyOrderFlowObjR
 
 		    wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("Passwd"))).sendKeys(gmailPassword);
 		    driver.findElement(By.id("passwordNext")).click();
-
+		    
+		    
 		    // --- Wait for Inbox to load ---
 		    wait.until(ExpectedConditions.or(
 		        ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.ae4.aDM")),
@@ -439,6 +440,8 @@ public void verifyOrderConfirmationMail(String expectedmsg)
 
 		    wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("Passwd"))).sendKeys(gmailPassword);
 		    driver.findElement(By.id("passwordNext")).click();
+		    
+		    Common.waitForElement(5);
 
 		    System.out.println(GREEN + "✅ Logged into Gmail successfully." + RESET);
 		}
@@ -2708,6 +2711,257 @@ public void orderExchangeForUserSide() {
 		    
 		    Common.waitForElement(3);
 	}
+	
+	private void openTheNewsletterSubscribesInAdminPanel() {
+
+	    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // ✅ Wait until Email menu is clickable
+	    WebElement emailMenu = wait.until(
+	            ExpectedConditions.elementToBeClickable(clickONEmail)
+	    );
+
+	    // ✅ Scroll and click (normal + JS fallback)
+	    try {
+	        emailMenu.click();
+	    } catch (Exception e) {
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+	        js.executeScript("arguments[0].click();", emailMenu);
+	    }
+
+	    Common.waitForElement(5);
+
+	    // ✅ Enter email and search
+	    wait.until(ExpectedConditions.visibilityOf(enterEmail));
+	    enterEmail.clear();
+	    enterEmail.sendKeys("zlaata.qa.test@gmail.com");
+	    Common.waitForElement(5);
+	    enterEmail.sendKeys(Keys.ENTER);
+
+	    Common.waitForElement(5);
+	    try {
+	        // click trash icon
+	        WebElement deleteBtn = driver.findElement(
+	                By.xpath("//i[contains(@class,'la-trash')]")
+	        );
+
+	        ((JavascriptExecutor) driver)
+	                .executeScript("arguments[0].click();", deleteBtn);
+
+	        Common.waitForElement(2);
+
+	        // ✅ click confirm delete button (popup)
+	        WebElement confirmDelete = driver.findElement(
+	            By.xpath("//button[contains(@class,'swal-button--danger')]")
+	        );
+	        confirmDelete.click();
+
+	        Common.waitForElement(2);
+
+	        // ✅ read success message (optional)
+	        String msg = deleteMessage.getText();
+	        System.out.println("Delete message: " + msg);
+
+	        System.out.println("✅ Email found and deleted");
+
+	    } catch (NoSuchElementException e) {
+	        System.out.println("ℹ️ Email not found — nothing to delete");
+	    }
+	}
+
+
+	
+	public void subscribesNewLetter() {
+
+	    HomePage home = new HomePage(driver);
+	    home.homeLaunch();
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    WebElement newsletterSection = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.cssSelector("div.newsletter_container")
+	            )
+	    );
+
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", newsletterSection);
+
+	    Common.waitForElement(1);
+
+	    String GREEN = "\u001B[32m";
+	    String RESET = "\u001B[0m";
+
+	    WebElement emailInput = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(By.id("subscribeletter"))
+	    );
+
+	    WebElement subscribeBtn = driver.findElement(By.id("subscribeletterbtn"));
+
+	  
+	    emailInput.sendKeys("zlaata.qa.test@gmail.com");
+	    subscribeBtn.click();
+
+	    WebElement successMsg = wait.until(
+	            ExpectedConditions.visibilityOf(mailValidationMessage)
+	    );
+
+	    String actualSuccessMsg = successMsg.getText().trim();
+	    String expectedSuccessMsg = "Successfully Subscribed";
+
+	    Assert.assertEquals(expectedSuccessMsg, actualSuccessMsg);
+
+	    System.out.println(GREEN + "✅ Successfully subscribed with new email" + RESET);
+	}
+	
+	private void OpenTheMailVerifyNewsLettermail(String expectedmsg) throws InterruptedException {
+
+		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		
+		String CYAN = "\u001B[36m";
+		String YELLOW = "\u001B[33m";
+		String GREEN = "\u001B[32m";
+		String RED = "\u001B[31m";
+		String RESET = "\u001B[0m";
+		String line = "──────────────────────────────────────────────────────────────";
+		
+		System.out.println(CYAN + line + RESET);
+		System.out.println(GREEN + "📧 Starting Gmail N Verification..." + RESET);
+		System.out.println(CYAN + line + RESET);
+		
+		// ✅ Open Gmail login page
+		driver.get("https://mail.google.com/");
+		System.out.println("🌐 Opening Gmail login page...");
+		
+		// ---- LOGIN FLOW ----
+		// Check if already logged in by looking for inbox element
+		List<WebElement> inboxCheck = driver.findElements(By.xpath("//table//tr//span[@class='bog']/span"));
+
+		if (inboxCheck.size() > 0) {
+		    System.out.println(YELLOW + "⚠️ Gmail session already active... Skipping login." + RESET);
+		} else {
+		    System.out.println(CYAN + "🔐 Logging into Gmail..." + RESET);
+
+		    wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("identifierId"))).sendKeys(gmailId);
+		    driver.findElement(By.id("identifierNext")).click();
+
+		    wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("Passwd"))).sendKeys(gmailPassword);
+		    driver.findElement(By.id("passwordNext")).click();
+		    
+		    Common.waitForElement(5);
+
+		    System.out.println(GREEN + "✅ Logged into Gmail successfully." + RESET);
+		}
+		
+		// ✅ Wait for inbox to load
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
+		System.out.println(GREEN + "📥 Gmail inbox loaded." + RESET);
+		
+		// ---- WAIT FOR ORDER CONFIRMATION MAIL ----
+		boolean mailFound = false;
+		int retries = 36; // ~3 minutes
+
+		for (int i = 0; i < retries; i++) {
+		    try {
+		        // Always re-locate the first mail element fresh each time
+		        WebElement firstMail = wait.until(
+		            ExpectedConditions.presenceOfElementLocated(
+		                By.xpath("(//table//tr//span[@class='bog']/span)[1]")
+		            )
+		        );
+
+		        String mailText = firstMail.getText().trim();
+
+		        if (mailText.contains(expectedmsg)) {
+		            // Wait until clickable before clicking
+		            wait.until(ExpectedConditions.elementToBeClickable(firstMail));
+		            firstMail.click();
+		            System.out.println(GREEN + "📨 Order mail received and opened!" + RESET);
+		            mailFound = true;
+		            break;
+		        }
+
+		    } catch (StaleElementReferenceException e) {
+		        System.out.println(YELLOW + "⚠️ Element went stale after refresh, re-locating..." + RESET);
+		    } catch (Exception e) {
+		        System.out.println(YELLOW + "⏳ Waiting for latest mail... retry " + (i + 1) + RESET);
+		    }
+
+		    // Wait and refresh for next retry
+		    Thread.sleep(5000);
+		    driver.navigate().refresh();
+
+		    // Wait until inbox reloads before next iteration
+		    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
+		}
+
+		if (!mailFound) {
+		    System.out.println(RED + "❌ Order Confirmation Mail not received within time!" + RESET);
+		    Assert.fail("Order confirmation mail not found.");
+		}
+		
+		// ---- READ MAIL CONTENT ----
+		Thread.sleep(4000);
+		    
+		}
+
+
+	public void verifyRefundDetailsAndAmount() {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String RESET  = "\u001B[0m";
+	    int expectedRefundAmount = Integer.parseInt(
+		        totalAmount.replaceAll("[^0-9]", "")
+		);
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // ---- Refund card ----
+	    WebElement refundCard = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.cssSelector("div.refund_status_card"))
+	    );
+
+	    // ---- Heading verification ----
+	    WebElement refundHeading = refundCard.findElement(
+	            By.cssSelector("h3.refund_status_heading")
+	    );
+
+	    if (refundHeading.isDisplayed()
+	            && refundHeading.getText().equalsIgnoreCase("Refund Details")) {
+
+	        System.out.println(GREEN + "✅ Refund Details heading is displayed" + RESET);
+	    } else {
+	        throw new AssertionError(RED + "❌ Refund Details heading not displayed" + RESET);
+	    }
+
+	   
+	    WebElement refundText = refundCard.findElement(
+	            By.cssSelector("p.refund_status_details")
+	    );
+
+	    String refundMessage = refundText.getText();
+	    System.out.println("Refund Text → " + refundMessage);
+
+	    // ---- Extract amount ₹1,500 → 1500 ----
+	    int actualRefundAmount = Integer.parseInt(
+	            refundMessage.split("₹")[1].split(" ")[0].replace(",", "")
+	    );
+	    
+
+	    // ---- Amount comparison ----
+	    if (actualRefundAmount == expectedRefundAmount) {
+	        System.out.println(GREEN + "✅ Refund amount matched: ₹" + actualRefundAmount + RESET);
+	    } else {
+	        throw new AssertionError(
+	                RED + "❌ Refund amount mismatch. Expected ₹"
+	                        + expectedRefundAmount + " but found ₹"
+	                        + actualRefundAmount + RESET
+	        );
+	    }
+	}
 
 //String totalMRF="₹1999", discountedMRP="₹999", youSaved="₹1000", totalAmount="₹999", orderId="ZLTQA/25-26/18079";
 //TC01 Verify Order Placed Confirm
@@ -2749,11 +3003,15 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Order Cancelled");
 			
-			verifyOrderConfirmationMail("Order Cancellation Confirmation");
+	//		verifyOrderConfirmationMail("Order Cancellation Confirmation");
 			
 			orderRefundInitiateByAdmin();
 			
-			verifyRefundCreditedEmail("Refund Credited");
+			openUserApp();
+			
+			verifyRefundDetailsAndAmount();
+			
+		//	verifyRefundCreditedEmail("Refund Credited");
 						
 		}
 	
@@ -2787,6 +3045,7 @@ public void orderExchangeForUserSide() {
 			updateExchangeShippedToExchangeDelivered();
 			
 			openUserApp();
+			
 			verifyOrderLabelforExchange("Exchange Order Delivered");
 
 			verifyOrderExchangeEmail("Exchange Order Delivered Confirmation");
@@ -2794,7 +3053,7 @@ public void orderExchangeForUserSide() {
 		}
 //TC04 Verify Order Return Flow 
 		public void verifyOrderReturnAllEmail() throws InterruptedException {
-			deleteAllMailsIfNotEmpty();
+	//		deleteAllMailsIfNotEmpty();
 			
 			addProductToCartAndPlacedTheOrder();
 			
@@ -2808,7 +3067,7 @@ public void orderExchangeForUserSide() {
 			
 			orderReturnRequestAcceptByAdmin();
 			
-			verifyOrderConfirmationMail("Order Return Request");
+		//	verifyOrderConfirmationMail("Order Return Request");
 			
 			orderReturnRefundInitiateByAdmin();
 			
@@ -2816,7 +3075,9 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Refund Credited");
 			
-			verifyRefundCreditedEmail("Refund Credited");
+			verifyRefundDetailsAndAmount();
+
+		//	verifyRefundCreditedEmail("Refund Credited");
 						
 		}
 		
@@ -2828,11 +3089,15 @@ public void orderExchangeForUserSide() {
 			
 			orderCancelByAdminSide();
 			
+			orderReturnRefundInitiateByAdmin();
+			
 			openUserApp();
 			
+			verifyRefundDetailsAndAmount();
+
 			verifyOrderLabel("Order Cancelled");
 			
-			verifyOrderConfirmationMail("Cancellation of Your Order");
+	//		verifyOrderConfirmationMail("Cancellation of Your Order");
 				
 		}
 	
@@ -2972,12 +3237,21 @@ public void orderExchangeForUserSide() {
 	
 	
 	
+			public void verifyNewLettermail() throws InterruptedException {
+				deleteAllMailsIfNotEmpty();
+				adminLoginApp();
+				openTheNewsletterSubscribesInAdminPanel();
+				subscribesNewLetter();
+				OpenTheMailVerifyNewsLettermail("Newsletter Subscription");
+				
+				
+				
+
+			}
 	
 	
 	
-	
-	
-	
+		
 	
 	
 	

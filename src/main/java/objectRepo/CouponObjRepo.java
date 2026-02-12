@@ -1,20 +1,58 @@
 package objectRepo;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import basePage.BasePage;
 
 public abstract class CouponObjRepo extends BasePage {
+	
+	
+	public void waitFor(WebElement el) {
+        new WebDriverWait(driver, Duration.ofSeconds(15))
+            .until(ExpectedConditions.elementToBeClickable(el));
+    }
+    public void type(WebElement el, String value) {
+        waitFor(el); el.clear(); el.sendKeys(value);
+    }
+    public void click(WebElement el) {
+        waitFor(el); el.click();
+    }
+    
+    @FindBy(name = "email")
+   	protected WebElement adminEmail;
+   	
+   	@FindBy(id = "password")
+   	protected WebElement adminPassword;
+   	
+   	@FindBy(xpath = "//button[@type='submit']")
+   	protected WebElement adminLogin;
 
 	@FindBy(xpath = "(//button[@class='coupon_input_apply_btn '])[1]")
 	protected WebElement applyButton;
 
 	@FindBy(xpath = "//div[@class='login_process_wrap']")
 	protected WebElement loginPopup;
+	
+
+	@FindBy(xpath = "//button[@onclick='submitOTP()']")
+	protected WebElement verifyotp;
+	
+	@FindBy(id = "userNumber")
+	protected WebElement loginNumber;
+	
+	@FindBy(xpath = "//button[@class='send_otp_btn btn___2']")
+	protected WebElement sendotp;
+	
+	@FindBy(xpath = "//form[@class='digit-group login_otp_input_form']")
+	protected WebElement otpEnterTextBox;
+	
 
 	@FindBy(xpath = "//button[@class='checkout_details_sub_heading viewCouponBtn']")
 	protected WebElement viewCoupon;
@@ -143,8 +181,9 @@ public abstract class CouponObjRepo extends BasePage {
 	@FindBy(xpath = "//li[@class='navigation_menu_list nav_menu_dropdown shop']")
 	protected WebElement shopMenu;
 
-	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//a[contains(translate(text(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ALL')]")
+	@FindBy(xpath = "//div[@class='nav_drop_down_box_category active']//ul/li/a[translate(normalize-space(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = 'DRESSES']")
 	protected WebElement category;
+	
 
 	@FindBy(xpath = "//h2[@class='product_list_cards_heading']")
 	protected  WebElement productListingName;
@@ -192,6 +231,8 @@ public abstract class CouponObjRepo extends BasePage {
 	@FindBy(xpath = "//span[@class='prod_bp_value']")//list of WebElement
 	protected List <WebElement> bestPriceElements;
 
+	@FindBy(xpath = "//a[contains(@class,'view_details_btn') and contains(text(),'View Order Details')]")
+	protected WebElement viewOrderDetails;
 	@FindBy(xpath = "//span[@class='prod_bp_coupen']")//list of WebElement
 	protected List <WebElement> couponCodeElements;
 
@@ -227,12 +268,14 @@ public abstract class CouponObjRepo extends BasePage {
 	@FindBy(xpath ="//a[@class='Cls_cart_btn Cls_redirect_restrict']")
 	protected WebElement bagIcon;
 
-	@FindBy(xpath ="//button[.='Buy Now']")
+	@FindBy(xpath ="//button[@class='prod_buy_now_btn btn___2 Cls_Buy_now_To_Cart']")
 	protected WebElement buyNowButton;
 
 	@FindBy(xpath = "//div[@class='snackbar-container  snackbar-pos top-right']")
 	protected WebElement addCartMessage;
 
+	
+	
 
 	@FindBy(xpath = "//button[@class='prod_buy_now_btn btn___2 Cls_Buy_now_To_Cart']")
 	protected WebElement buyNowbutton;
@@ -266,7 +309,7 @@ public abstract class CouponObjRepo extends BasePage {
 	protected WebElement sortByDiscountLowtoHigh;
 	
 	
-	@FindBy(xpath = "//li[@data-value='Price High to Low']")
+	@FindBy(xpath = "//li[@value='Price High to Low']")
 	protected WebElement sortByPriceHightoLow;
 	
 	@FindBy(xpath = "//li[@data-value='Price Low to High']")
@@ -462,4 +505,55 @@ public abstract class CouponObjRepo extends BasePage {
 	@FindBy(xpath = "//li[@class='navigation_menu_list home']")
 	protected WebElement homePageLink;
 
+	
+	
+	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Continue']")
+	protected WebElement continueBtn;
+	
+	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Place order']")
+	protected WebElement placeOrderBtn;
+	
+	
+	@FindBy(xpath = "(//input[@id='net-banking'])[1]")
+	protected WebElement selectNetBank;
+	
+	@FindBy(xpath = "//div[@data-value='HDFC']//span[normalize-space(text())='HDFC Bank']")
+	protected WebElement selectHdfcBank;
+	
+	
+	 @FindBy(xpath="//label[normalize-space()='Incorrect size Ordered']")
+	    protected WebElement selectReason;
+	 
+	 @FindBy(xpath="//button[contains(@class,'order_return_continue_btn')]")
+	    protected WebElement continueReturnBtn;
+	 
+	 
+	 @FindBy(xpath = "(//input[@role='searchbox'])[1]")  
+	 protected WebElement orderSearchBox;
+	 
+	 @FindBy(xpath = "//i[@class='las la-edit']")
+	    protected WebElement editBtn;
+	 
+	 @FindBy(xpath = "(//select[@class='form-control orderaccept courier-filed'])[1]")  
+	 protected WebElement shipmentStatus;
+	 
+	 @FindBy(xpath = "(//select[@class='form-control courier-provider'])[1]")  
+	 protected WebElement courierProvider;
+	 
+	 @FindBy(xpath="//span[@data-value='save_and_back']")
+	    protected WebElement saveButton;
+	 
+	 @FindBy(xpath="//select[@class='form-control order-status']")
+	    protected WebElement orderStatus;
+	
+	 @FindBy(xpath="(//div[contains(@class,'popup_containers_cls_btn')])[5]")
+	    protected WebElement closeBtn;
+	 
+
+	 @FindBy(xpath = "//a[normalize-space()='Order Id']")  
+	 protected WebElement orderIdbtn;
+	 
+	 @FindBy(xpath="//label[normalize-space()='Payment Refund']/following-sibling::select")
+	    protected WebElement paymentRefundBtn;
+	
 }

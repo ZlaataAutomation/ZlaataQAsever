@@ -434,28 +434,29 @@ public class CouponFunctionality {
 	}
 
 	@Then("Normal Coupon with fixed amount   should be applied successfully")
-	public void normal_coupon_with_fixed_amount_should_be_applied_successfully() {
+	public void normal_coupon_with_fixed_amount_should_be_applied_successfully() throws TimeoutException {
 
 		coupon.fixedAmountAppliedSuccessfullForNormalCoupon();
 
 	}
 
 	//19
-	
+
 	@Given("I sign up with a new phone number")
-	public void i_sign_up_with_a_new_phone_number() throws TimeoutException {
+	public void i_sign_up_with_a_new_phone_number() throws TimeoutException   {
 		coupon.signupAllCoupon();
 	}
 
 	@When("user adds a random product to the cart.")
 	public void userAddsRandomProductToCart() throws Exception {
-			coupon.afterSignUpFirstBuy();
+		coupon.afterSignUpFirstBuy();
 	}
 
 	@Then("apply the FirstBuy coupon and verify if the coupon is applied or not.")
-	public void applyFirstBuyCouponAndVerify() {
+	public void applyFirstBuyCouponAndVerify() throws Exception {
 		try {
 			coupon.verifyAppliedMessageForFirstBuy("Coupon applied");  // Verify coupon application
+			coupon.palceTheOrder();
 		} catch (Exception e) {
 			ExceptionTracker.capture(e);  // Log the exception details
 			throw e;  // Re-throw the exception to ensure the test fails
@@ -465,7 +466,13 @@ public class CouponFunctionality {
 	//20
 
 
-	
+	@Given("I sign up with a new phone numbers")
+	public void i_sign_up_with_a_new_phone_numbers() throws TimeoutException {
+
+		coupon.signupAllCoupon();
+
+	}
+
 	@Given("I subscribe to the newsletter with a random email")
 	public void i_subscribe_to_the_newsletter_with_a_random_email() {
 		coupon.subscribeForNewsletter();
@@ -475,18 +482,37 @@ public class CouponFunctionality {
 		coupon.verifyEmailAndNewsletterSubscription();
 	}
 
+	@Then("place the order afetr  that coupon disapper from application are not")
+	public void place_the_order_afetr_that_coupon_disapper_from_application_are_not() throws Exception {
+		coupon.palceTheOrderforNewletter();
+		coupon.afterPlaceOrderVerifynewletter();
+
+	}
+
+
+
+
 	//21
+
+
+		@Given("I sign up with  new phone number")
+	public void i_sign_up_with_new_phone_number() throws TimeoutException {
+			coupon.signupAllCoupon();
+	}
+
+
 
 	@Given("I subscribe to the feedback with a random email")
 	public void i_subscribe_to_the_feedback_with_a_random_email() {
-		
+
 		coupon.subscribeForfeedback();
-		
+
 	}
 
-		@Then("I add a products to the cart and apply the feedback coupon")
+	@Then("I add a products to the cart and apply the feedback coupon")
 	public void i_add_a_products_to_the_cart_and_apply_the_feedback_coupon() {
 		coupon.verifyEmailAndNewsforfeedback();
+		coupon.afterPlaceOrderVerifyfeedBackcoupon();
 	}
 
 
