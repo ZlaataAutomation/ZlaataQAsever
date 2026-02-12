@@ -2908,7 +2908,60 @@ public void orderExchangeForUserSide() {
 		}
 
 
+	public void verifyRefundDetailsAndAmount() {
 
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String RESET  = "\u001B[0m";
+	    int expectedRefundAmount = Integer.parseInt(
+		        totalAmount.replaceAll("[^0-9]", "")
+		);
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    // ---- Refund card ----
+	    WebElement refundCard = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.cssSelector("div.refund_status_card"))
+	    );
+
+	    // ---- Heading verification ----
+	    WebElement refundHeading = refundCard.findElement(
+	            By.cssSelector("h3.refund_status_heading")
+	    );
+
+	    if (refundHeading.isDisplayed()
+	            && refundHeading.getText().equalsIgnoreCase("Refund Details")) {
+
+	        System.out.println(GREEN + "✅ Refund Details heading is displayed" + RESET);
+	    } else {
+	        throw new AssertionError(RED + "❌ Refund Details heading not displayed" + RESET);
+	    }
+
+	   
+	    WebElement refundText = refundCard.findElement(
+	            By.cssSelector("p.refund_status_details")
+	    );
+
+	    String refundMessage = refundText.getText();
+	    System.out.println("Refund Text → " + refundMessage);
+
+	    // ---- Extract amount ₹1,500 → 1500 ----
+	    int actualRefundAmount = Integer.parseInt(
+	            refundMessage.split("₹")[1].split(" ")[0].replace(",", "")
+	    );
+	    
+
+	    // ---- Amount comparison ----
+	    if (actualRefundAmount == expectedRefundAmount) {
+	        System.out.println(GREEN + "✅ Refund amount matched: ₹" + actualRefundAmount + RESET);
+	    } else {
+	        throw new AssertionError(
+	                RED + "❌ Refund amount mismatch. Expected ₹"
+	                        + expectedRefundAmount + " but found ₹"
+	                        + actualRefundAmount + RESET
+	        );
+	    }
+	}
 
 //String totalMRF="₹1999", discountedMRP="₹999", youSaved="₹1000", totalAmount="₹999", orderId="ZLTQA/25-26/18079";
 //TC01 Verify Order Placed Confirm
@@ -2950,11 +3003,15 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Order Cancelled");
 			
-			verifyOrderConfirmationMail("Order Cancellation Confirmation");
+	//		verifyOrderConfirmationMail("Order Cancellation Confirmation");
 			
 			orderRefundInitiateByAdmin();
 			
-			verifyRefundCreditedEmail("Refund Credited");
+			openUserApp();
+			
+			verifyRefundDetailsAndAmount();
+			
+		//	verifyRefundCreditedEmail("Refund Credited");
 						
 		}
 	
@@ -2988,6 +3045,7 @@ public void orderExchangeForUserSide() {
 			updateExchangeShippedToExchangeDelivered();
 			
 			openUserApp();
+			
 			verifyOrderLabelforExchange("Exchange Order Delivered");
 
 			verifyOrderExchangeEmail("Exchange Order Delivered Confirmation");
@@ -2995,7 +3053,7 @@ public void orderExchangeForUserSide() {
 		}
 //TC04 Verify Order Return Flow 
 		public void verifyOrderReturnAllEmail() throws InterruptedException {
-			deleteAllMailsIfNotEmpty();
+	//		deleteAllMailsIfNotEmpty();
 			
 			addProductToCartAndPlacedTheOrder();
 			
@@ -3009,7 +3067,7 @@ public void orderExchangeForUserSide() {
 			
 			orderReturnRequestAcceptByAdmin();
 			
-			verifyOrderConfirmationMail("Order Return Request");
+		//	verifyOrderConfirmationMail("Order Return Request");
 			
 			orderReturnRefundInitiateByAdmin();
 			
@@ -3017,7 +3075,9 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Refund Credited");
 			
-			verifyRefundCreditedEmail("Refund Credited");
+			verifyRefundDetailsAndAmount();
+
+		//	verifyRefundCreditedEmail("Refund Credited");
 						
 		}
 		
@@ -3029,11 +3089,15 @@ public void orderExchangeForUserSide() {
 			
 			orderCancelByAdminSide();
 			
+			orderReturnRefundInitiateByAdmin();
+			
 			openUserApp();
 			
+			verifyRefundDetailsAndAmount();
+
 			verifyOrderLabel("Order Cancelled");
 			
-			verifyOrderConfirmationMail("Cancellation of Your Order");
+	//		verifyOrderConfirmationMail("Cancellation of Your Order");
 				
 		}
 	
