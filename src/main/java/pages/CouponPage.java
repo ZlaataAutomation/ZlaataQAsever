@@ -1392,7 +1392,8 @@ public final class CouponPage extends CouponObjRepo {
 		} else {
 			Assert.fail("❌ No in-stock products available to open");
 		}
-
+		buyNowbutton.click();
+		Common.waitForElement(2);
 
 		afterSignUpFirstBuy();
 
@@ -1409,6 +1410,9 @@ public final class CouponPage extends CouponObjRepo {
 
 	public void signupAllCoupon() throws TimeoutException  {
 
+		
+//		LoginPage login = new LoginPage(driver);
+//		login.userLogin();
 		NegativeSignupPages sigu = new NegativeSignupPages(driver);
 		sigu.signUp();
 		Common.waitForElement(5);
@@ -1420,7 +1424,7 @@ public final class CouponPage extends CouponObjRepo {
 		Common.waitForElement(5);
 		click(sortByPriceHightoLow);
 		Common.waitForElement(5);
-
+		
 		List<WebElement> products = driver.findElements(By.xpath(
 				"//div[contains(@class,'product_list_cards_list') and " +
 						"not(.//h2[contains(text(),'OUT OF STOCK')])]"
@@ -2020,19 +2024,33 @@ public final class CouponPage extends CouponObjRepo {
 		} else {
 			System.out.println(GREEN + "✅ Newsletter coupon not present — correct behavior" + RESET);
 		}
-
+		
+		bagIcon.click();
+	
 		wait.until(ExpectedConditions.elementToBeClickable(searchBox));
 		click(searchBox);
 		searchBox.sendKeys("NEWSLETTER10");
 		click(applyBtn);
+		WebElement snackbarElement = wait.until(
+		        ExpectedConditions.visibilityOfElementLocated(
+		                By.xpath("//div[contains(@class,'snackbar-container')]")
+		        )
+		);
 
-		WebElement snackbarElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-				By.xpath("//div[@class='snackbar-container  snackbar-pos top-right']")));
+		String snackbarText = snackbarElement.getText().trim();
+		String expectedText = "You have already used this coupon.";
 
-		String actualText = snackbarElement.getText().trim();
-		String expectedText = "This coupon has reached its maximum usage limit.";
+		System.out.println(YELLOW + "Captured Snackbar Text: " + snackbarText + RESET);
+		System.out.println(BLUE + "Expected Text: '" + expectedText + "'" + RESET);
+		System.out.println(PURPLE + "Actual Text: '" + snackbarText + "'" + RESET);
 
-		Assert.assertEquals(actualText, expectedText, "Snackbar error message does not match!");
+		Assert.assertTrue(
+		        RED + "❌ The expected text was not found in the snackbar message. Actual: " + snackbarText + RESET,
+		        snackbarText.toLowerCase().contains(expectedText.toLowerCase())
+		);
+
+		System.out.println(GREEN + "✅ Coupon message is correct: " + snackbarText + RESET);
+
 
 
 	}

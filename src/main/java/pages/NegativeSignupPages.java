@@ -40,8 +40,8 @@ public final class NegativeSignupPages extends SignupObjRepository {
 	public void launchZltV7() {
 
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-//		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
-//		click(submit);
+		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
+		click(submit);
 		//        popup();
 	}
 	private void popup() {
@@ -112,8 +112,8 @@ public final class NegativeSignupPages extends SignupObjRepository {
 		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 
 		// Enter access code and submit
-//		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
-//		click(submit);
+		type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
+		click(submit);
 		Common.waitForElement(2);
 		// Open profile and signup
 		click(profile);
