@@ -125,4 +125,20 @@ Scenario Outline: TC_UI_Admin_OEV_13 | Verify that a newsletter email is receive
 Examples:
   | TD_ID               |
   | TD_UI_Admin_OEV_13  |
+  
+    @Mail
+  @TC_UI_Admin_OEV_14
+Scenario Outline: TC_UI_Admin_OEV_14 |Verify the RTO Order Flow before the order is delivered.| "<TD_ID>"  
+  Given the Admin verifies the RTO order flow before the order is delivered.
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Admin_OEV_14   |
+  
+     @Mail
+  @TC_UI_Admin_OEV_15
+Scenario Outline: TC_UI_Admin_OEV_15 |Verify the RTO Order Flow for an exchange order before delivered.| "<TD_ID>"  
+  Given the Admin verifies the RTO order flow for an exchange order before the order is delivered.
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Admin_OEV_15   |
  

@@ -123,7 +123,15 @@ public class AdminEmailVerifyOrderFlowStepDef {
 	}
 
 
+			@Given("the Admin verifies the RTO order flow before the order is delivered.")
+			public void the_admin_verifies_the_rto_order_flow_before_the_order_is_delivered() throws InterruptedException {
+				adminEmail.verifyNormalRTOFlowDelivered();
+			}
 
+				@Given("the Admin verifies the RTO order flow for an exchange order before the order is delivered.")
+				public void the_admin_verifies_the_rto_order_flow_for_an_exchange_order_before_the_order_is_delivered() {
+				
+				}
 
 
 
