@@ -36,7 +36,7 @@
 <a href="#"><span class="badge badge-primary">Zlaata_Automation_Reports</span></a>
 </li>
 <li class="m-r-10">
-<a href="#"><span class="badge badge-primary">Feb 13, 2026 12:16:13 pm</span></a>
+<a href="#"><span class="badge badge-primary">Feb 16, 2026 10:23:00 AM</span></a>
 </li>
 </ul>
 </div>
@@ -58,6 +58,11 @@
 <span class="ico"><i class="fa fa-tag"></i></span>
 </a>
 </li>
+<li class="nav-item dropdown" onclick="toggleView('exception-view')">
+<a id="nav-exception" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-bug"></i></span>
+</a>
+</li>
 </ul>
 </div>
 </div>      <div class="vcontainer">
@@ -67,25 +72,25 @@
 <div class="col-md-3">
 <div class="card"><div class="card-body">
 <p class="m-b-0">Started</p>
-<h3>Feb 13, 2026 12:16:13 pm</h3>
+<h3>Feb 16, 2026 10:23:00 AM</h3>
 </div></div>
 </div>
 <div class="col-md-3">
 <div class="card"><div class="card-body">
 <p class="m-b-0">Ended</p>
-<h3>Feb 13, 2026 12:20:14 pm</h3>
+<h3>Feb 16, 2026 10:26:29 AM</h3>
 </div></div>
 </div>
 <div class="col-md-3">
 <div class="card"><div class="card-body">
 <p class="m-b-0 text-pass">Features Passed</p>
-<h3>1</h3>
+<h3>0</h3>
 </div></div>
 </div>
 <div class="col-md-3">
 <div class="card"><div class="card-body">
 <p class="m-b-0 text-fail">Features Failed</p>
-<h3>0</h3>
+<h3>1</h3>
 </div></div>
 </div>
 </div>
@@ -101,12 +106,12 @@
 </div>
 </div>
 <div class="card-footer">
-<div><small data-tooltip='100%'>
-<b>1</b> features passed
+<div><small data-tooltip='0%'>
+<b>0</b> features passed
 </small>
 </div>
 <div>
-<small data-tooltip='0%'><b>0</b> features failed,
+<small data-tooltip='100%'><b>1</b> features failed,
 <b>0</b> skipped, <b data-tooltip='0%'>0</b> others
 </small>
 </div>
@@ -124,9 +129,9 @@
 </div>
 </div>
 <div class="card-footer">
-<div><small data-tooltip='100%'><b>1</b> scenarios passed</small></div>
+<div><small data-tooltip='0%'><b>0</b> scenarios passed</small></div>
 <div>
-<small data-tooltip='0%'><b>0</b> scenarios failed,
+<small data-tooltip='100%'><b>1</b> scenarios failed,
 <b>0</b> skipped, <b data-tooltip='%'>0</b> others
 </small>
 </div>
@@ -144,9 +149,9 @@
 </div>
 </div>
 <div class="card-footer">
-<div><small data-tooltip='100%'><b>4</b> steps passed</small></div>
+<div><small data-tooltip='50%'><b>1</b> steps passed</small></div>
 <div>
-<small data-tooltip='0%'><b>0</b> steps failed,
+<small data-tooltip='50%'><b>1</b> steps failed,
 <b>0</b> skipped, <b data-tooltip='%'>0</b> others
 </small>
 </div>
@@ -163,7 +168,7 @@
 </div></div>
 <script>
 var timeline = {
-"Coupon Module":241.012
+"Verify Order Email Flow":208.261
 };
 </script>
 <div class="row">
@@ -173,20 +178,20 @@ var timeline = {
 <div class="card-body pb-0 pt-0"><table class="table table-sm table-bordered">
 <thead><tr class="bg-gray"><th>Name</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Others</th><th>Passed %</th></tr></thead><tbody>
 <tr>
-<td>@gow</td>
+<td>@TC_UI_Admin_OEV_14</td>
+<td>0</td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td>0</td>
-<td>100%</td>
+<td>0%</td>
 </tr>
 <tr>
-<td>@TC_UI_Zlaata_CP_20</td>
+<td>@Mail</td>
+<td>0</td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
-<td>0</td>
-<td>100%</td>
+<td>0%</td>
 </tr>
 </tbody>
 </table></div>
@@ -197,19 +202,19 @@ var timeline = {
 <script>
 var statusGroup = {
 parentCount: 5,
-passParent: 1,
-failParent: 0,
+passParent: 0,
+failParent: 1,
 warningParent: 0,
 skipParent: 0,
 childCount: 5,
-passChild: 1,
-failChild: 0,
+passChild: 0,
+failChild: 1,
 warningChild: 0,
 skipChild: 0,
 infoChild: 0,
 grandChildCount: 5,
-passGrandChild: 4,
-failGrandChild: 0,
+passGrandChild: 1,
+failGrandChild: 1,
 warningGrandChild: 0,
 skipGrandChild: 0,
 infoGrandChild: 0,
@@ -225,7 +230,7 @@ eventsCount: 5,
 <li class="dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-exclamation-circle"></i></a>
 <ul id="status-toggle" class="dropdown-menu dropdown-md p-v-0">
-<a class="dropdown-item" status="pass" href="#"><span>Pass</span><span class="status success"></span></a>
+<a class="dropdown-item" status="fail" href="#"><span>Fail</span><span class="status danger"></span></a>
 <div class="dropdown-divider"></div>
 <a status="clear" class="dropdown-item" href="#"><span>Clear</span><span class="pull-right"><i class="fa fa-close"></i></span></a>
 </ul>
@@ -233,31 +238,31 @@ eventsCount: 5,
 <li class="dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tag"></i></a>
 <ul id="tag-toggle" class="dropdown-menu dropdown-md p-v-0">
-<a class="dropdown-item" href="#">@gow</a><a class="dropdown-item" href="#">@TC_UI_Zlaata_CP_20</a>
+<a class="dropdown-item" href="#">@TC_UI_Admin_OEV_14</a><a class="dropdown-item" href="#">@Mail</a>
 </ul>
 </li>
 </ul>
 </div>    <div class="test-list-wrapper scrollable">
       <ul class="test-list-item">
-        <li class="test-item"  status="pass" test-id="1"
+        <li class="test-item"  status="fail" test-id="1"
           author=""
           tag=""
           device="">
           <div class="test-detail">
-            <p class="name">Coupon Module</p>
+            <p class="name">Verify Order Email Flow</p>
             <p class="text-sm">
-              <span>12:16:13 pm</span> / <span>00:04:01:012</span>
-              <span class="badge pass-bg log float-right">Pass</span>
+              <span>10:23:01 AM</span> / <span>00:03:28:261</span>
+              <span class="badge fail-bg log float-right">Fail</span>
             </p>
           </div>
           <div class="test-contents d-none">
 <div class="detail-head">
 <div class="p-v-10">
 <div class="info">
-<h5 class="test-status text-pass">Coupon Module</h5>
-<span class='badge badge-success'>02.13.2026 12:16:13 pm</span>
-<span class='badge badge-danger'>02.13.2026 12:20:14 pm</span>
-<span class='badge badge-default'>00:04:01:012</span>
+<h5 class="test-status text-fail">Verify Order Email Flow</h5>
+<span class='badge badge-success'>02.16.2026 10:23:01 AM</span>
+<span class='badge badge-danger'>02.16.2026 10:26:29 AM</span>
+<span class='badge badge-default'>00:03:28:261</span>
 &middot; <span class='uri-anchor badge badge-default'>#test-id=1</span>
 <span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
 <span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
@@ -269,34 +274,66 @@ eventsCount: 5,
   <div class="card">
     <div class="card-header" role="tab">
       <div class="card-title">
-        <div class="node" id="2"><span class="badge log pass-bg mr-2">Pass</span>TC_UI_Zlaata_CP_20 |Verify the functionality for news letter coupon in User Application.| "<TD_ID>"</div>
+        <div class="node" id="2"><span class="badge log fail-bg mr-2">Fail</span>TC_UI_Admin_OEV_14 |Verify the RTO Order Flow before the order is delivered.| "<TD_ID>"</div>
       </div>
     </div>
-        <div class="scenario_outline collapse">
+        <div class="scenario_outline ">
             <div class="card-body l1">
               <div class="card-header">
                 <div class="card-title outline-child">
-                  <div class="node" id="3"><span class="badge log pass-bg mr-2">Pass</span>TC_UI_Zlaata_CP_20 |Verify the functionality for news letter coupon in User Application.| "TD_UI_Zlaata_CP_20"</div>
+                  <div class="node" id="3"><span class="badge log fail-bg mr-2">Fail</span>TC_UI_Admin_OEV_14 |Verify the RTO Order Flow before the order is delivered.| "TD_UI_Admin_OEV_14"</div>
                 </div>
               </div>
-              <div class="card-body mt-3 collapse">
-                  <div class="step pass-bg">
-                    <span>Given I sign up with a new phone numbers</span>
+              <div class="card-body mt-3 ">
+                  <div class="step fail-bg">
+                    <span>Given the Admin verifies the RTO order flow before the order is delivered.</span>
       <div>
+        <textarea disabled class="code-block">org.openqa.selenium.ElementClickInterceptedException: element click intercepted: Element <span class="mr-1 truncate font-medium" data-testid="Netbanking">...</span> is not clickable at point (621, 604). Other element would receive the click: <div class=" mx-auto flex h-16 w-full items-center justify-center bg-gradient-to-t from-surface-25 to-transparent">...</div>
+  (Session info: chrome=144.0.7559.133)
+Build info: version: '4.34.0', revision: '707dcb4246*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '11.0.28'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [a682dbd50fe6443cfacd7d9d3ee7cab0, clickElement {id=f.CE7ED2AFA5C296F8DDB9D9641EE61A89.d.9DF3649F1ED7E546346971DB6FB952E6.e.2}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 144.0.7559.133, chrome: {chromedriverVersion: 144.0.7559.133 (7da823b1d59..., userDataDir: C:\Users\SAROJK~1\AppData\L...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:61793}, goog:processID: 18120, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:61793/devtoo..., se:cdpVersion: 144.0.7559.133, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on windows (a682dbd50fe6443cfacd7d9d3ee7cab0)] -> xpath: //span[@data-testid='Netbanking']]
+Session ID: a682dbd50fe6443cfacd7d9d3ee7cab0
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+	at org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:138)
+	at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:50)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:215)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:544)
+	at org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:223)
+	at org.openqa.selenium.remote.RemoteWebElement.click(RemoteWebElement.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor91.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.openqa.selenium.support.decorators.WebDriverDecorator.call(WebDriverDecorator.java:315)
+	at org.openqa.selenium.support.decorators.DefaultDecorated.call(DefaultDecorated.java:48)
+	at org.openqa.selenium.support.decorators.WebDriverDecorator.lambda$createProxyFactory$3(WebDriverDecorator.java:405)
+	at net.bytebuddy.renamed.java.lang.Object$ByteBuddy$aQemIBmi.click(Unknown Source)
+	at pages.AdminEmailVerifyOrderFlowPage.addProductToCartAndPlacedTheOrder(AdminEmailVerifyOrderFlowPage.java:264)
+	at pages.AdminEmailVerifyOrderFlowPage.verifyNormalRTOFlowDelivered(AdminEmailVerifyOrderFlowPage.java:3704)
+	at stepDef.AdminEmailVerifyOrderFlowStepDef.the_admin_verifies_the_rto_order_flow_before_the_order_is_delivered(AdminEmailVerifyOrderFlowStepDef.java:128)
+	at ✽.the Admin verifies the RTO order flow before the order is delivered.(file:///C:/Users/Sarojkumar/git/ZlaataQAsever33/src/test/resources/features/AdminFeature/emailVerify.feature:132)
+</textarea>
+      
       </div>
                   </div>
                   <div class="step pass-bg">
-                    <span>And I subscribe to the newsletter with a random email</span>
-      <div>
+                    <span>stepDef.Hooks.afterScenario(io.cucumber.java.Scenario)</span>
+      <div>❌ Failed to capture screenshot in @After hook: Session ID is null. Using WebDriver after calling quit()?
+Build info: version: '4.34.0', revision: '707dcb4246*'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '11.0.28'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [null, screenshot {}]
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 144.0.7559.133, chrome: {chromedriverVersion: 144.0.7559.133 (7da823b1d59..., userDataDir: C:\Users\SAROJK~1\AppData\L...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:61793}, goog:processID: 18120, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:61793/devtoo..., se:cdpVersion: 144.0.7559.133, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
       </div>
-                  </div>
-                  <div class="step pass-bg">
-                    <span>Then I add a product to the cart and apply the coupon</span>
-      <div>
-      </div>
-                  </div>
-                  <div class="step pass-bg">
-                    <span>And place the order afetr  that coupon disapper from application are not</span>
       <div>
       </div>
                   </div>
@@ -327,15 +364,15 @@ eventsCount: 5,
 <li class="test-item">
 <div class="test-detail">
 <span class="meta">
-<span class='badge log pass-bg'>1</span>
+<span class='badge log badge-danger'>1</span>
 </span>
-<p class="name">@gow</p>
+<p class="name">@TC_UI_Admin_OEV_14</p>
 <p class="duration text-sm">1 tests</p>
 </div>
 <div class="test-contents d-none">
 <div class="info">
-<h4>@gow</h4>
-<span status="pass" class='badge log pass-bg'>1 passed</span>
+<h4>@TC_UI_Admin_OEV_14</h4>
+<span status="fail" class='badge log badge-danger'>1 failed</span>
 </div>
 <table class='table table-sm mt-4'>
 <thead>
@@ -346,13 +383,13 @@ eventsCount: 5,
 </tr>
 </thead>
 <tbody>
-<tr class="tag-test-status" status="pass">
-<td><span class="badge log pass-bg">Pass</span></td>
-<td>12:16:13 pm</td>
+<tr class="tag-test-status" status="fail">
+<td><span class="badge log fail-bg">Fail</span></td>
+<td>10:23:01 AM</td>
 <td>
-<a href="#" class="linked" test-id='1' id='3'>TC_UI_Zlaata_CP_20 |Verify the functionality for news letter coupon in User Application.| "TD_UI_Zlaata_CP_20"</a>
+<a href="#" class="linked" test-id='1' id='3'>TC_UI_Admin_OEV_14 |Verify the RTO Order Flow before the order is delivered.| "TD_UI_Admin_OEV_14"</a>
 <div class="">
-<span class="badge badge-default">Coupon Module.TC_UI_Zlaata_CP_20 |Verify the functionality for news letter coupon in User Application.| "TD_UI_Zlaata_CP_20"</span>
+<span class="badge badge-default">Verify Order Email Flow.TC_UI_Admin_OEV_14 |Verify the RTO Order Flow before the order is delivered.| "TD_UI_Admin_OEV_14"</span>
 </div>
 </td>
 </tr>
@@ -363,15 +400,15 @@ eventsCount: 5,
 <li class="test-item">
 <div class="test-detail">
 <span class="meta">
-<span class='badge log pass-bg'>1</span>
+<span class='badge log badge-danger'>1</span>
 </span>
-<p class="name">@TC_UI_Zlaata_CP_20</p>
+<p class="name">@Mail</p>
 <p class="duration text-sm">1 tests</p>
 </div>
 <div class="test-contents d-none">
 <div class="info">
-<h4>@TC_UI_Zlaata_CP_20</h4>
-<span status="pass" class='badge log pass-bg'>1 passed</span>
+<h4>@Mail</h4>
+<span status="fail" class='badge log badge-danger'>1 failed</span>
 </div>
 <table class='table table-sm mt-4'>
 <thead>
@@ -382,13 +419,65 @@ eventsCount: 5,
 </tr>
 </thead>
 <tbody>
-<tr class="tag-test-status" status="pass">
-<td><span class="badge log pass-bg">Pass</span></td>
-<td>12:16:13 pm</td>
+<tr class="tag-test-status" status="fail">
+<td><span class="badge log fail-bg">Fail</span></td>
+<td>10:23:01 AM</td>
 <td>
-<a href="#" class="linked" test-id='1' id='3'>TC_UI_Zlaata_CP_20 |Verify the functionality for news letter coupon in User Application.| "TD_UI_Zlaata_CP_20"</a>
+<a href="#" class="linked" test-id='1' id='3'>TC_UI_Admin_OEV_14 |Verify the RTO Order Flow before the order is delivered.| "TD_UI_Admin_OEV_14"</a>
 <div class="">
-<span class="badge badge-default">Coupon Module.TC_UI_Zlaata_CP_20 |Verify the functionality for news letter coupon in User Application.| "TD_UI_Zlaata_CP_20"</span>
+<span class="badge badge-default">Verify Order Email Flow.TC_UI_Admin_OEV_14 |Verify the RTO Order Flow before the order is delivered.| "TD_UI_Admin_OEV_14"</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="test-content scrollable">
+<div class="test-content-detail">
+<div class="detail-body"></div>
+</div>
+</div>
+</div><div class="test-wrapper row view exception-view attributes-view">
+<div class="test-list">
+<div class="test-list-tools">
+<ul class="tools pull-left"><li><a href=""><span class="font-size-14">Exception</span></a></li></ul>
+<ul class="tools text-right"><li><a href="#"><span class="badge badge-primary">1</span></a></li></ul>
+</div>
+<div class="test-list-wrapper scrollable">
+<ul class="test-list-item">
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log badge-danger'>1</span>
+</span>
+<p class="name">org.openqa.selenium.ElementClickInterceptedException</p>
+<p class="duration text-sm">1 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>org.openqa.selenium.ElementClickInterceptedException</h4>
+<span status="fail" class='badge log badge-danger'>1 failed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="fail">
+<td><span class="badge log fail-bg">Fail</span></td>
+<td>10:23:12 AM</td>
+<td>
+<a href="#" class="linked" test-id='1' id='6'>Given the Admin verifies the RTO order flow before the order is delivered.</a>
+<div class="">
+<span class="badge badge-default">Verify Order Email Flow.TC_UI_Admin_OEV_14 |Verify the RTO Order Flow before the order is delivered.| "TD_UI_Admin_OEV_14".Given the Admin verifies the RTO order flow before the order is delivered.</span>
 </div>
 </td>
 </tr>

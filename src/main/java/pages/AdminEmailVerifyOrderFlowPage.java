@@ -62,7 +62,7 @@ public class AdminEmailVerifyOrderFlowPage extends AdminEmailVerifyOrderFlowObjR
 
 		    // Open cart
 		    driver.findElement(By.xpath("//a[@class='Cls_cart_btn Cls_redirect_restrict']")).click();
-		    Common.waitForElement(1);
+		    Common.waitForElement(2);
 
 		    // ✅ STEP 1: Check if cart is already empty
 		    try {
@@ -699,7 +699,7 @@ public void orderStatusShippedToDelivered() {
     System.out.println(line);
     System.out.println(GREEN + "🚚 Updating Order Status for Order ID: " + orderId + RESET);
     System.out.println(line);
-
+    Common.waitForElement(2);
     driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationAdminUrl());
 
     driver.get(Common.getValueFromTestDataMap("ExcelPath"));
@@ -3060,6 +3060,371 @@ public void orderExchangeForUserSide() {
 	    System.out.println(line);
 
 	}
+	
+	public void orderStatusShippedToRTO() {
+
+	    String GREEN = "\u001B[32m";
+	    String YELLOW = "\u001B[33m";
+	    String RED = "\u001B[31m";
+	    String RESET = "\u001B[0m";
+	    String line = "──────────────────────────────────────────────────────────────";
+
+	    System.out.println(line);
+	    System.out.println(GREEN + "🚚 Updating Order Status for Order ID: " + orderId + RESET);
+	    System.out.println(line);
+	    Common.waitForElement(2);
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationAdminUrl());
+
+	    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+	    System.out.println(GREEN + "✅ Navigated to Orders page" + RESET);
+
+//	    // ✅ Search Order ID
+//	    wait.until(ExpectedConditions.elementToBeClickable(orderIdbtn)).click();
+//	    wait.until(ExpectedConditions.elementToBeClickable(orderSearchBox));
+//	    orderSearchBox.clear();
+//	    orderSearchBox.sendKeys(orderId);
+//	    orderSearchBox.sendKeys(Keys.ENTER);
+	    Common.waitForElement(3);
+
+	    // ✅ Validate Order Exists
+	    try {
+	        wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("//td/span[normalize-space(text())='" + orderId + "']")));
+	        System.out.println(GREEN + "✅ Order found in table!" + RESET);
+	    } catch (TimeoutException e) {
+	        System.out.println(RED + "❌ Order not found! Stopping execution." + RESET);
+	        return;
+	    }
+
+	    // ✅ Open Edit
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+	    System.out.println(GREEN + "✅ Opened Edit page" + RESET);
+
+	    // ✅ Step 1: Set to Out For Delivery
+	    wait.until(ExpectedConditions.elementToBeClickable(orderStatus));
+		waitFor(orderStatus);
+		click(orderStatus);
+		Common.waitForElement(2);
+	    Select step1 = new Select(orderStatus);
+	    step1.selectByVisibleText("Out For Delivery");
+	    System.out.println(GREEN + "✅ Status changed → Out For Delivery" + RESET);
+	    Common.waitForElement(3);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton)).click();
+	    System.out.println(GREEN + "💾 Saved changes (Out For Delivery)" + RESET);
+
+	    // ✅ Re-open Edit
+	    Common.waitForElement(5);
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+	    System.out.println(GREEN + "✅ Re-opened Edit page" + RESET);
+
+	    // ✅ Step 2: Set to Order Delivered
+	    wait.until(ExpectedConditions.elementToBeClickable(orderStatus));
+	    waitFor(orderStatus);
+		click(orderStatus);
+		Common.waitForElement(2);
+	    Select step2 = new Select(orderStatus);
+	    step2.selectByVisibleText("RTO Initiated");
+	    System.out.println(GREEN + "✅ Status changed → RTO Initiated" + RESET);
+
+	    Common.waitForElement(3);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton)).click();
+	    System.out.println(GREEN + "💾 Saved changes (Order Delivered)" + RESET);
+
+	    System.out.println(line);
+	    System.out.println(GREEN + "🎉 Order successfully updated from Shipped → RTO Initiated!" + RESET);
+	    System.out.println(line);
+	}
+	
+	public void orderRTOInitiaToDelivered() {
+		String CYAN = "\u001B[36m";
+		String YELLOW = "\u001B[33m";
+		String GREEN = "\u001B[32m";
+		String RED = "\u001B[31m";
+		String RESET = "\u001B[0m";
+		String line = "──────────────────────────────────────────────────────────────";
+		System.out.println(line);
+	    System.out.println(GREEN + "🚚 Giving  Refund  for Order ID: " + orderId + RESET);
+	    System.out.println(line);
+
+	//    adminLoginApp();
+	    
+		
+	    driver.get(Common.getValueFromTestDataMap("Link"));
+		System.out.println("Redirect to Canceled Order Page");
+		Common.waitForElement(1);
+		
+	    // ✅ Go to order search box and search order ID
+		Common.waitForElement(3);
+	    wait.until(ExpectedConditions.elementToBeClickable(orderIdbtn));
+	    waitFor(orderIdbtn);
+		click(orderIdbtn);
+		 Common.waitForElement(1);
+		wait.until(ExpectedConditions.elementToBeClickable(orderSearchBox));
+	    Common.waitForElement(1);
+		waitFor(orderSearchBox);
+	    orderSearchBox.clear();
+	    orderSearchBox.sendKeys(orderId);
+	    Common.waitForElement(1);
+	    orderSearchBox.sendKeys(Keys.ENTER);
+	    Common.waitForElement(2);
+
+	    // ✅ Verify order is displayed
+	    try {
+	        WebElement orderRow = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("//td/span[normalize-space(text())='" + orderId + "']")));
+	        System.out.println(GREEN + "✅ Order found in table!" + RESET);
+	    } catch (TimeoutException e) {
+	        System.out.println(RED + "❌ Order not found! Stopping execution." + RESET);
+	        return;
+	    }
+
+	    // ✅ Click Edit button
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn));
+	    Common.waitForElement(2);
+		waitFor(editBtn);
+		click(editBtn);
+	    System.out.println(GREEN + "✅ Clicked Edit" + RESET);
+
+	    // ✅ Step 1: Set to Return Accept
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(returnStatus));
+		waitFor(returnStatus);
+		click(returnStatus);
+		Common.waitForElement(2);
+	    Select step3 = new Select(returnStatus);
+	    step3.selectByVisibleText("RTO In Transit");
+	    System.out.println(GREEN + "✅ Status changed →RTO In Transit" + RESET);
+
+		 // ✅ Save & Back
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+	    waitFor(saveButton);
+	    click(saveButton);
+	  
+
+	    // ✅ Again click Edit for second update
+	    Common.waitForElement(5);
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+	    System.out.println(GREEN + "✅ Re-opened Edit Page (RTO In Transit)" + RESET);
+	    
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(returnStatus));
+		waitFor(returnStatus);
+		click(returnStatus);
+		Common.waitForElement(2);
+	    Select step4 = new Select(returnStatus);
+	    step4.selectByVisibleText("RTO Out For Delivery");
+	    System.out.println(GREEN + "✅ Status changed → RTO Out For Delivery" + RESET);
+
+	    // ✅ Save & Back
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+	    waitFor(saveButton);
+	    click(saveButton);
+	    
+	 // ✅ Again click Edit for second update
+	    Common.waitForElement(5);
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+	    System.out.println(GREEN + "✅ Re-opened Edit Page (RTO Delivered)" + RESET);
+	    
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(returnStatus));
+		waitFor(returnStatus);
+		click(returnStatus);
+		Common.waitForElement(2);
+	    Select step5 = new Select(returnStatus);
+	    step5.selectByVisibleText("RTO Delivered");
+	    System.out.println(GREEN + "✅ Status changed → RTO Delivered" + RESET);
+
+	 // ✅ Save & Back
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+	    waitFor(saveButton);
+	    click(saveButton);
+	    
+	 // ✅ Again click Edit for second update
+	    Common.waitForElement(3);
+	  
+		 	
+	}
+	public void orderExchangeRTOInitiaToDelivered() {
+		String CYAN = "\u001B[36m";
+		String YELLOW = "\u001B[33m";
+		String GREEN = "\u001B[32m";
+		String RED = "\u001B[31m";
+		String RESET = "\u001B[0m";
+		String line = "──────────────────────────────────────────────────────────────";
+		System.out.println(line);
+	    System.out.println(GREEN + "🚚 Giving  Refund  for Order ID: " + orderId + RESET);
+	    System.out.println(line);
+
+	//    adminLoginApp();
+	    
+		
+	    driver.get(Common.getValueFromTestDataMap("Search bar"));
+		System.out.println("Redirect to Canceled Order Page");
+		Common.waitForElement(1);
+		
+	    // ✅ Go to order search box and search order ID
+		Common.waitForElement(3);
+	    wait.until(ExpectedConditions.elementToBeClickable(orderIdbtn));
+	    waitFor(orderIdbtn);
+		click(orderIdbtn);
+		 Common.waitForElement(1);
+		wait.until(ExpectedConditions.elementToBeClickable(orderSearchBox));
+	    Common.waitForElement(1);
+		waitFor(orderSearchBox);
+	    orderSearchBox.clear();
+	    orderSearchBox.sendKeys(orderId);
+	    Common.waitForElement(1);
+	    orderSearchBox.sendKeys(Keys.ENTER);
+	    Common.waitForElement(2);
+
+	    // ✅ Verify order is displayed
+	    try {
+	        WebElement orderRow = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("//td/span[normalize-space(text())='" + orderId + "']")));
+	        System.out.println(GREEN + "✅ Order found in table!" + RESET);
+	    } catch (TimeoutException e) {
+	        System.out.println(RED + "❌ Order not found! Stopping execution." + RESET);
+	        return;
+	    }
+
+	    // ✅ Click Edit button
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn));
+	    Common.waitForElement(2);
+		waitFor(editBtn);
+		click(editBtn);
+	    System.out.println(GREEN + "✅ Clicked Edit" + RESET);
+
+	    // ✅ Step 1: Set to Return Accept
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(returnStatus));
+		waitFor(returnStatus);
+		click(returnStatus);
+		Common.waitForElement(2);
+	    Select step3 = new Select(returnStatus);
+	    step3.selectByVisibleText("RTO In Transit");
+	    System.out.println(GREEN + "✅ Status changed →RTO In Transit" + RESET);
+
+		 // ✅ Save & Back
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+	    waitFor(saveButton);
+	    click(saveButton);
+	  
+
+	    // ✅ Again click Edit for second update
+	    Common.waitForElement(5);
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+	    System.out.println(GREEN + "✅ Re-opened Edit Page (RTO In Transit)" + RESET);
+	    
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(returnStatus));
+		waitFor(returnStatus);
+		click(returnStatus);
+		Common.waitForElement(2);
+	    Select step4 = new Select(returnStatus);
+	    step4.selectByVisibleText("RTO Out For Delivery");
+	    System.out.println(GREEN + "✅ Status changed → RTO Out For Delivery" + RESET);
+
+	    // ✅ Save & Back
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+	    waitFor(saveButton);
+	    click(saveButton);
+	    
+	 // ✅ Again click Edit for second update
+	    Common.waitForElement(5);
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+	    System.out.println(GREEN + "✅ Re-opened Edit Page (RTO Delivered)" + RESET);
+	    
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(returnStatus));
+		waitFor(returnStatus);
+		click(returnStatus);
+		Common.waitForElement(2);
+	    Select step5 = new Select(returnStatus);
+	    step5.selectByVisibleText("RTO Delivered");
+	    System.out.println(GREEN + "✅ Status changed → RTO Delivered" + RESET);
+
+	 // ✅ Save & Back
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(saveButton));
+	    waitFor(saveButton);
+	    click(saveButton);
+	    
+	 // ✅ Again click Edit for second update
+	    Common.waitForElement(3);
+	  
+		 	
+	}
+	public void updateExchangeShippedToExchangeRTO() {
+
+	    String GREEN = "\u001B[32m";
+	    String YELLOW = "\u001B[33m";
+	    String RED = "\u001B[31m";
+	    String RESET = "\u001B[0m";
+	    String line = "──────────────────────────────────────────────────────────────";
+
+	    System.out.println(line);
+	    System.out.println(GREEN + "🔄 Updating Exchange Order Status (Shipped → RTO) for Order ID: " + orderId + RESET);
+	    System.out.println(line);
+
+	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationAdminUrl());
+	    driver.get(Common.getValueFromTestDataMap("Link"));
+	    System.out.println(GREEN + "✅ Navigated to Orders page" + RESET);
+
+	    Common.waitForElement(3);
+
+	    // ✅ Validate Order Exists
+	    try {
+	        wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("//td/span[normalize-space(text())='" + orderId + "']")));
+	        System.out.println(GREEN + "✅ Exchange Order found in table!" + RESET);
+	    } catch (TimeoutException e) {
+	        System.out.println(RED + "❌ Exchange Order not found! Stopping execution." + RESET);
+	        return;
+	    }
+
+	    // ✅ Open Edit Page
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn)).click();
+	    System.out.println(GREEN + "✅ Opened Edit page" + RESET);
+
+	    // ✅ Step 1 → Change to Exchange Out For Delivery (Shipped)
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(exchangeStatus));
+	    waitFor(exchangeStatus);
+	    click(exchangeStatus);
+	    Common.waitForElement(1);
+	    new Select(exchangeStatus).selectByVisibleText("Exchange Out For Delivery");
+	    System.out.println(GREEN + "📦 Status changed → Exchange Out For Delivery" + RESET);
+	    Common.waitForElement(2);
+	    click(saveButton);
+	    System.out.println(GREEN + "💾 Saved (Exchange Out For Delivery)" + RESET);
+
+	    // ✅ Re-open Edit Page
+	    Common.waitForElement(4);
+	    click(editBtn);
+
+	    // ✅ Step 2 → Change to Exchange Delivered
+	    Common.waitForElement(2);
+	    wait.until(ExpectedConditions.elementToBeClickable(exchangeStatus));
+	    waitFor(exchangeStatus);
+	    click(exchangeStatus);
+	    Common.waitForElement(1);
+	    new Select(exchangeStatus).selectByVisibleText("RTO Initiated");
+	    System.out.println(GREEN + "📥 Status changed → RTO Initiated" + RESET);
+	    Common.waitForElement(2);
+	    click(saveButton);
+	    System.out.println(GREEN + "💾 Saved (RTO Initiated)" + RESET);
+	    Common.waitForElement(2);
+	    System.out.println(line);
+	    System.out.println(GREEN + "🎉 Exchange status successfully updated → RTO Initiated!" + RESET);
+	    System.out.println(line);
+	}
+
 //String totalMRF="₹1999", discountedMRP="₹999", youSaved="₹1000", totalAmount="₹999", orderId="ZLTQA/25-26/18079";
 //TC01 Verify Order Placed Confirm
 		public void verifyOrderPlacedEmail() throws InterruptedException {
@@ -3330,7 +3695,58 @@ public void orderExchangeForUserSide() {
 				
 				
 				
-			}		
+			}	
+			
+//TC-13 Verify RTO flow
+			
+			public void verifyNormalRTOFlowDelivered() throws InterruptedException {
+				
+				addProductToCartAndPlacedTheOrder();
+				
+				updateOrderStatusToShipped();
+
+				orderStatusShippedToRTO();
+				
+				openUserApp();
+				
+				verifyOrderLabel("RTO");
+				
+				orderRTOInitiaToDelivered();
+				
+				openUserApp();
+				
+				verifyOrderLabel("Order Cancelled");
+				
+				
+			}
+			
+//TC-15 Verify RTO flow
+			
+			public void verifyExchangeRTOFlowDelivered() throws InterruptedException {
+				
+				addProductToCartAndPlacedTheOrder();
+				
+				updateOrderStatusToShipped();
+
+				orderStatusShippedToDelivered();
+				
+				orderExchangeForUserSide();
+												
+				orderExchangeRequestAcceptByAdmin();
+								
+				updateExchangeRequestToShipped();
+												
+				updateExchangeShippedToExchangeRTO();
+				
+				openUserApp();
+				verifyOrderLabelforExchange("RTO");
+				
+				orderExchangeRTOInitiaToDelivered();
+				
+				verifyOrderLabelforExchange("Exchange Order Cancel");
+				
+				
+			}
 	
 	
 	
