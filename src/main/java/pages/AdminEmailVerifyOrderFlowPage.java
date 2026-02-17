@@ -1121,6 +1121,7 @@ public void orderExchangeForUserSide() {
 	    System.out.println(CYAN + line + RESET);
 	    System.out.println(GREEN + "🚀 Starting Order Exchange Flow..." + RESET);
 	    System.out.println(CYAN + line + RESET);
+	    Common.waitForElement(3);
 	    driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
 	    Common.waitForElement(3);
 	    wait.until(ExpectedConditions.elementToBeClickable(myProfileIcon));
