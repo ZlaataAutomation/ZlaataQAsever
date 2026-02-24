@@ -41,6 +41,7 @@ public class PageObjectManager {
     private Admin_Order_Page adminorder;
     private Calculation_MyOrder_Page calculation;
     private TryAlongSectionPage tryAlong;
+    private Reg_TrackOrder_Page trackOrder;
 
    
 
@@ -167,5 +168,9 @@ public class PageObjectManager {
 	
 	public TryAlongSectionPage getTryAlongSectionPage() {
 		return (tryAlong == null) ? tryAlong = new TryAlongSectionPage(driver): tryAlong;
+	}
+	
+	public Reg_TrackOrder_Page getReg_TrackOrder_Page() {
+		return (trackOrder == null) ? trackOrder = new Reg_TrackOrder_Page(driver): trackOrder;
 	}
 }

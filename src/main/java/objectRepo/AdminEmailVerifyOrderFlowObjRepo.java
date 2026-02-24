@@ -38,7 +38,7 @@ public abstract class AdminEmailVerifyOrderFlowObjRepo extends BasePage {
 	
 	@FindBy(xpath = "//button[@onclick='submitOTP()']")
 	protected WebElement verifyotp;
-	@FindBy(xpath = "//div[@class='navigation_cta_icon_list account_icon_btn open__popup ']")
+	@FindBy(xpath = "//button[contains(@class,'account_icon_btn')]")
 	protected WebElement profile;
 	
 	@FindBy(id = "userNumber")
@@ -50,17 +50,17 @@ public abstract class AdminEmailVerifyOrderFlowObjRepo extends BasePage {
 	@FindBy(xpath = "//form[@class='digit-group login_otp_input_form']")
 	protected WebElement otpEnterTextBox;
 	
-	@FindBy(xpath = "//input[@id='search_input']")
+	@FindBy(xpath = "//button[@id='searchBtn']")
 	protected WebElement userSearchBox;
 	
-	@FindBy(xpath = "//div[contains(@class,'product_list_add_to_cart')]")
+	@FindBy(xpath = "//button[contains(@class,'prod_add_to_cart') and contains(@class,'ClsSingleCart')]")
 	protected WebElement addToBag;
 	
 	    
 	@FindBy(xpath = "//button[contains(@class,'add_bag_prod_buy_now_btn') and normalize-space()='Add to Bag']")
 	protected WebElement addToCartBtn;
 	
-	@FindBy(xpath = "//a[@title='Cart Icon']")
+	@FindBy(xpath = "//button[contains(@class,'account_icon_btn')]")
 	protected WebElement bagIcon;
 	
 	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Continue']")
@@ -120,7 +120,7 @@ public abstract class AdminEmailVerifyOrderFlowObjRepo extends BasePage {
 	 @FindBy(xpath="//label[normalize-space()='Payment Refund']/following-sibling::select")
 	    protected WebElement paymentRefundBtn;
 	 
-	 @FindBy(xpath="(//div[@title='User Icon'])[1]")
+	 @FindBy(xpath="//button[contains(@class,'account_icon_btn')]")
 	    protected WebElement myProfileIcon;
 	 
 	 @FindBy(xpath="(//h2[normalize-space()='My Orders'])[1]")
