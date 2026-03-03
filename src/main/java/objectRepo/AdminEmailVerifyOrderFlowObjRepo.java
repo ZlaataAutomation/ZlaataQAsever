@@ -51,7 +51,11 @@ public abstract class AdminEmailVerifyOrderFlowObjRepo extends BasePage {
 	protected WebElement otpEnterTextBox;
 	
 	@FindBy(xpath = "//button[@id='searchBtn']")
+	protected WebElement searchIcon;
+	
+	@FindBy(xpath = "//input[@id='globalSearchInput']")
 	protected WebElement userSearchBox;
+	
 	
 	@FindBy(xpath = "//button[contains(@class,'prod_add_to_cart') and contains(@class,'ClsSingleCart')]")
 	protected WebElement addToBag;
@@ -60,7 +64,7 @@ public abstract class AdminEmailVerifyOrderFlowObjRepo extends BasePage {
 	@FindBy(xpath = "//button[contains(@class,'add_bag_prod_buy_now_btn') and normalize-space()='Add to Bag']")
 	protected WebElement addToCartBtn;
 	
-	@FindBy(xpath = "//button[contains(@class,'account_icon_btn')]")
+	@FindBy(xpath = "//button[contains(@class,'Cls_cart_btn') and contains(@class,'header_cta_btn')]")
 	protected WebElement bagIcon;
 	
 	@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Continue']")

@@ -61,7 +61,7 @@ public class AdminEmailVerifyOrderFlowPage extends AdminEmailVerifyOrderFlowObjR
 	 public void deleteAllProductsFromCart() {
 
 		    // Open cart
-		    driver.findElement(By.xpath("//button[contains(@class,'account_icon_btn')]")).click();
+		    driver.findElement(By.xpath("//button[contains(@class,'Cls_cart_btn') and contains(@class,'header_cta_btn')]")).click();
 		    Common.waitForElement(2);
 
 		    // ✅ STEP 1: Check if cart is already empty
@@ -170,6 +170,10 @@ public class AdminEmailVerifyOrderFlowPage extends AdminEmailVerifyOrderFlowObjR
 
 		    // ✅ Search product
 		    System.out.println(YELLOW + "🔍 Searching for product: " + productName + RESET);
+		    Common.waitForElement(3);
+		    wait.until(ExpectedConditions.elementToBeClickable(searchIcon));
+		    searchIcon.click();
+		    Common.waitForElement(2);
 		    wait.until(ExpectedConditions.elementToBeClickable(userSearchBox));
 		    userSearchBox.clear();
 		    userSearchBox.sendKeys(productName);
@@ -185,6 +189,8 @@ public class AdminEmailVerifyOrderFlowPage extends AdminEmailVerifyOrderFlowObjR
 		    click(addToCartBtn);
 		    System.out.println(GREEN + "✅ Added product to cart" + RESET);
 
+		    js.executeScript("window.scrollBy(0, -500);");
+		    
 		    Common.waitForElement(2);
 		    wait.until(ExpectedConditions.elementToBeClickable(bagIcon));
 		    click(bagIcon);
@@ -3586,7 +3592,7 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Order Cancelled");
 			
-	//		verifyOrderConfirmationMail("Order Cancellation Confirmation");
+			verifyOrderConfirmationMail("Order Cancellation Confirmation");
 			
 			orderRefundInitiateByAdmin();
 			
@@ -3594,7 +3600,7 @@ public void orderExchangeForUserSide() {
 			
 			verifyRefundDetailsAndAmount();
 			
-		//	verifyRefundCreditedEmail("Refund Credited");
+			verifyRefundCreditedEmail("Refund Credited");
 						
 		}
 	

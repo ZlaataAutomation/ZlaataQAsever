@@ -34,7 +34,7 @@ public final class LoginPage extends LoginObjRepository {
 //				click(submit);
 		handleAccessCodeIfPresentFast();
 //		popup();
-//		closeDebugBarIfPresent();
+		closeDebugBarIfPresent();
 		
     }
 
