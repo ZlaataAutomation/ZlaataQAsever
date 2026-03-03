@@ -36,7 +36,7 @@ public final class HomePage extends HomePageObjRepo {
 //				click(submit);
 		handleAccessCodeIfPresentFast();
 //		popup();
-//		closeDebugBarIfPresent();
+		closeDebugBarIfPresent();
 
 
 	}
