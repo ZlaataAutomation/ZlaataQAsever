@@ -42,7 +42,7 @@ public abstract class Calculation_MyOrder_ObjRepo extends BasePage {
     @FindBy(xpath = "(//button[normalize-space()='Add to Cart'])[1]")
     protected WebElement addToCartBtn;
     
-    @FindBy(xpath = "//a[@title='Cart Icon']")
+    @FindBy(xpath = "//button[contains(@class,'Cls_cart_btn') and contains(@class,'header_cta_btn')]")
 	protected WebElement clickCartBtn;
     
    	@FindBy(xpath = "//button[normalize-space()='View Coupons']")

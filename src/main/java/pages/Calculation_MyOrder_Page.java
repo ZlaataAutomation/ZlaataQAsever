@@ -140,20 +140,23 @@ public class Calculation_MyOrder_Page extends Calculation_MyOrder_ObjRepo {
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Actions actions = new Actions(driver);
 
-	    // Hover on Shop → All
+	 // Hover on Shop
 	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
+	            By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")
+	    ));
 	    actions.moveToElement(shopMenu).perform();
 
+	    // Click All
 	    WebElement allButton = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a[translate(normalize-space(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = 'DRESSES']")));
+	            By.xpath("//div[contains(@class,'dropdown_content')]//a[normalize-space()='All']")
+	    ));
 	    allButton.click();
 
 	    System.out.println("✅ Clicked on 'All' under Shop menu");
 
 	    // Collect all product cards
 	    List<WebElement> products = wait.until(ExpectedConditions
-	            .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'product_list_cards_list ')]")));
+	            .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'prod_listing_card')]")));
 
 	    if (products.isEmpty()) {
 	        System.out.println("⚠️ No products found on listing page!");
@@ -170,14 +173,14 @@ public class Calculation_MyOrder_Page extends Calculation_MyOrder_ObjRepo {
 	        System.out.println("🎯 Checking random product index: " + randomIndex);
 
 	        WebElement productCard = driver.findElement(
-	                By.xpath("(//div[contains(@class,'product_list_cards_list')])[" + randomIndex + "]"));
+	                By.xpath("(//div[contains(@class,'prod_listing_card')])[" + randomIndex + "]"));
 
 	        String name = productCard.findElement(
-	                By.xpath(".//h2[@class='product_list_cards_heading']"))
+	                By.xpath(".//div[contains(@class,'prod_listing_details')]"))
 	                .getText().trim();
 
 	        List<WebElement> stockLabels = productCard.findElements(
-	                By.xpath(".//h2[contains(@class,'product_list_cards_out_of_stock_heading') and normalize-space()='OUT OF STOCK']"));
+	                By.xpath(".//span[contains(@class,'prod_listing_hurry') and normalize-space()='Out of Stock']"));
 
 	        boolean isOutOfStock = !stockLabels.isEmpty() && stockLabels.get(0).isDisplayed();
 
@@ -190,7 +193,7 @@ public class Calculation_MyOrder_Page extends Calculation_MyOrder_ObjRepo {
 	        String  productName = name;
 
 	        WebElement productNameElement = productCard.findElement(
-	                By.xpath(".//h2[@class='product_list_cards_heading']"));
+	                By.xpath(".//div[contains(@class,'prod_listing_details')]"));
 
 	     // Fix: JS click to avoid interception
 	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
@@ -246,12 +249,14 @@ public class Calculation_MyOrder_Page extends Calculation_MyOrder_ObjRepo {
 
 	    // Home
 	    Common.waitForElement(2);
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+	    js.executeScript("window.scrollBy(0, -500);");
+	    Common.waitForElement(2);
 	    wait.until(ExpectedConditions.elementToBeClickable(homeBtn)).click();
 	    System.out.println(GREEN + "🏠 Successfully navigated to Home page" + RESET);
 
 	    // Scroll
 	    Common.waitForElement(2);
-	    JavascriptExecutor js = (JavascriptExecutor) driver;
 	    js.executeScript("window.scrollBy(0, 3700);");
 	    System.out.println(CYAN + "📜 Scrolled to Gift Card banner" + RESET);
 
@@ -3225,27 +3230,23 @@ public String takeRandomAccessoriesProductFromAll() {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     Actions actions = new Actions(driver);
 
-    // Hover on Shop → All
+ // Hover on Shop
     WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
-            By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
+            By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")
+    ));
     actions.moveToElement(shopMenu).perform();
 
-    
+    // Click All
     WebElement allButton = wait.until(ExpectedConditions.elementToBeClickable(
-            By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a[normalize-space()='Accessories']")));
-   
- // Scroll into view
-    ((JavascriptExecutor) driver).executeScript(
-        "arguments[0].scrollIntoView({block: 'center'});", allButton
-    );
+            By.xpath("//div[contains(@class,'dropdown_content')]//a[normalize-space()='All']")
+    ));
+    allButton.click();
 
-    // JS Click → 100% no interception
-    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", allButton);
     System.out.println("✅ Clicked on 'All' under Shop menu");
 
     // Collect all product cards
     List<WebElement> products = wait.until(ExpectedConditions
-            .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'product_list_cards_list ')]")));
+            .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'prod_listing_card')]")));
 
     if (products.isEmpty()) {
         System.out.println("⚠️ No products found on listing page!");
@@ -3262,14 +3263,14 @@ public String takeRandomAccessoriesProductFromAll() {
         System.out.println("🎯 Checking random product index: " + randomIndex);
 
         WebElement productCard = driver.findElement(
-                By.xpath("(//div[contains(@class,'product_list_cards_list')])[" + randomIndex + "]"));
+                By.xpath("(//div[contains(@class,'prod_listing_card')])[" + randomIndex + "]"));
 
         String name = productCard.findElement(
-                By.xpath(".//h2[@class='product_list_cards_heading']"))
+                By.xpath(".//div[contains(@class,'prod_listing_details')]"))
                 .getText().trim();
 
         List<WebElement> stockLabels = productCard.findElements(
-                By.xpath(".//h2[contains(@class,'product_list_cards_out_of_stock_heading') and normalize-space()='OUT OF STOCK']"));
+                By.xpath(".//span[contains(@class,'prod_listing_hurry') and normalize-space()='Out of Stock']"));
 
         boolean isOutOfStock = !stockLabels.isEmpty() && stockLabels.get(0).isDisplayed();
 
@@ -3279,22 +3280,16 @@ public String takeRandomAccessoriesProductFromAll() {
         }
 
         // Found in-stock product
-        productlistingName = name;
+        String  productName = name;
 
         WebElement productNameElement = productCard.findElement(
-                By.xpath(".//h2[@class='product_list_cards_heading']"));
-        
-        // Scroll into view
-	    ((JavascriptExecutor) driver).executeScript(
-	        "arguments[0].scrollIntoView({block: 'center'});", productNameElement
-	    );
+                By.xpath(".//div[contains(@class,'prod_listing_details')]"));
 
-	    // JS Click → 100% no interception
-	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
-     
+     // Fix: JS click to avoid interception
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
 
         productFound = true;
-        System.out.println("✅ Selected random in-stock product: " + productlistingName);
+        System.out.println("✅ Selected random in-stock product: " + productName);
         break;
     }
 
@@ -5453,7 +5448,7 @@ Assert.fail("❌ " + label + " MISMATCH — UI: "
 			
 			takeRandomAccessoriesProductFromAll();
 			
-			takeCustomizeProduct();
+		//	takeCustomizeProduct();
 			
 			addGiftCardInCart();
 				

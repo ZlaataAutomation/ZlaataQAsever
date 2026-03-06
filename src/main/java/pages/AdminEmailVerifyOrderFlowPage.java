@@ -58,8 +58,8 @@ public class AdminEmailVerifyOrderFlowPage extends AdminEmailVerifyOrderFlowObjR
 
 		    System.out.println("\u001B[32m✅ Login successful\u001B[0m");
 		}
-	 public void deleteAllProductsFromCart() {
 
+	 public void deleteAllProductsFromCart() {
 		    // Open cart
 		    driver.findElement(By.xpath("//button[contains(@class,'Cls_cart_btn') and contains(@class,'header_cta_btn')]")).click();
 		    Common.waitForElement(2);
