@@ -32,9 +32,14 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	@FindBy(name = "title")
 	protected WebElement bannerTitle;	
 	
+	@FindBy(name = "heading")
+	protected WebElement heading;	
 	
-	@FindBy(xpath = "//input[@class='file-limitation']")
-	protected WebElement uploadImageInput;
+	@FindBy(xpath = "//div[@data-field-name='desktop_img']//input[@data-handle='uploadImage']")
+	protected WebElement uploadDesktopImage;
+
+	@FindBy(xpath = "//div[@data-field-name='mobile_img']//input[@data-handle='uploadImage']")
+	protected WebElement uploadMobileImage;
 	
 	@FindBy(xpath = "//span[@data-value='save_and_back']")
 	protected WebElement uploadButton;
@@ -146,6 +151,12 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	    
 	    @FindBy(xpath="//a[normalize-space()='Status']")
 	    protected WebElement clickStatus;
+	    
+	    @FindBy(xpath="//a[normalize-space()='Brand Type']")
+	    protected WebElement brandType;
+
+	    @FindBy(xpath="//li[contains(@class,'select2-results__option') and normalize-space()='Zlaata India']")
+	    protected WebElement selectbrandType;
 
 	    @FindBy(xpath = "//li[contains(@class,'select2-results__option') and normalize-space()='Active']")
 	    protected WebElement statusActiveOption;
@@ -191,7 +202,7 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	    protected WebElement nextPageArrow;
 
 	    // Plus Button to add products
-	    @FindBy(xpath = "//i[@class='las la-plus-circle']")  
+	    @FindBy(xpath = "(//i[@class='las la-plus-circle'])[last()]")  
 	    protected WebElement plusButton;
 
 	

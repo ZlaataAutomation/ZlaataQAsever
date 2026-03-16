@@ -42,6 +42,7 @@ public class PageObjectManager {
     private Calculation_MyOrder_Page calculation;
     private TryAlongSectionPage tryAlong;
     private Reg_TrackOrder_Page trackOrder;
+    private Landing_Page land;
 
    
 
@@ -172,5 +173,9 @@ public class PageObjectManager {
 	
 	public Reg_TrackOrder_Page getReg_TrackOrder_Page() {
 		return (trackOrder == null) ? trackOrder = new Reg_TrackOrder_Page(driver): trackOrder;
+	}
+	
+	public Landing_Page getLanding_Page() {
+		return (land == null) ? land = new Landing_Page(driver): land;
 	}
 }

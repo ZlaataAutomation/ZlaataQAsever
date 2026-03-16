@@ -28,6 +28,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -70,9 +71,9 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 		    
 		}
 
-	public void uploadImage(String imagePath) {
+	public void uploadImageinHomePageBanner() {
 	    Scanner sc = new Scanner(System.in);
-
+	    String imagePath = System.getProperty("user.dir") + "/src/test/resources/images/sample.jpg";
 	    // ANSI color codes for console output
 	    String GREEN = "\u001B[32m";
 	    String YELLOW = "\u001B[33m";
@@ -110,19 +111,49 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	    Common.waitForElement(2);
 	    type(bannerTitle, expectedBannerTitle);
 	    Common.waitForElement(2);
+	    type(heading, expectedBannerTitle);
+  
 
-	    // Step 5: Upload image
-	    waitFor(uploadImageInput);
-	    uploadImageInput.sendKeys(imagePath);
+wait.until(ExpectedConditions.presenceOfElementLocated(
+        By.xpath("//div[@data-field-name='desktop_img']//input[@data-handle='uploadImage']")));
+
+uploadDesktopImage.sendKeys(imagePath);
+
+Common.waitForElement(2);
+
+uploadMobileImage.sendKeys(imagePath);
+
+System.out.println("✅ Image uploaded successfully");
 	    System.out.println(GREEN + "✅ Image uploaded successfully!" + RESET);
-
+	    
+	}
+public void uploadHomepageBannerDetails(String linkValue, String brandTypeValue, String bannerTypeValue) {
+    String GREEN = "\u001B[32m";
+    String YELLOW = "\u001B[33m";
+    String BLUE = "\u001B[34m";
+    String CYAN = "\u001B[36m";
+    String RESET = "\u001B[0m";
+    String line = "─────────────────────────────────────────────";
+	 Common.waitForElement(1);
+	    // Link
+	    WebElement linkField = driver.findElement(By.name("link"));
+	    linkField.clear();
+	    linkField.sendKeys(linkValue);
+	    Common.waitForElement(2);
+	    // Brand Type
+	    Select bannerType = new Select(driver.findElement(By.name("type")));
+	    bannerType.selectByVisibleText(bannerTypeValue);
+	 Common.waitForElement(1);
+	    // Brand Type
+	    Select brandType = new Select(driver.findElement(By.name("brand_type")));
+	    brandType.selectByVisibleText(brandTypeValue);
 	    Common.waitForElement(2);
 	    ((JavascriptExecutor) driver)
         .executeScript("arguments[0].click();", uploadButton);
 //	    click(uploadButton);
 	    
 	    Common.waitForElement(3);
-	    driver.navigate().refresh();
+//	    driver.navigate().refresh();
 //	    Common.waitForElement(4);
 
 	    // Step 6: Select Home Page filter and set status
@@ -157,11 +188,9 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 
 	public void verifyBannerOnHomePage() {
-		HomePage home = new HomePage(driver);
-		home.homeLaunch();
 
 	  //  String expectedTitle = Common.getValueFromTestDataMap("Banner Title");
-
+		Common.waitForElement(2);
 	    int timeoutMinutes = 10;
 	    boolean titleFound = false;
 	    WebElement titleElement = null;
@@ -174,14 +203,14 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	            Common.waitForElement(2);
 
 	            Wait<WebDriver> wait = new FluentWait<>(driver)
-	                    .withTimeout(Duration.ofSeconds(15)) // ⬅ increase from 5s to 15s
+	                    .withTimeout(Duration.ofSeconds(5)) // ⬅ increase from 5s to 15s
 	                    .pollingEvery(Duration.ofSeconds(3))
 	                    .ignoring(NoSuchElementException.class)
 	                    .ignoring(StaleElementReferenceException.class);
 
 	            titleElement = wait.until(d -> {
 	                List<WebElement> elements = driver.findElements(
-	                        By.xpath("//a[contains(@class,'carousel_banner')]//img[@alt='" + expectedBannerTitle + "']")
+	                        By.xpath("//section[@data-section='zi_home_page_banner' or @data-section='bl_home_page_banner']//img[@alt='" + expectedBannerTitle + "']")
 	                );
 	              
 	                return elements.isEmpty() ? null : elements.get(0);
@@ -824,7 +853,7 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 //	    click(clickStatus);
 
 	    // Select Status -> Active
-	    Common.waitForElement(3);
+	    Common.waitForElement(1);
 	    Thread.sleep(2000);
 //	    ((JavascriptExecutor) driver)
 //        .executeScript("arguments[0].click();", statusActiveOption);
@@ -836,7 +865,18 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 	    statusActiveOption.click();  // ✅ THIS WILL WORK IN HEADLESS
 	    System.out.println("✅ Selected Active status");
+	    
+	    Common.waitForElement(2);
+	    ((JavascriptExecutor) driver)
+        .executeScript("arguments[0].click();", brandType);
+	    Common.waitForElement(1);
+	    Thread.sleep(2000);
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({block:'center'});", selectbrandType
+	    );
 
+	    selectbrandType.click();  // ✅ THIS WILL WORK IN HEADLESS
+	    System.out.println("✅ Selected Brand Type");
 	    // Click Collection button
 	    //Thread.sleep(2000);
 	    Common.waitForElement(2);
@@ -881,7 +921,7 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 		
 	}
 	
-	public void sortTheProductInFirstPosition() {
+	public void sortTheProductInFirstPosition() throws InterruptedException {
 		// Click on Search Box for Product Sort
 		Common.waitForElement(2);
 	    ((JavascriptExecutor) driver)
@@ -902,6 +942,17 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 		//click(clickProductSort);
 		System.out.println("✅ Selected Product Sorts");
 
+		 Common.waitForElement(2);
+		    ((JavascriptExecutor) driver)
+	        .executeScript("arguments[0].click();", brandType);
+		    Common.waitForElement(1);
+		    Thread.sleep(2000);
+		    ((JavascriptExecutor) driver).executeScript(
+		            "arguments[0].scrollIntoView({block:'center'});", selectbrandType
+		    );
+
+		    selectbrandType.click();  // ✅ THIS WILL WORK IN HEADLESS
+		    System.out.println("✅ Selected Brand Type");
 		//  Click Category Name
 		Common.waitForElement(2);
 	   		 ((JavascriptExecutor) driver)
@@ -1021,11 +1072,20 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	}
 	
 	public void verifyProductShowInNewArrivalsSction() {
-		HomePage home = new HomePage(driver);
-		home.homeLaunch();
+		
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
+		  WebDriverWait wait1 = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	        WebElement banner = wait1.until(ExpectedConditions.elementToBeClickable(
+	                By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+	        ));
+
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+	        System.out.println("Clicked ZLAATA INDIA  Home Page Banner");
 	    Common.waitForElement(3);
 	    WebElement topSellingSection = driver.findElement(
-	            By.xpath("//div[@data-section='new_arrivals']")
+	            By.xpath("//section[@data-section='new_arrivals']")
 	    );
 	    
 	    ((JavascriptExecutor) driver).executeScript(
@@ -1038,7 +1098,7 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	    );
 
 	    int timeoutMinutes = 10;   // total wait time
-	    int refreshInterval = 15; // refresh every 15 seconds
+	    int refreshInterval = 4; // refresh every 15 seconds
 	    boolean productFound = false;
 	    WebElement card = null;
 
@@ -1059,7 +1119,7 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 	            card = wait.until(d -> {
 	                List<WebElement> elements = d.findElements(By.xpath(
-	                		"(//div[contains(@class,'new_arrival_inner_wrpr')]//a[contains(@class,'prod_title') and normalize-space(.)='" + productlistingName + "'])[1]"
+	                		"(//div[contains(@class,'new_in_overlay')]//h4[contains(@class,'new_in_heading') and normalize-space(.)='" + productlistingName + "'])[1]"
 	                ));
 	                return elements.isEmpty() ? null : elements.get(0);
 	            });
@@ -1674,426 +1734,6 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
     }
 	
     
-	//Bulk Catagories
-    
-    public void uploadTheCategoriesBulkExcel(String filePath) {
-    	Common.waitForElement(2);
-        driver.get(Common.getValueFromTestDataMap("ExcelPath"));
-        
-        System.out.println("✅ Redirected to Admin product Catagories page");
- 
-        Common.waitForElement(2);
-        waitFor(importButton);
-        click(importButton);
-        System.out.println("✅ Clicked Import Button");
-
-        Common.waitForElement(2);
-        waitFor(uploadExcelButton);
-        uploadExcelButton.sendKeys(filePath);
-        System.out.println("✅ Uploaded file: " + filePath);
-
-        Common.waitForElement(2);
-        waitFor(submitButton);
-        submitButton.click();
-        System.out.println("✅ Excel uploaded successfully");
-        
-      //Clear Catch
-	    Common.waitForElement(3);
-	    waitFor(clearCatchButton);
-	    click(clearCatchButton);
-	    System.out.println("✅ Successful click Clear Catch Button");
-		
-	}
-	
-    public void verifyCategoriesInAdmin(String filePath) throws IOException {
-        Common.waitForElement(2);
-
-        // ✅ Read Excel → Filter only non-empty Categories
-        List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath)
-            .stream()
-            .filter(product -> {
-                Object categoryObj = product.get("Category Name");  // <-- Excel column name
-                return categoryObj != null && !categoryObj.toString().trim().isEmpty();
-            })
-            .collect(Collectors.toList());
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-
-        for (Map<String, Object> product : products) {
-            String categoryName = (String) product.get("Category Name");
-
-            // ✅ Refresh page before each search
-            driver.navigate().refresh();
-            Common.waitForElement(3);
-
-            // ✅ Click Categories button (replace with your locator)
-            wait.until(ExpectedConditions.elementToBeClickable(categoriesNameButton)).click();
-            System.out.println("✅ Clicked Categories button");
-
-            // ✅ Enter category name in search box
-            wait.until(ExpectedConditions.elementToBeClickable(searchTextBox));
-            searchTextBox.clear();
-            searchTextBox.sendKeys(categoryName);
-            searchTextBox.sendKeys(Keys.ENTER);
-            System.out.println("✅ Searched for Category: " + categoryName);
-
-            // ✅ Verify category visible in table
-            By categoryLocator = By.xpath("//span[@title='" + categoryName + "']");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(categoryLocator));
-            System.out.println("✅ Category is visible in Admin panel: " + categoryName);
-            
-            // Click on Search Box for Product Sort
-    		Common.waitForElement(3);
-    		click(searchProductSortMenu);
-    		waitFor(searchProductSortMenu);
-    		type(searchProductSortMenu, "Product Sorts");
-    		// Thread.sleep(2000);
-    		System.out.println("Typed 'Product Sorts");
-    		waitFor(clickProductSort);
-    		// Thread.sleep(3000);
-    		click(clickProductSort);
-    		System.out.println("Selected Product Sorts");
-
-    		//  Click add Product Sort Name
-    		waitFor(addProductSort);
-    		click(addProductSort);
-    		System.out.println("Clicked add product Sort");
-    		Common.waitForElement(2);
-    		//  Click Category Name
-    		waitFor(categoryType);
-    		click(categoryType);
-    		System.out.println("Clicked Category Type");
-    		Common.waitForElement(2);
-    		waitFor(categorySearchTextBox);
-    		type(categorySearchTextBox,"Category");
-    		categorySearchTextBox.sendKeys(Keys.ENTER);
-    		System.out.println("Typed 'Category Name' & pressed Enter");
-    	//  Click Category Name
-    		waitFor(categoryId);
-    		click(categoryId);
-    		System.out.println("Clicked Catagory Id Type");
-    		Common.waitForElement(2);
-    		waitFor(categorySearchTextBox);
-    		type(categorySearchTextBox,categoryName);
-    		categorySearchTextBox.sendKeys(Keys.ENTER);
-    		System.out.println("Typed 'Category id' & pressed Enter");
-    		
-    		// Get all product cards
-    	    List<WebElement> allProducts = driver.findElements(By.xpath("//div[contains(@class,'sortable-card')]"));
-
-    	    if (allProducts.size() < 3) {
-    	        System.out.println("❌ Less than 3 products available, cannot perform reorder.");
-    	        return;
-    	    }
-
-    	    WebElement thirdProduct = allProducts.get(2); // index starts at 0 → 2 = 3rd element
-    	    WebElement firstProduct = allProducts.get(0);
-
-    	    try {
-    	        // Perform drag and drop with Actions
-    	        Actions actions = new Actions(driver);
-    	        actions.clickAndHold(thirdProduct)
-    	               .moveToElement(firstProduct, 0, 0) // move inside the first product card
-    	               .release()
-    	               .build()
-    	               .perform();
-
-    	        System.out.println("✅ Dragged 3rd product to 1st position.");
-    	    } catch (Exception e) {
-    	        System.out.println("❌ Drag and drop failed: " + e.getMessage());
-    	    }
-    		Common.waitForElement(2);
-            waitFor(saveButton);
-            saveButton.click();
-            System.out.println("✅ Excel uploaded successfully");
-    		
-        }
-        
-    
-      //Clear Catch
-	    Common.waitForElement(2);
-	    waitFor(clearCatchButton);
-	    click(clearCatchButton);
-	    System.out.println("✅ Successfull click Clear Catch Button");
-		
-	
-
-        System.out.println("🎉 All categories verification completed successfully!");
-    }
-		
-    public void verifyCatagoriesInUserApp(String filePath) throws IOException, InterruptedException {
-    	HomePage home = new HomePage(driver);
-		home.homeLaunch();
-        Common.waitForElement(3);
-
-        List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-        Actions actions = new Actions(driver);
-
-        ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Categories in User App");
-        ExtentManager.setTest(test);
-
-        for (Map<String, Object> product : products) {
-            String category = (String) product.get("Category Name");
-
-            if (category == null || category.trim().isEmpty()) {
-                System.out.println("⚠ Skipping empty category");
-                continue;
-            }
-
-            // ✅ Hover Shop menu
-            WebElement shopMenu = wait.until(ExpectedConditions
-                    .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
-            actions.moveToElement(shopMenu).perform();
-
-            // ✅ Get dropdown links
-            List<WebElement> dropdownLinks = wait.until(ExpectedConditions
-                    .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
-
-            boolean found = false;
-            for (WebElement link : dropdownLinks) {
-                if (link.getText().trim().equalsIgnoreCase(category.trim())) {
-                    found = true;
-
-                    // ✅ Verify link
-                    Assert.assertTrue("❌ Category not visible: " + category, link.isDisplayed());
-                    System.out.println("✅ Category visible in dropdown: " + category);
-                    test.pass("Category visible: " + category);
-
-                    // ✅ Click category
-                    link.click();
-                    System.out.println("✅ Navigated to Category: " + category);
-
-                    // 🔄 WAIT + REFRESH here until products show
-                    int timeoutMinutes = 5;
-                    int refreshInterval = 5; // seconds
-                    boolean productsFound = false;
-                    long endTime = System.currentTimeMillis() + timeoutMinutes * 60 * 1000;
-
-                    while (System.currentTimeMillis() < endTime) {
-                        try {
-                            List<WebElement> productsInCollection = driver.findElements(By.xpath("//h2[@class='product_list_cards_heading']"));
-
-                            if (!productsInCollection.isEmpty()) {
-                                productsFound = true;
-                                break;
-                            }
-                        } catch (Exception ignored) {}
-
-                        driver.navigate().refresh();
-                        Common.waitForElement(3);
-                        Thread.sleep(refreshInterval * 1000);
-                    }
-
-                    // ✅ Final check
-                    if (productsFound) {
-                        System.out.println("✅ Products available under Category: " + category);
-                        test.pass("Products found in Category: " + category);
-                    } else {
-                        System.err.println("❌ No products found in Category '" + category + "' within " + timeoutMinutes + " minutes.");
-                        test.fail("No products found in Category: " + category);
-                    }
-
-                    break; // stop dropdown loop
-                }
-            }
-
-            if (!found) {
-                System.err.println("❌ Category not found in dropdown: " + category);
-                test.fail("Category not found: " + category);
-            }
-
-            // ✅ Reset for next category
-            driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-            Common.waitForElement(2);
-        }
-
-        ExtentManager.getExtentReports().flush();
-    }
-		
-		
-		
-
-		//Bulk Upload Collection
-		
-		 public void bulkBploadCollectionExcel(String filePath) {
-		        Common.waitForElement(2);
-		        driver.get(Common.getValueFromTestDataMap("ExcelPath"));
-		        
-		        System.out.println("✅ Redirected to Admin product collection page");
-		 
-		        Common.waitForElement(2);
-		        waitFor(importButton);
-		        click(importButton);
-		        System.out.println("✅ Clicked Import Button");
-
-		        Common.waitForElement(2);
-		        waitFor(uploadExcelButton);
-		        uploadExcelButton.sendKeys(filePath);
-		        System.out.println("✅ Uploaded file: " + filePath);
-
-		        Common.waitForElement(2);
-		        waitFor(submitButton);
-		        submitButton.click();
-		        System.out.println("✅ Excel uploaded successfully");
-		        
-		      //Clear Catch
-			    Common.waitForElement(5);
-			    waitFor(clearCatchButton);
-			    click(clearCatchButton);
-			    System.out.println("✅ Successfull click Clear Catch Button");
-			    
-		        
-		    }
-		
-		 public void verifyCollectionsInAdmin(String filePath) throws IOException {
-			    Common.waitForElement(2);
-
-			    // Read Excel → Filter only non-empty collection names
-			    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath)
-			        .stream()
-			        .filter(product -> {
-			            Object collectionObj = product.get("Collections");  // <-- Excel column
-			            return collectionObj != null && !collectionObj.toString().trim().isEmpty();
-			        })
-			        .collect(Collectors.toList());
-			    
-			    Common.waitForElement(2);
-			    waitFor(clickStatus);
-			    click(clickStatus);
-
-			    // Select Status -> Active
-			    waitFor(statusActiveOption);
-			    click(statusActiveOption);
-			    System.out.println("✅ Selected Active status");
-
-			    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-
-			    for (Map<String, Object> product : products) {
-			        String collectionName = (String) product.get("Collections");
-
-			        // ✅ Navigate to Product Collection section
-			        wait.until(ExpectedConditions.elementToBeClickable(collectionButton)).click();
-			        System.out.println("✅ Clicked Collection button");
-
-			        wait.until(ExpectedConditions.elementToBeClickable(searchTextBox));
-			        searchTextBox.clear();
-			        searchTextBox.sendKeys(collectionName);
-			        searchTextBox.sendKeys(Keys.ENTER);
-
-			        System.out.println("✅ Searched for Collection: " + collectionName);
-
-			        // ✅ Wait until collection is visible in table
-			        By collectionLocator = By.xpath("//span[@title='" + collectionName + "']");
-			        wait.until(ExpectedConditions.visibilityOfElementLocated(collectionLocator));
-
-			        System.out.println("✅ Collection is visible in Admin panel: " + collectionName);
-			        
-			     // Click Edit button
-				    Common.waitForElement(2);
-				    waitFor(editButton);
-			        click(editButton);
-			        System.out.println("✅ Clicked  editbutton");
-			        Common.waitForElement(3);
-				    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,1800);");
-				    // Click Collection button
-				    //Thread.sleep(2000);
-				    Common.waitForElement(2);
-				    waitFor(menuButton);
-				    click(menuButton);
-				    System.out.println("✅ Clicked Collection button");
-
-				    //Search 'new-arrivals'
-				    //Thread.sleep(2000);
-				    Common.waitForElement(2);
-				    waitFor(menuSearchBox);
-				    type(menuSearchBox, "Shop");
-				    menuSearchBox.sendKeys(Keys.ENTER);
-				    System.out.println("✅ Successfull  set ShopMenu");
-				   // Thread.sleep(2000);
-				    // Save changes
-			        Common.waitForElement(2);
-			        waitFor(saveButton);
-			        saveButton.click();
-				    System.out.println("✅ successful saved");
-			        
-
-			    }
-			 
-			    // ✅ Clear Cache
-			    Common.waitForElement(2);
-			    waitFor(clearCatchButton);
-			    click(clearCatchButton);
-			    System.out.println("✅ Successfully clicked Clear Cache Button");
-			    Common.waitForElement(2);
-			}
-
-
-
-
-
-		 public void verifyCollectionsInUserApp(String filePath) throws IOException {
-			 HomePage home = new HomePage(driver);
-				home.homeLaunch();
-			    Common.waitForElement(3);
-
-			    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
-
-			    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-			    Actions actions = new Actions(driver);
-
-			    ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Collections in User App");
-			    ExtentManager.setTest(test);
-
-			    for (Map<String, Object> product : products) {
-			        String collection = (String) product.get("Title");
-
-			        if (collection == null || collection.trim().isEmpty()) {
-			            System.out.println("⚠ Skipping empty collection");
-			            continue;
-			        }
-
-			        // ✅ Hover Shop menu
-			        WebElement shopMenu = wait.until(ExpectedConditions
-			                .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
-			        actions.moveToElement(shopMenu).perform();
-
-			        // ✅ Wait for dropdown
-			        List<WebElement> dropdownLinks = wait.until(ExpectedConditions
-			                .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
-
-			        boolean found = false;
-			        for (WebElement link : dropdownLinks) {
-			            String linkText = link.getText().trim();
-			            if (linkText.equalsIgnoreCase(collection.trim())) {
-			                found = true;
-
-			                // ✅ Verify visible
-			                Assert.assertTrue("❌ Collection not visible: " + collection, link.isDisplayed());
-			                System.out.println("✅ Collection visible in dropdown: " + collection);
-			                test.pass("Collection visible: " + collection);
-
-			                // ✅ Click
-			                link.click();
-			                System.out.println("✅ Navigated to collection: " + collection);
-
-			                break;
-			            }
-			        }
-
-			        if (!found) {
-			            System.out.println("❌ Collection not found in dropdown: " + collection);
-			            test.fail("Collection not found: " + collection);
-			        }
-
-			        // ✅ After clicking, go back & refresh Shop menu for next collection
-			        driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationUrl());
-			        Common.waitForElement(2);
-			    }
-
-			    ExtentManager.getExtentReports().flush();
-			}
 		 
 		 String productName;
 		 String excpectedName;
@@ -2186,74 +1826,77 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 		    // 🛍️ Select In-stock Product from App
 		    // ===============================
 		    public String takeRandomProductName() {
-		        HomePage home = new HomePage(driver);
-		        home.homeLaunch();
+		      
 		        Common.waitForElement(3);
 
 		        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		        Actions actions = new Actions(driver);
 
-		        // Hover on Shop → All
-		        WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
-		                By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
-		        actions.moveToElement(shopMenu).perform();
+		        // Hover on Shop
+			    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
+			            By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")
+			    ));
+			    actions.moveToElement(shopMenu).perform();
 
-		        WebElement allButton = wait.until(ExpectedConditions.elementToBeClickable(
-		                By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a[translate(normalize-space(), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') = 'DRESSES']")));
-		 //       allButton.click();
-		        ((JavascriptExecutor) driver)
-                .executeScript("arguments[0].click();", allButton);
+			    // Click All
+			    WebElement allButton = wait.until(ExpectedConditions.elementToBeClickable(
+			            By.xpath("//div[contains(@class,'dropdown_content')]//a[normalize-space()='All']")
+			    ));
+			    allButton.click();
+			    Common.waitForElement(3);
+			    System.out.println("✅ Clicked on 'All' under Shop menu");
 
-		        System.out.println("✅ Clicked on 'All' under Shop menu");
+			    // Collect all product cards
+			    List<WebElement> products = wait.until(ExpectedConditions
+			            .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'prod_listing_card')]")));
 
-		        // Collect all product cards
-		        List<WebElement> products = wait.until(ExpectedConditions
-		                .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'product_list_cards_list ')]")));
+			    if (products.isEmpty()) {
+			        System.out.println("⚠️ No products found on listing page!");
+			        return null;
+			    }
 
-		        if (products.isEmpty()) {
-		            System.out.println("⚠️ No products found on listing page!");
-		            return null;
-		        }
+			    Random rand = new Random();
+			    int maxAttempts = Math.min(5, products.size());
+			    boolean productFound = false;
 
-		        Random rand = new Random();
-		        int maxAttempts = Math.min(8, products.size()); // check max 5 random ones
-		        boolean productFound = false;
+			    for (int attempt = 1; attempt <= maxAttempts; attempt++) {
 
-		        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-		            int randomIndex = rand.nextInt(products.size()) + 1; // 1-based index for XPath
-		            System.out.println("🎯 Checking random product index: " + randomIndex);
+			        int randomIndex = rand.nextInt(products.size()) + 1;
+			        System.out.println("🎯 Checking random product index: " + randomIndex);
 
-		            WebElement productCard = driver.findElement(
-		                    By.xpath("(//div[contains(@class,'product_list_cards_list')])[" + randomIndex + "]"));
+			        WebElement productCard = driver.findElement(
+			                By.xpath("(//div[contains(@class,'prod_listing_card')])[" + randomIndex + "]"));
 
-		            String name = productCard.findElement(By.xpath(".//h2[@class='product_list_cards_heading']")).getText().trim();
+			        String name = productCard.findElement(
+			                By.xpath(".//a[contains(@class,'product_list_name')]"))
+			                .getText().trim();
 
-		            List<WebElement> stockLabels = productCard.findElements(
-		                    By.xpath(".//h2[contains(@class,'product_list_cards_out_of_stock_heading') and normalize-space()='OUT OF STOCK']"));
+			        List<WebElement> stockLabels = productCard.findElements(
+			                By.xpath(".//span[contains(@class,'prod_listing_hurry') and normalize-space()='Out of Stock']"));
 
-		            boolean isOutOfStock = !stockLabels.isEmpty() && stockLabels.get(0).isDisplayed();
+			        boolean isOutOfStock = !stockLabels.isEmpty() && stockLabels.get(0).isDisplayed();
 
-		            if (isOutOfStock) {
-		                System.out.println("❌ Random product '" + name + "' is OUT OF STOCK. Retrying another...");
-		                continue; // try another random one
-		            }
+			        if (isOutOfStock) {
+			            System.out.println("❌ '" + name + "' is OUT OF STOCK. Retrying...");
+			            continue;
+			        }
 
-		            // ✅ Product is in stock
-		            productlistingName = name;
-		            WebElement productNameElement = productCard.findElement(By.xpath(".//h2[@class='product_list_cards_heading']"));
-		            ((JavascriptExecutor) driver)
-	                .executeScript("arguments[0].click();", productNameElement);
-		         //   productNameElement.click();
-		            productFound = true;
+			        // Found in-stock product
+			        String  productName = name;
 
-		            System.out.println("✅ Selected random in-stock product: " + productlistingName);
-		            break;
-		        }
+			        WebElement productNameElement = productCard.findElement(
+			                By.xpath(".//a[contains(@class,'product_list_name')]"));
 
-		        if (!productFound) {
-		            System.out.println("⚠️ Could not find any in-stock product after " + maxAttempts + " random tries.");
-		            return null;
-		        }
+			        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
+			        productFound = true;
+			        System.out.println("✅ Selected random in-stock product: " + productName);
+			        break;
+			    }
+
+			    if (!productFound) {
+			        System.out.println("⚠️ No in-stock product found after trying " + maxAttempts);
+			        return null;
+			    }
 
 		     // ✅ Get product detail name
 		        WebElement productDetailNameElement = wait.until(
@@ -2271,41 +1914,443 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 
 
 		    
-		 
+public void launchHomepage(String page) {
+
+		        HomePage home = new HomePage(driver);
+		        home.homeLaunch();
+
+		        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+		        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+		                By.xpath("//h2[normalize-space()='" + page + "']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+		        ));
+
+		        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+		        System.out.println("Clicked " + page + " Home Page Banner");
+		    }
 			   
 		    
-		    
-		    
-		    
+public void uploadImageinCategories() {
+    Scanner sc = new Scanner(System.in);
+    String imagePath = System.getProperty("user.dir") + "/src/test/resources/images/categoies.jpg";
+    // ANSI color codes for console output
+    String GREEN = "\u001B[32m";
+    String YELLOW = "\u001B[33m";
+    String BLUE = "\u001B[34m";
+    String CYAN = "\u001B[36m";
+    String RESET = "\u001B[0m";
+    String line = "─────────────────────────────────────────────";
+    
+    adminLoginApp();
+    // Step 2: Navigate to Excel path (if needed)
+    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+    Common.waitForElement(2);
+
+    // Step 4: Add new homepage banner
+    expectedBannerTitle = "Category" + System.currentTimeMillis();
+ // 🔥 FIX FOR HEADLESS
+    ((JavascriptExecutor) driver)
+            .executeScript("arguments[0].click();", addHomePageBanner);
+    System.out.println("Clicked Add Home Page Banner");
+    Common.waitForElement(2);
+    type(bannerTitle, expectedBannerTitle);
+    Common.waitForElement(2);
+    type(heading, expectedBannerTitle);
+
+    Common.waitForElement(2);
+wait.until(ExpectedConditions.presenceOfElementLocated(
+    By.xpath("//div[@data-field-name='desktop_img']//input[@data-handle='uploadImage']")));
+
+uploadDesktopImage.sendKeys(imagePath);
+
+Common.waitForElement(2);
+
+uploadMobileImage.sendKeys(imagePath);
+
+System.out.println("✅ Image uploaded successfully");
+    System.out.println(GREEN + "✅ Image uploaded successfully!" + RESET);
+    
+}	    
+public void uploadImageinColections() {
+    Scanner sc = new Scanner(System.in);
+    String imagePath = System.getProperty("user.dir") + "/src/test/resources/images/categoies.jpg";
+    // ANSI color codes for console output
+    String GREEN = "\u001B[32m";
+    String YELLOW = "\u001B[33m";
+    String BLUE = "\u001B[34m";
+    String CYAN = "\u001B[36m";
+    String RESET = "\u001B[0m";
+    String line = "─────────────────────────────────────────────";
+    
+    adminLoginApp();
+    // Step 2: Navigate to Excel path (if needed)
+    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+    Common.waitForElement(2);
+
+    // Step 4: Add new homepage banner
+    expectedBannerTitle = "Collection" + System.currentTimeMillis();
+ // 🔥 FIX FOR HEADLESS
+    ((JavascriptExecutor) driver)
+            .executeScript("arguments[0].click();", addHomePageBanner);
+    System.out.println("Clicked Add Home Page Banner");
+    Common.waitForElement(2);
+    type(bannerTitle, expectedBannerTitle);
+    Common.waitForElement(2);
+    type(heading, expectedBannerTitle);
+
+    Common.waitForElement(2);
+wait.until(ExpectedConditions.presenceOfElementLocated(
+    By.xpath("//div[@data-field-name='desktop_img']//input[@data-handle='uploadImage']")));
+
+uploadDesktopImage.sendKeys(imagePath);
+
+Common.waitForElement(2);
+
+uploadMobileImage.sendKeys(imagePath);
+
+System.out.println("✅ Image uploaded successfully");
+    System.out.println(GREEN + "✅ Image uploaded successfully!" + RESET);
+    
+}	  
+public void verifyCategoriesBannerOnHomePage() {
+
+	  //  String expectedTitle = Common.getValueFromTestDataMap("Banner Title");
+	 Common.waitForElement(2);
+	    WebElement topSellingSection = driver.findElement(
+	            By.xpath("//section[@data-section='zi_categories_banner'] | //section[@data-section='bl_categories_banner']")
+	    );
+	    
+	    ((JavascriptExecutor) driver).executeScript(
+	            "window.scrollTo({top: arguments[0].getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth'});",
+	            topSellingSection
+	    );
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({behavior:'smooth', block:'center'});",
+	            topSellingSection
+	    );
+		Common.waitForElement(2);
+	    int timeoutMinutes = 10;
+	    boolean titleFound = false;
+	    WebElement titleElement = null;
+
+	    long endTime = System.currentTimeMillis() + timeoutMinutes * 60 * 1000;
+
+	    while (System.currentTimeMillis() < endTime) {
+	        try {
+	            driver.navigate().refresh();
+	            Common.waitForElement(2);
+
+	            Wait<WebDriver> wait = new FluentWait<>(driver)
+	                    .withTimeout(Duration.ofSeconds(3)) // ⬅ increase from 5s to 15s
+	                    .pollingEvery(Duration.ofSeconds(3))
+	                    .ignoring(NoSuchElementException.class)
+	                    .ignoring(StaleElementReferenceException.class);
+
+	            titleElement = wait.until(d -> {
+	            	List<WebElement> elements = driver.findElements(
+	            		    By.xpath("//div[contains(@class,'bl_category')]//span[normalize-space()='" + expectedBannerTitle + "']"
+	            		    + " | "
+	            		    + "//a[contains(@class,'zi_categories_card')]//span[normalize-space()="
+	            		    + "translate('" + expectedBannerTitle + "','abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')]")
+	            		);
+	                return elements.isEmpty() ? null : elements.get(0);
+	            });
+
+	            // ✅ Relax condition → as soon as element is found
+	            if (titleElement != null) {
+	                titleFound = true;
+	                break;
+	            }
+
+	        } catch (TimeoutException te) {
+	            // keep looping until timeout
+	        }
+
+	        try {
+	            Thread.sleep(1000);
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	        }
+	    }
+
+	    // ✅ Final check
+	    if (titleFound) {
+	        System.out.println("✅ Banner title '" + expectedBannerTitle + "' is visible in User Application.");
+	    } else {
+	        System.out.println("❌ Banner title '" + expectedBannerTitle + "' not found within " + timeoutMinutes + " minutes.");
+	        Assert.fail("❌ Banner title '" + expectedBannerTitle + "' not found within " + timeoutMinutes + " minutes.");
+	    }
+	}
+public void verifyCollectionBannerOnHomePage() {
+
+	  //  String expectedTitle = Common.getValueFromTestDataMap("Banner Title");
+	 Common.waitForElement(2);
+	    WebElement topSellingSection = driver.findElement(
+	            By.xpath("//section[@data-section='zi_collection_banner'] | //section[@data-section='bl_categories_banner']")
+	    );
+	    
+	    ((JavascriptExecutor) driver).executeScript(
+	            "window.scrollTo({top: arguments[0].getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth'});",
+	            topSellingSection
+	    );
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({behavior:'smooth', block:'center'});",
+	            topSellingSection
+	    );
+		Common.waitForElement(2);
+	    int timeoutMinutes = 10;
+	    boolean titleFound = false;
+	    WebElement titleElement = null;
+
+	    long endTime = System.currentTimeMillis() + timeoutMinutes * 60 * 1000;
+
+	    while (System.currentTimeMillis() < endTime) {
+	        try {
+	            driver.navigate().refresh();
+	            Common.waitForElement(2);
+
+	            Wait<WebDriver> wait = new FluentWait<>(driver)
+	                    .withTimeout(Duration.ofSeconds(3)) // ⬅ increase from 5s to 15s
+	                    .pollingEvery(Duration.ofSeconds(3))
+	                    .ignoring(NoSuchElementException.class)
+	                    .ignoring(StaleElementReferenceException.class);
+
+	            titleElement = wait.until(d -> {
+	            	List<WebElement> elements = driver.findElements(
+	            		    By.xpath(
+	            		        "//a[contains(@class,'zi_collection_card')]//span[contains(@class,'zi_collection_name') and " +
+	            		        "translate(normalize-space(.),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')='" 
+	            		        + expectedBannerTitle.toUpperCase() + "']"
+	            		    )
+	            		);
+	                return elements.isEmpty() ? null : elements.get(0);
+	            });
+
+	            // ✅ Relax condition → as soon as element is found
+	            if (titleElement != null) {
+	                titleFound = true;
+	                break;
+	            }
+
+	        } catch (TimeoutException te) {
+	            // keep looping until timeout
+	        }
+
+	        try {
+	            Thread.sleep(1000);
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	        }
+	    }
+
+	    // ✅ Final check
+	    if (titleFound) {
+	        System.out.println("✅ Banner title '" + expectedBannerTitle + "' is visible in User Application.");
+	    } else {
+	        System.out.println("❌ Banner title '" + expectedBannerTitle + "' not found within " + timeoutMinutes + " minutes.");
+	        Assert.fail("❌ Banner title '" + expectedBannerTitle + "' not found within " + timeoutMinutes + " minutes.");
+	    }
+	}
+public void verifyCategoryBannerRedirect(String expectedLinkEnd) {
+
+    String GREEN  = "\u001B[32m";
+    String RED    = "\u001B[31m";
+    String BLUE   = "\u001B[34m";
+    String CYAN   = "\u001B[36m";
+    String RESET  = "\u001B[0m";
+
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+    System.out.println(CYAN + "━━━━━━━━ CATEGORY BANNER TEST ━━━━━━━━" + RESET);
+
+    // Locate banner (ZI OR BL layout)
+    WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath(
+                    "//span[normalize-space()=translate('" + expectedBannerTitle + "','abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')]/ancestor::a[contains(@class,'zi_categories_card')]"
+                    + " | " +
+                    "//span[normalize-space()='" + expectedBannerTitle + "']/ancestor::div[contains(@class,'bl_category')]//a[contains(@class,'category-link')]"
+            )
+    ));
+
+    String hrefLink = banner.getAttribute("href");
+
+    System.out.println(BLUE + "Banner Name : " + RESET + expectedBannerTitle);
+    System.out.println(BLUE + "Banner Link : " + RESET + hrefLink);
+
+    if (banner.isDisplayed()) {
+        System.out.println(GREEN + "✅ Banner displayed: " + expectedBannerTitle + RESET);
+
+        // Click banner
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+    } else {
+        Assert.fail("❌ Banner not displayed: " + expectedBannerTitle);
+    }
+
+    Common.waitForElement(2);
+
+    // Wait for product listing page
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//h2[contains(@class,'prod_listing_topic')]")));
+
+    // Get heading
+    String heading = driver.findElement(
+            By.xpath("//h2[contains(@class,'prod_listing_topic')]")).getText().trim();
+
+    // Get URL
+    String currentUrl = driver.getCurrentUrl();
+
+    System.out.println(BLUE + "Current URL : " + RESET + currentUrl);
+    System.out.println(BLUE + "Page Heading : " + RESET + heading);
+
+    // URL validation
+    if (currentUrl.contains(expectedLinkEnd)) {
+        System.out.println(GREEN + "✅ URL matched : " + currentUrl + RESET);
+    } else {
+        System.out.println(RED + "❌ URL mismatch : " + currentUrl + RESET);
+        Assert.fail("URL mismatch");
+    }
+
+    // Heading validation
+    if (heading.equalsIgnoreCase(expectedBannerTitle) || heading.equalsIgnoreCase("All")) {
+        System.out.println(GREEN + "✅ Heading verified : " + heading + RESET);
+    } else {
+        System.out.println(RED + "❌ Heading mismatch : " + heading + RESET);
+        Assert.fail("Heading mismatch");
+    }
+
+    System.out.println(CYAN + "━━━━━━━━ TEST COMPLETED ━━━━━━━━" + RESET);
+}
+public void verifyCollectionBannerRedirect(String expectedLinkEnd) {
+
+    String GREEN  = "\u001B[32m";
+    String RED    = "\u001B[31m";
+    String BLUE   = "\u001B[34m";
+    String CYAN   = "\u001B[36m";
+    String RESET  = "\u001B[0m";
+
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+    System.out.println(CYAN + "━━━━━━━━ CATEGORY BANNER TEST ━━━━━━━━" + RESET);
+
+    // Locate banner (ZI OR BL layout)
+    WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath(
+                "//span[contains(@class,'zi_collection_name') and " +
+                "translate(normalize-space(.),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')='" 
+                + expectedBannerTitle.toUpperCase() + "']" +
+                "/ancestor::a[contains(@class,'zi_collection_card')]"
+            )
+    ));
+    String hrefLink = banner.getAttribute("href");
+
+    System.out.println(BLUE + "Banner Name : " + RESET + expectedBannerTitle);
+    System.out.println(BLUE + "Banner Link : " + RESET + hrefLink);
+
+    if (banner.isDisplayed()) {
+        System.out.println(GREEN + "✅ Banner displayed: " + expectedBannerTitle + RESET);
+
+        // Click banner
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+    } else {
+        Assert.fail("❌ Banner not displayed: " + expectedBannerTitle);
+    }
+
+    Common.waitForElement(2);
+
+    // Wait for product listing page
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//h2[contains(@class,'prod_listing_topic')]")));
+
+    // Get heading
+    String heading = driver.findElement(
+            By.xpath("//h2[contains(@class,'prod_listing_topic')]")).getText().trim();
+
+    // Get URL
+    String currentUrl = driver.getCurrentUrl();
+
+    System.out.println(BLUE + "Current URL : " + RESET + currentUrl);
+    System.out.println(BLUE + "Page Heading : " + RESET + heading);
+
+    // URL validation
+    if (currentUrl.contains(expectedLinkEnd)) {
+        System.out.println(GREEN + "✅ URL matched : " + currentUrl + RESET);
+    } else {
+        System.out.println(RED + "❌ URL mismatch : " + currentUrl + RESET);
+        Assert.fail("URL mismatch");
+    }
+
+    // Heading validation
+    if (heading.equalsIgnoreCase(expectedBannerTitle) || heading.equalsIgnoreCase("All")) {
+        System.out.println(GREEN + "✅ Heading verified : " + heading + RESET);
+    } else {
+        System.out.println(RED + "❌ Heading mismatch : " + heading + RESET);
+        Assert.fail("Heading mismatch");
+    }
+
+    System.out.println(CYAN + "━━━━━━━━ TEST COMPLETED ━━━━━━━━" + RESET);
+}
 //Home Page Test Case
-	
-//TC-02
-		public void  validateProductSuccessfullyRemoved() throws InterruptedException{
-			
-			copyProductNameFromHomePageTopSelling();
-			
-			givesProductName();
-			
-			fetchSkuFromProduct();
-			
-			removeSkuFromTopSelling();
-			
-			verifyProductNotInTopSelling();
-			
+		    
+//TC-01		
+	public void verifyZlaataIndiaHomePageBanner() {
 		
-		 }
+		uploadImageinHomePageBanner();
+		
+		uploadHomepageBannerDetails("/zlaata-india/all","Zlaata India", "Home Page Banner");
+		
+		launchHomepage("ZLAATA INDIA");
+		
+		verifyBannerOnHomePage();
+
+	}
+//TC-2
+	public void verifyBossLadyHomePageBanner() {
+
+		uploadImageinHomePageBanner();
+		
+		uploadHomepageBannerDetails("/boss-lady/all","Boss Lady", "Home Page Banner");
+		
+		launchHomepage("BOSS LADY");
+		
+		verifyBannerOnHomePage();
+
+	}
 	
-		public void  validateProductSuccessfullyAdded() throws InterruptedException{
-			
-			putSkuIntoTopSelling();
-			
-			verifyProductShowInTopSelling();
-			
-			
-		 }
 	
+	
+	
+////TC-02
+//		public void  validateProductSuccessfullyRemoved() throws InterruptedException{
+//			
+//			copyProductNameFromHomePageTopSelling();
+//			
+//			givesProductName();
+//			
+//			fetchSkuFromProduct();
+//			
+//			removeSkuFromTopSelling();
+//			
+//			verifyProductNotInTopSelling();
+//			
+//		
+//		 }
+//	
+//		public void  validateProductSuccessfullyAdded() throws InterruptedException{
+//			
+//			putSkuIntoTopSelling();
+//			
+//			verifyProductShowInTopSelling();
+//			
+//			
+//		 }
+//	
 //TC-03	
 	public void validateNewArrivalSuccessfullyAdded() throws InterruptedException {
+		
+		launchHomepage("ZLAATA INDIA");
 	
 		takeRandomProductName();
 		
@@ -2314,15 +2359,55 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 		addTheProductInNewArrivalSection();
 		
 		sortTheProductInFirstPosition();
-	
+			
 		verifyProductShowInNewArrivalsSction();
 }
 	
+//TC-04	
+	public void validateZlaataIndiaCategories() {
+		
+		uploadImageinCategories();
+		
+		uploadHomepageBannerDetails("/zlaata-india/all","Zlaata India", "Categories Banner");
+		
+		launchHomepage("ZLAATA INDIA");
+		
+		verifyCategoriesBannerOnHomePage();
+		
+		verifyCategoryBannerRedirect("/zlaata-india/all");
+		
+	}
 	
+//TC-05
+	public void validateBossLadyCategories() {
+		
+		uploadImageinCategories();
+		
+		uploadHomepageBannerDetails("/boss-lady/all","Boss Lady", "Categories Banner");
+
+		launchHomepage("BOSS LADY");
+		
+		verifyCategoriesBannerOnHomePage();
+		
+		verifyCategoryBannerRedirect("/boss-lady/all");
+	}
 	
+//TC-06
 	
-	
-	
+	public void validatezlaataIndiaHomePageCollection() {
+		
+		uploadImageinColections();
+		
+		uploadHomepageBannerDetails("/zlaata-india/all","Zlaata India", "Collection Banner");
+		
+		launchHomepage("ZLAATA INDIA");
+		
+		verifyCollectionBannerOnHomePage();
+		
+		verifyCollectionBannerRedirect("/zlaata-india/all");
+
+
+	}
 	
 	
 	

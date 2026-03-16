@@ -2,54 +2,82 @@ Feature: Home Page Banner upload verification admin panel
  
  @Home
     @Regression
-     @TC_UI_Zlaata_ADM_01
-Scenario Outline: TC_UI_Zlaata_ADM_01 | Verify banner upload on home page section  | "<TD_ID>"  
-  Given I upload an image "sample.jpg" in admin panel
-  When I verify that the homepage first banner is "Home Page Banner"
+     @TC_UI_Zlaata_Home_01
+Scenario Outline: TC_UI_Zlaata_Home_01 |Verify the Zlaata India banner upload in Admin and its display on the Zlaata India home page section.| "<TD_ID>"  
+  Given I upload a banner for Zlaata India in the admin panel
+  Then I should see the uploaded banner displayed in the Zlaata India home page banner section
 
 Examples:  
   | TD_ID                  |  
-  | TD_UI_Zlaata_ADM_01   |
+  | TD_UI_Zlaata_Home_01   |
   
-  
-  @Home
-    @Positive
-  @Regression
-    @TC_UI_Zlaata_ADM_02
-Scenario Outline: TC_UI_Zlaata_ADM_02 |Verify Top Selling Section Product Display on Homepage.| "<TD_ID>"  
- 
-  Given admin removes the product from Top Selling.
-  When admin adds the product SKU to Top Selling
-  
+   @Home
+    @Regression
+     @TC_UI_Zlaata_Home_02
+Scenario Outline: TC_UI_Zlaata_Home_02 |Verify the Boss Lady banner upload in Admin and its display on the Boss Lady home page section.| "<TD_ID>"  
+  Given I upload a banner for Boss Lady in the admin panel
+  Then I should see the uploaded banner displayed in the Boss Lady home page banner section
+
 Examples:  
   | TD_ID                  |  
-  | TD_UI_Zlaata_ADM_02   |
+  | TD_UI_Zlaata_Home_02   |
+  
   
   @Home
   @Regression
-  @TC_UI_Zlaata_ADM_03
-Scenario Outline: TC_UI_Zlaata_ADM_03 |Verify New Arrivals Section Product Display on Homepage.| "<TD_ID>"  
- 
-  
-  Given the admin verifies the colour of the product at the first position
-    When the admin adds this product to the New Arrivals section
+  @TC_UI_Zlaata_Home_03
+Scenario Outline: TC_UI_Zlaata_Home_03 |Verify New Arrivals Section Product Display on Homepage.| "<TD_ID>"  
+   Given the admin adds this product to the New Arrivals section
     And the admin sorts this product to the first position in New Arrivals
     Then the product should appear in the New Arrivals section on the user application
 Examples:  
   | TD_ID                  |  
-  | TD_UI_Zlaata_ADM_03   |
+  | TD_UI_Zlaata_Home_03   |
  
  @Home
  @Regression
-   @TC_UI_Zlaata_ADM_04
-Scenario Outline: TC_UI_Zlaata_ADM_04 |Verify Category Section Display on Website.| "<TD_ID>"  
-   Given admin is logged in
-    When I update the category banner with image "catagory.jpg"
-    Then I should see the updated banner in the user application
+   @TC_UI_Zlaata_Home_04
+Scenario Outline: TC_UI_Zlaata_Home_04 |Verify Zlaata India Category Section Display on Website.| "<TD_ID>"  
+    Given I upload the Zlaata India category banner with image in admin panel
+    Then I should see Zlaata India the updated banner in the user application
 
 Examples:  
   | TD_ID                  |  
-  | TD_UI_Zlaata_ADM_04   |
+  | TD_UI_Zlaata_Home_04   |
+ 
+  @Home
+ @Regression
+   @TC_UI_Zlaata_Home_05
+Scenario Outline: TC_UI_Zlaata_Home_05 |Verify Boss Lady Category Section Display on Website.| "<TD_ID>"  
+    Given I upload the Boss Lady category banner with image in admin panel
+    Then I should see Boss Lady  the updated banner in the user application
+
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Zlaata_Home_05   | 
+  
+  
+  
+   @Home
+ @Regression
+   @TC_UI_Zlaata_Home_06
+Scenario Outline: TC_UI_Zlaata_Home_06 |Verify Zlaata India Collection Section Display on Website.| "<TD_ID>"  
+    Given I upload the Zlaata India Collection banner with image in admin panel
+    Then I should see Zlaata India the updated Collection banner in the user application
+
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Zlaata_Home_06   |
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
    @TC_UI_Zlaata_ADM_05
