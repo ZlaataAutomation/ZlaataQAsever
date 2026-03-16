@@ -10,8 +10,8 @@ Feature: This is HomePage feature
   #============================================================================
   
   @sanity
-  @TC_UI_Zlaata_Home_01
-  Scenario Outline: TC_UI_Zlaata_Home_01 |Verify if the user is able to click on the homepage banner.|"<TD_ID>"
+  @TC_UI_Zlaata_Home1_01
+  Scenario Outline: TC_UI_Zlaata_Home1_01 |Verify if the user is able to click on the homepage banner.|"<TD_ID>"
      
      Given User going to click available banners in home page
     
@@ -21,8 +21,8 @@ Feature: This is HomePage feature
       | TD_UI_Zlaata_Home_01 |
     
     @sanity
-    @TC_UI_Zlaata_Home_02
-  Scenario Outline: TC_UI_Zlaata_Home_02 |Verify if the user is able to click on the forward and backward arrows on the homepage banner.|"<TD_ID>"
+    @TC_UI_Zlaata_Home1_02
+  Scenario Outline: TC_UI_Zlaata_Home1_02 |Verify if the user is able to click on the forward and backward arrows on the homepage banner.|"<TD_ID>"
      
      Given User clicks on forward and backward button at home page banner section
     
@@ -31,8 +31,8 @@ Feature: This is HomePage feature
       | TD_ID                  |
       | TD_UI_Zlaata_Home_02 |	
       
-       @TC_UI_Zlaata_Home_03
-  Scenario Outline: TC_UI_Zlaata_Home_03 |Verify if the user is able to click on the banner pause button.|"<TD_ID>"
+       @TC_UI_Zlaata_Home1_03
+  Scenario Outline: TC_UI_Zlaata_Home1_03 |Verify if the user is able to click on the banner pause button.|"<TD_ID>"
      
      Given User clicks on pause button
     
@@ -42,8 +42,8 @@ Feature: This is HomePage feature
       | TD_UI_Zlaata_Home_03 |
       
       @sanity
-       @TC_UI_Zlaata_Home_04
-  Scenario Outline: TC_UI_Zlaata_Home_04 |Verify if the user is able to click on the "Top Selling" section forward and backward arrows.|"<TD_ID>"
+       @TC_UI_Zlaata_Home1_04
+  Scenario Outline: TC_UI_Zlaata_Home1_04 |Verify if the user is able to click on the "Top Selling" section forward and backward arrows.|"<TD_ID>"
      
      Given User verifying top selling section
     
@@ -53,8 +53,8 @@ Feature: This is HomePage feature
       | TD_UI_Zlaata_Home_04 |
       
       @sanity
-       @TC_UI_Zlaata_Home_05
-  Scenario Outline: TC_UI_Zlaata_Home_05 |Verify if the user is able to click on the product image in the "Top Selling" section.|"<TD_ID>"
+       @TC_UI_Zlaata_Home1_05
+  Scenario Outline: TC_UI_Zlaata_Home1_05 |Verify if the user is able to click on the product image in the "Top Selling" section.|"<TD_ID>"
      
      Given User clicks on product image at tope selling section
     
@@ -64,8 +64,8 @@ Feature: This is HomePage feature
       | TD_UI_Zlaata_Home_05 |
       
       @sanity
-       @TC_UI_Zlaata_Home_06
-  Scenario Outline: TC_UI_Zlaata_Home_06 |Verify if the user is able to click on the "New Arrival" section forward and backward arrows.|"<TD_ID>"
+       @TC_UI_Zlaata_Home1_06
+  Scenario Outline: TC_UI_Zlaata_Home1_06 |Verify if the user is able to click on the "New Arrival" section forward and backward arrows.|"<TD_ID>"
      
      Given User clicks on forward and backward arrows on  new arrivals
     
@@ -75,8 +75,8 @@ Feature: This is HomePage feature
       | TD_UI_Zlaata_Home_06 |
       
       @sanity
-       @TC_UI_Zlaata_Home_07
-  Scenario Outline: TC_UI_Zlaata_Home_07 |Verify if the user is able to click on the product image in the "New Arrival" section.|"<TD_ID>"
+       @TC_UI_Zlaata_Home1_07
+  Scenario Outline: TC_UI_Zlaata_Home1_07 |Verify if the user is able to click on the product image in the "New Arrival" section.|"<TD_ID>"
      
      Given User clicks on product image at new arrival section
     
@@ -86,8 +86,8 @@ Feature: This is HomePage feature
       | TD_UI_Zlaata_Home_07 |
       
       @sanity
-       @TC_UI_Zlaata_Home_08
-  Scenario Outline: TC_UI_Zlaata_Home_08 |Verify if the user is able to click on the "Quick View" button in the "New Arrival" section.|"<TD_ID>"
+       @TC_UI_Zlaata_Home1_08
+  Scenario Outline: TC_UI_Zlaata_Home1_08 |Verify if the user is able to click on the "Quick View" button in the "New Arrival" section.|"<TD_ID>"
      
      Given User clicks on home page quick view icon
     
