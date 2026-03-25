@@ -28,6 +28,7 @@ public class AdminPanelAllImportStepDef {
 	public void admin_verify_categories_in_admin_panel_with(String filePath) throws IOException {
 		String excelPath = System.getProperty("user.dir") + "/src/test/resources/ImportFile/" + filePath;
 		adminGoogle.verifyCategoriesInAdmin(excelPath); 
+		adminGoogle.verifyCategoryInZlMenu(excelPath);
 	}
 	@Then("Admin verify Categories from {string} should be visible in user app")
 	public void admin_verify_categories_from_should_be_visible_in_user_app(String filePath) throws IOException, InterruptedException {
@@ -46,6 +47,7 @@ public class AdminPanelAllImportStepDef {
 	public void admin_verify_collection_in_admin_panel_with(String filePath) throws IOException {
 		String excelPath = System.getProperty("user.dir") + "/src/test/resources/ImportFile/" + filePath;
 		adminGoogle.verifyCollectionsInAdmin(excelPath); 
+		adminGoogle.verifyCollectionInZlMenu(excelPath);
 
 	}
 	@Then("Admin verify Collection from {string} should be visible in user app")

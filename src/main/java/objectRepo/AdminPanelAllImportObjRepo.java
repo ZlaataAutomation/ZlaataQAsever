@@ -69,6 +69,11 @@ public abstract class AdminPanelAllImportObjRepo extends BasePage {
 	@FindBy(xpath = "//input[@id='menuSearch']")  
 	protected WebElement searchProductSortMenu;
 
+	 @FindBy(xpath = "//a[normalize-space()='Zl Menu']")  
+	    protected WebElement clickZlMenu;
+	 @FindBy(xpath = "//span[@class='ladda-label']")
+	    protected WebElement addZlMenu;
+	 
 	@FindBy(xpath = "//a[normalize-space()='Product Sorts']")  
 	protected WebElement clickProductSort;
 

@@ -39,13 +39,13 @@ public abstract class AdminPanelSortingObjRepo extends BasePage{
     @FindBy(xpath = "//a[normalize-space()='Category Name']")
     protected WebElement categoriesNameButton;
     
-    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[1]")
+    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[2]")
     protected WebElement categoryType;
     
     @FindBy(xpath = "//span[@class='ladda-label']")
     protected WebElement addProductSort;
     
-    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[2]")
+    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[3]")
     protected WebElement categoryId;
     
     @FindBy(xpath = "//input[@role='searchbox']")
@@ -71,7 +71,12 @@ public abstract class AdminPanelSortingObjRepo extends BasePage{
     @FindBy(xpath = "//input[@id='search_input']") 
     protected WebElement searchBox;
 	
-    
+    @FindBy(xpath="(//span[@class='select2-selection select2-selection--single'])[1]")
+    protected WebElement brandType;
+
+
+    @FindBy(xpath="//li[contains(@class,'select2-results__option') and normalize-space()='Zlaata India']")
+    protected WebElement selectbrandType;
 	
 	
 	

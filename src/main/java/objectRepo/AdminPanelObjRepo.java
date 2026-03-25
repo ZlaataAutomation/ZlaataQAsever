@@ -152,8 +152,12 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	    @FindBy(xpath="//a[normalize-space()='Status']")
 	    protected WebElement clickStatus;
 	    
+	    @FindBy(xpath = "//i[@class='las la-edit']")
+	    protected WebElement editBtn;
+	    
 	    @FindBy(xpath="//a[normalize-space()='Brand Type']")
 	    protected WebElement brandType;
+
 
 	    @FindBy(xpath="//li[contains(@class,'select2-results__option') and normalize-space()='Zlaata India']")
 	    protected WebElement selectbrandType;
@@ -247,10 +251,10 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 		 @FindBy(xpath = "(//div[@class='col-sm-0 col-md-4 text-center'])[1]")
 		 protected WebElement clickBlankSpace;
 
-	    @FindBy(xpath = "//input[@id='search_input']")
-	    protected WebElement userSearchBox;
-
-
+		 @FindBy(xpath = "//input[@id='globalSearchInput']")
+			protected WebElement userSearchBox;
+	    @FindBy(xpath = "//button[@id='searchBtn']")
+		protected WebElement searchIcon;
 	 
 	    //Special Timer Product
 	    @FindBy(xpath = "//input[@placeholder='Search']")
