@@ -29,7 +29,7 @@ public class AdminPanelSortingStepDef {
 
 	
 	@When("I sort the products in a category")
-	public void i_sort_the_products_in_a_category() throws IOException {
+	public void i_sort_the_products_in_a_category() throws IOException, InterruptedException {
 	    adminSort.sortTheCategoriesInAdminPanel();
 	}
 	@Then("I should see the same product appear first in the User Application category")
@@ -40,7 +40,7 @@ public class AdminPanelSortingStepDef {
 	    
 	
 	@When("I sort the products in a Collection")
-		public void i_sort_the_products_in_a_collection() throws IOException {
+		public void i_sort_the_products_in_a_collection() throws IOException, InterruptedException {
 		  adminSort.sortTheCollectionInAdminPanel();
 		}
 

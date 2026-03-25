@@ -102,50 +102,51 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
             wait.until(ExpectedConditions.elementToBeClickable(searchTextBox));
             searchTextBox.clear();
             searchTextBox.sendKeys(categoryName);
+            Common.waitForElement(2);
             searchTextBox.sendKeys(Keys.ENTER);
             System.out.println("✅ Searched for Category: " + categoryName);
 
             // ✅ Verify category visible in table
-            By categoryLocator = By.xpath("//span[@title='" + categoryName + "']");
+            By categoryLocator = By.xpath("//span[normalize-space()='" + categoryName + "']");
             wait.until(ExpectedConditions.visibilityOfElementLocated(categoryLocator));
             System.out.println("✅ Category is visible in Admin panel: " + categoryName);
             
             // Click on Search Box for Product Sort
-    		Common.waitForElement(3);
-    		click(searchProductSortMenu);
-    		waitFor(searchProductSortMenu);
-    		type(searchProductSortMenu, "Product Sorts");
-    		System.out.println("Typed 'Product Sorts");
-    		Common.waitForElement(2);
-    		waitFor(clickProductSort);
-    		click(clickProductSort);
-    		System.out.println("Selected Product Sorts");
-    		Common.waitForElement(2);
-    		waitFor(addProductSort);
-    		click(addProductSort);
-    		System.out.println("Clicked add product Sort");
-    		Common.waitForElement(2);
-    		waitFor(categoryType);
-    		click(categoryType);
-    		System.out.println("Clicked Category Type");
-    		Common.waitForElement(2);
-    		waitFor(categorySearchTextBox);
-    		type(categorySearchTextBox,"Category");
-    		categorySearchTextBox.sendKeys(Keys.ENTER);
-    		System.out.println("Typed 'Category Name' & pressed Enter");
-    		Common.waitForElement(2);
-    		waitFor(categoryId);
-    		click(categoryId);
-    		System.out.println("Clicked Catagory Id Type");
-    		Common.waitForElement(2);
-    		waitFor(categorySearchTextBox);
-    		type(categorySearchTextBox,categoryName);
-    		categorySearchTextBox.sendKeys(Keys.ENTER);
-    		System.out.println("Typed 'Category id' & pressed Enter");
-    		Common.waitForElement(2);
-            waitFor(saveButton);
-            saveButton.click();
-            System.out.println("✅ Excel uploaded successfully");
+//    		Common.waitForElement(3);
+//    		click(searchProductSortMenu);
+//    		waitFor(searchProductSortMenu);
+//    		type(searchProductSortMenu, "Product Sorts");
+//    		System.out.println("Typed 'Product Sorts");
+//    		Common.waitForElement(2);
+//    		waitFor(clickProductSort);
+//    		click(clickProductSort);
+//    		System.out.println("Selected Product Sorts");
+//    		Common.waitForElement(2);
+//    		waitFor(addProductSort);
+//    		click(addProductSort);
+//    		System.out.println("Clicked add product Sort");
+//    		Common.waitForElement(2);
+//    		waitFor(categoryType);
+//    		click(categoryType);
+//    		System.out.println("Clicked Category Type");
+//    		Common.waitForElement(2);
+//    		waitFor(categorySearchTextBox);
+//    		type(categorySearchTextBox,"Category");
+//    		categorySearchTextBox.sendKeys(Keys.ENTER);
+//    		System.out.println("Typed 'Category Name' & pressed Enter");
+//    		Common.waitForElement(2);
+//    		waitFor(categoryId);
+//    		click(categoryId);
+//    		System.out.println("Clicked Catagory Id Type");
+//    		Common.waitForElement(2);
+//    		waitFor(categorySearchTextBox);
+//    		type(categorySearchTextBox,categoryName);
+//    		categorySearchTextBox.sendKeys(Keys.ENTER);
+//    		System.out.println("Typed 'Category id' & pressed Enter");
+//    		Common.waitForElement(2);
+//            waitFor(saveButton);
+//            saveButton.click();
+//            System.out.println("✅ Excel uploaded successfully");
     		
         }
         
@@ -160,14 +161,131 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 
         System.out.println("🎉 All categories verification completed successfully!");
     }
-		
-    public void verifyCatagoriesInUserApp(String filePath) throws IOException, InterruptedException {
-    	HomePage home = new HomePage(driver);
-		home.homeLaunch();
-        Common.waitForElement(3);
+    
+    public void verifyCategoryInZlMenu(String filePath) throws IOException {
+
         List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        Actions actions = new Actions(driver);
+
+        for (Map<String, Object> product : products) {
+
+            String category = (String) product.get("Category Name");
+
+            if (category == null || category.trim().isEmpty()) {
+                System.out.println("⚠ Skipping empty category");
+                continue;
+            }
+
+            System.out.println("➡ Processing Category: " + category);
+
+            try {
+
+                // ✅ Step 1: Open Zl Menu
+                Common.waitForElement(2);
+                click(searchProductSortMenu);
+                type(searchProductSortMenu, "Zl Menu");
+                click(clickZlMenu);
+                System.out.println("✅ Selected Zl Menu");
+                Common.waitForElement(2);
+
+                // ✅ Step 2: Click Header
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//a[contains(@href,'zl-menu?location=1')]"))).click();
+
+                // ✅ Step 3: Select Brand → Zlaata India
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//li[@filter-name='brand_type']//a[contains(text(),'Brand')]"))).click();
+
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//a[@parameter='brand_type' and contains(text(),'Zlaata India')]"))).click();
+
+                System.out.println("✅ Brand Selected");
+
+                // ✅ Step 4: Select Status → Active
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//li[@filter-name='status']//a[contains(text(),'Status')]"))).click();
+
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//a[@parameter='status' and contains(text(),'Active')]"))).click();
+
+                System.out.println("✅ Status Selected");
+                Common.waitForElement(2);
+
+                // ✅ Step 5: Click Edit button for "Shop Line"
+                WebElement editBtn = wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//tr[.//span[normalize-space()='Shop'] and .//span[normalize-space()='Zlaata India'] and .//span[normalize-space()='header']]//a[contains(@class,'btn-edit')]")));
+
+                editBtn.click();
+                System.out.println("✅ Clicked Edit for Shop Line");
+                Common.waitForElement(2);
+
+                // ✅ Step 6: Click Link Menu Tab
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.id("link_tab_nav"))).click();
+
+                // ✅ Step 7: Wait for container
+                wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.id("link-menu-container")));
+
+                // ✅ Step 8: Click Select2 Category Field
+                WebElement selectBox = wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("(//span[contains(@class,'select2-selection--multiple')])[1]")));
+
+                selectBox.click();
+
+                // ✅ Step 9: Type Category Name
+                WebElement searchBox = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//textarea[contains(@class,'select2-search__field')]")));
+
+                searchBox.sendKeys(category);
+                Thread.sleep(1000); // small wait for dropdown
+
+                // ✅ Step 10: Press Enter
+                searchBox.sendKeys(Keys.ENTER);
+
+                System.out.println("✅ Category Entered: " + category);
+                
+                Common.waitForElement(2);
+              waitFor(saveButton);
+              saveButton.click();
+              System.out.println("✅ Excel uploaded successfully");
+      		        
+      
+        //Clear Catch
+  	    Common.waitForElement(3);
+  	    waitFor(clearCatchButton);
+  	    click(clearCatchButton);
+  	    System.out.println("✅ Successfull click Clear Catch Button");
+  		
+  	
+
+          System.out.println("🎉 All categories verification completed successfully!");
+
+            } catch (Exception e) {
+                System.out.println("❌ Failed for Category: " + category);
+                e.printStackTrace();
+            }
+        }
+    }
+		
+    public void verifyCatagoriesInUserApp(String filePath) throws IOException, InterruptedException {
+    	  HomePage home = new HomePage(driver);
+	        home.homeLaunch();
+
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+	        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+	                By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+	        ));
+
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+	        System.out.println("Clicked ZLAATA INDIA Home Page Banner");
+        Common.waitForElement(3);
+        List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
+
         Actions actions = new Actions(driver);
 
         ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Categories in User App");
@@ -181,14 +299,15 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
                 continue;
             }
 
-            // ✅ Hover Shop menu
-            WebElement shopMenu = wait.until(ExpectedConditions
-                    .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
-            actions.moveToElement(shopMenu).perform();
+            // Hover on Shop
+    	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
+    	            By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")
+    	    ));
+    	    actions.moveToElement(shopMenu).perform();
 
             // ✅ Get dropdown links
             List<WebElement> dropdownLinks = wait.until(ExpectedConditions
-                    .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
+                    .visibilityOfAllElementsLocatedBy(By.xpath("//h5[text()='CATEGORIES']/following-sibling::a")));
 
             boolean found = false;
             for (WebElement link : dropdownLinks) {
@@ -212,7 +331,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 
                     while (System.currentTimeMillis() < endTime) {
                         try {
-                            List<WebElement> productsInCollection = driver.findElements(By.xpath("//h2[@class='product_list_cards_heading']"));
+                            List<WebElement> productsInCollection = driver.findElements(By.xpath("//div[contains(@class,'prod_listing_card')]"));
 
                             if (!productsInCollection.isEmpty()) {
                                 productsFound = true;
@@ -234,7 +353,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
                         test.fail("No products found in Category: " + category);
                     }
 
-                    break; // stop dropdown loop
+                   break; // stop dropdown loop
                 }
             }
 
@@ -310,6 +429,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 		        wait.until(ExpectedConditions.elementToBeClickable(searchTextBox));
 		        searchTextBox.clear();
 		        searchTextBox.sendKeys(collectionName);
+		        Common.waitForElement(2);
 		        searchTextBox.sendKeys(Keys.ENTER);
 
 		        System.out.println("✅ Searched for Collection: " + collectionName);
@@ -352,18 +472,136 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 		    Common.waitForElement(2);
 		}
 
+	 public void verifyCollectionInZlMenu(String filePath) throws IOException {
 
+		   List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
+
+		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+		    Actions actions = new Actions(driver);
+
+		    ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Collections in User App");
+		    ExtentManager.setTest(test);
+
+		    for (Map<String, Object> product : products) {
+		        String collection = (String) product.get("Title");
+
+		        if (collection == null || collection.trim().isEmpty()) {
+		            System.out.println("⚠ Skipping empty collection");
+		            continue;
+		        }
+	            System.out.println("➡ Processing Category: " + collection);
+		    
+	            try {
+
+	                // ✅ Step 1: Open Zl Menu
+	                Common.waitForElement(2);
+	                click(searchProductSortMenu);
+	                type(searchProductSortMenu, "Zl Menu");
+	                click(clickZlMenu);
+	                System.out.println("✅ Selected Zl Menu");
+	                Common.waitForElement(2);
+
+	                // ✅ Step 2: Click Header
+	                wait.until(ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[contains(@href,'zl-menu?location=1')]"))).click();
+
+	                // ✅ Step 3: Select Brand → Zlaata India
+	                wait.until(ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//li[@filter-name='brand_type']//a[contains(text(),'Brand')]"))).click();
+
+	                wait.until(ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[@parameter='brand_type' and contains(text(),'Zlaata India')]"))).click();
+
+	                System.out.println("✅ Brand Selected");
+
+	                // ✅ Step 4: Select Status → Active
+	                wait.until(ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//li[@filter-name='status']//a[contains(text(),'Status')]"))).click();
+
+	                wait.until(ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//a[@parameter='status' and contains(text(),'Active')]"))).click();
+
+	                System.out.println("✅ Status Selected");
+	                Common.waitForElement(2);
+
+	                // ✅ Step 5: Click Edit button for "Shop Line"
+	                WebElement editBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	                        By.xpath("//tr[.//span[normalize-space()='Shop'] and .//span[normalize-space()='Zlaata India'] and .//span[normalize-space()='header']]//a[contains(@class,'btn-edit')]")));
+
+	                editBtn.click();
+	                System.out.println("✅ Clicked Edit for Shop Line");
+	                Common.waitForElement(2);
+
+	                // ✅ Step 6: Click Link Menu Tab
+	                wait.until(ExpectedConditions.elementToBeClickable(
+	                        By.id("link_tab_nav"))).click();
+
+	                // ✅ Step 7: Wait for container
+	                wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                        By.id("link-menu-container")));
+
+	                // ✅ Step 8: Click Select2 Category Field
+	                WebElement selectBox = wait.until(ExpectedConditions.elementToBeClickable(
+	                        By.xpath("(//span[contains(@class,'select2-selection--multiple')])[2]")));
+
+	                selectBox.click();
+
+	                // ✅ Step 9: Type Category Name
+	                WebElement searchBox = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                        By.xpath("//textarea[contains(@class,'select2-search__field')]")));
+
+	                searchBox.sendKeys(collection);
+	                Thread.sleep(1000); // small wait for dropdown
+
+	                // ✅ Step 10: Press Enter
+	                searchBox.sendKeys(Keys.ENTER);
+
+	                System.out.println("✅ collection Entered: " + collection);
+	                
+	                Common.waitForElement(2);
+	              waitFor(saveButton);
+	              saveButton.click();
+	              System.out.println("✅ Excel uploaded successfully");
+	      		        
+	      
+	        //Clear Catch
+	  	    Common.waitForElement(3);
+	  	    waitFor(clearCatchButton);
+	  	    click(clearCatchButton);
+	  	    System.out.println("✅ Successfull click Clear Catch Button");
+	  		
+	  	
+
+	          System.out.println("🎉 All categories verification completed successfully!");
+
+	            } catch (Exception e) {
+	                System.out.println("❌ Failed for collection: " + collection);
+	                e.printStackTrace();
+	            }
+	            System.out.println("🎉 All collections verification completed successfully!");
+		    }
+	        }
+	    
 
 
 
 	 public void verifyCollectionsInUserApp(String filePath) throws IOException, InterruptedException {
 		 HomePage home = new HomePage(driver);
-			home.homeLaunch();
+	        home.homeLaunch();
+
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+	        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+	                By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+	        ));
+
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+	        System.out.println("Clicked ZLAATA INDIA Home Page Banner");
 		    Common.waitForElement(3);
 
 		    List<Map<String, Object>> products = ExcelXLSReader.readProductsWithMultipleListing(filePath);
 
-		    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		    Actions actions = new Actions(driver);
 
 		    ExtentTest test = ExtentManager.getExtentReports().createTest("Verify Collections in User App");
@@ -379,12 +617,12 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 
 		        // ✅ Hover Shop menu
 		        WebElement shopMenu = wait.until(ExpectedConditions
-		                .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
+		                .visibilityOfElementLocated(By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")));
 		        actions.moveToElement(shopMenu).perform();
 
 		        // ✅ Wait for dropdown
 		        List<WebElement> dropdownLinks = wait.until(ExpectedConditions
-		                .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
+		                .visibilityOfAllElementsLocatedBy(By.xpath("//h5[text()='COLLECTIONS']/following-sibling::a")));
 
 		        boolean found = false;
 		        for (WebElement link : dropdownLinks) {
@@ -409,7 +647,7 @@ public class AdminPanelAllImortPage extends AdminPanelAllImportObjRepo{
 
 	                    while (System.currentTimeMillis() < endTime) {
 	                        try {
-	                            List<WebElement> productsInCollection = driver.findElements(By.xpath("//h2[@class='product_list_cards_heading']"));
+	                            List<WebElement> productsInCollection = driver.findElements(By.xpath("//div[contains(@class,'prod_listing_card')]"));
 
 	                            if (!productsInCollection.isEmpty()) {
 	                                productsFound = true;

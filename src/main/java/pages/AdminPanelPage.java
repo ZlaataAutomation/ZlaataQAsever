@@ -148,6 +148,12 @@ public void uploadHomepageBannerDetails(String linkValue, String brandTypeValue,
 	    Select brandType = new Select(driver.findElement(By.name("brand_type")));
 	    brandType.selectByVisibleText(brandTypeValue);
 	    Common.waitForElement(2);
+	    WebElement label = driver.findElement(
+	    	    By.xpath("//label[normalize-space()='Status']")
+	    	);
+	    	label.click();
+	    
+	    Common.waitForElement(2);
 	    ((JavascriptExecutor) driver)
         .executeScript("arguments[0].click();", uploadButton);
 //	    click(uploadButton);
@@ -1555,6 +1561,18 @@ public void uploadHomepageBannerDetails(String linkValue, String brandTypeValue,
         Common.waitForElement(2);
         driver.get(Common.getValueFromTestDataMap("ExcelPath"));
         
+        Common.waitForElement(2);
+	    ((JavascriptExecutor) driver)
+        .executeScript("arguments[0].click();", brandType);
+	    Common.waitForElement(1);
+	    Thread.sleep(2000);
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({block:'center'});", selectbrandType
+	    );
+
+	    selectbrandType.click();  // ✅ THIS WILL WORK IN HEADLESS
+	    System.out.println("✅ Selected Brand Type");
+        
         System.out.println("✅ Redirected to Admin Special Timer Product page");
         Common.waitForElement(3);
 	    waitFor(clickStatus);
@@ -1660,8 +1678,20 @@ public void uploadHomepageBannerDetails(String linkValue, String brandTypeValue,
 	    click(clearCatchButton);
 	    System.out.println("✅ Successfull click Clear Catch Button");
         // ✅ Step 3: Switch to User App
-        HomePage home = new HomePage(driver);
-		home.homeLaunch();
+	    HomePage home = new HomePage(driver);
+        home.homeLaunch();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+        ));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+        System.out.println("Clicked ZLAATA INDIA Home Page Banner");
+        
+        
         // ✅ Step 4: Loop through Excel SKUs and verify in User App
         for (Map<String, Object> product : excelProducts) {
             Object skuObj = product.get("sku");
@@ -1680,16 +1710,23 @@ public void uploadHomepageBannerDetails(String linkValue, String brandTypeValue,
             }
 
             // Search in user app
+            Common.waitForElement(2);
+
+            wait.until(ExpectedConditions.elementToBeClickable(searchIcon)).click();
+
             wait.until(ExpectedConditions.elementToBeClickable(userSearchBox));
             userSearchBox.clear();
             userSearchBox.sendKeys(productColorName);
-          
-            Common.waitForElement(3);
-            By locator = By.xpath("//h6[normalize-space()='" + productColorName + "']");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 
-            WebElement productElement = driver.findElement(locator);
+            // Wait until results load
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("searchProductWrapper")));
+            Common.waitForElement(2);
+            By locator = By.xpath("//div[@id='searchProductWrapper']//a[contains(@title,'" + productColorName + "')]");
+
+            WebElement productElement = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+
             Assert.assertTrue("❌ Product not found in User App: " + productColorName, productElement.isDisplayed());
+
             productElement.click();
 
             System.out.println("✅ Product found in User App: " + productColorName);
@@ -1711,17 +1748,14 @@ public void uploadHomepageBannerDetails(String linkValue, String brandTypeValue,
 
             // ✅ Verify price details
             try {
-                WebElement actualPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_actual_price']")
-                ));
+            	WebElement currentPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            	        By.xpath("//div[contains(@class,'prod_current_price')]")));
 
-                WebElement currentPrice = driver.findElement(
-                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_current_price']")
-                );
+            	WebElement actualPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            	        By.xpath("//div[contains(@class,'prod_actual_price')]")));
 
-                WebElement discountPercentage = driver.findElement(
-                    By.xpath("//div[@class='prod_main_details_head']//div[@class='prod_discount_percentage']")
-                );
+            	WebElement discountPercentage = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            	        By.xpath("//div[contains(@class,'prod_discount_percentage')]")));
 
                 System.out.println("   Actual Price   : " + actualPrice.getText());
                 System.out.println("   Special  Price  : " + currentPrice.getText());
@@ -2292,8 +2326,191 @@ public void verifyCollectionBannerRedirect(String expectedLinkEnd) {
 
     System.out.println(CYAN + "━━━━━━━━ TEST COMPLETED ━━━━━━━━" + RESET);
 }
-//Home Page Test Case
-		    
+
+String ProductName="Blue Satin Shirt";
+public void createInfluencerPointer() throws InterruptedException {
+
+    adminLoginApp();
+    // Step 2: Navigate to Excel path (if needed)
+    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
+    Common.waitForElement(2);
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+ // Click Banner Type dropdown
+ WebElement bannerType = wait.until(ExpectedConditions.elementToBeClickable(
+         By.xpath("//div[@id='bannerTypeFilter']//button")));
+ bannerType.click();
+ Common.waitForElement(2);
+ // Click Influencer Banner option
+ WebElement influencerBanner = wait.until(ExpectedConditions.elementToBeClickable(
+         By.xpath("//div[@id='bannerTypeFilter']//a[normalize-space()='Influencer Banner']")));
+ influencerBanner.click();
+	 Common.waitForElement(2);
+	    ((JavascriptExecutor) driver)
+     .executeScript("arguments[0].click();", clickStatus);
+
+
+	    // Select Status -> Active
+	    Common.waitForElement(1);
+	    Thread.sleep(2000);
+	 // 3️⃣ Scroll + native click (NOT JS)
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({block:'center'});", statusActiveOption
+	    );
+
+	    statusActiveOption.click();  // ✅ THIS WILL WORK IN HEADLESS
+	    System.out.println("✅ Selected Active status");
+	    Common.waitForElement(1);
+	    // ✅ Click Edit button
+	    wait.until(ExpectedConditions.elementToBeClickable(editBtn));
+	    Common.waitForElement(2);
+		waitFor(editBtn);
+		click(editBtn);
+	    System.out.println( "✅ Clicked Edit" );
+	    Common.waitForElement(2);
+	    WebElement influencerMapping = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[@tab_name='influencer-mapping']")));
+
+	    influencerMapping.click();
+	    Common.waitForElement(1);
+	    WebElement addPointer = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.id("add-pointer")));
+
+	    addPointer.click();
+	    Common.waitForElement(2);
+	 // Click "Select Product" dropdown
+	    WebElement selectProduct = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//span[contains(@id,'additional_info1sku') and contains(@class,'select2-selection__rendered')]")));
+	    selectProduct.click();
+	    Common.waitForElement(2);
+	    // Wait for search field
+	    WebElement searchBox = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//input[@class='select2-search__field']")));
+
+	    // Type product name and press Enter
+	    searchBox.sendKeys(ProductName);
+	    searchBox.sendKeys(Keys.ENTER);
+	    Common.waitForElement(2);
+	    ((JavascriptExecutor) driver)
+        .executeScript("arguments[0].click();", uploadButton);
+	    
+	    Common.waitForElement(3);
+	    waitFor(clearCatchButton);
+	    ((JavascriptExecutor) driver)
+        .executeScript("arguments[0].click();", clearCatchButton);
+//	    click(clearCatchButton);
+	    System.out.println("✅ Successfull click Clear Catch Button");
+	    
+	
+}
+
+public void verifyInfluencerPointerOnHomePage() {
+
+	  //  String expectedTitle = Common.getValueFromTestDataMap("Banner Title");
+	 Common.waitForElement(2);
+	    WebElement topSellingSection = driver.findElement(
+	            By.xpath("//section[@data-section='zi_influencer_banner']")
+	    );
+	    
+	    ((JavascriptExecutor) driver).executeScript(
+	            "window.scrollTo({top: arguments[0].getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth'});",
+	            topSellingSection
+	    );
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({behavior:'smooth', block:'center'});",
+	            topSellingSection
+	    );
+		Common.waitForElement(2);
+	    int timeoutMinutes = 10;
+	    boolean titleFound = false;
+	    WebElement titleElement = null;
+
+	    long endTime = System.currentTimeMillis() + timeoutMinutes * 60 * 1000;
+
+	    while (System.currentTimeMillis() < endTime) {
+	        try {
+	            driver.navigate().refresh();
+	            Common.waitForElement(2);
+
+	            Wait<WebDriver> wait = new FluentWait<>(driver)
+	                    .withTimeout(Duration.ofSeconds(3)) // ⬅ increase from 5s to 15s
+	                    .pollingEvery(Duration.ofSeconds(3))
+	                    .ignoring(NoSuchElementException.class)
+	                    .ignoring(StaleElementReferenceException.class);
+
+	            titleElement = wait.until(d -> {
+	            	List<WebElement> elements = driver.findElements(
+	            		    By.xpath("//h6[@class='influencer_prod_name' and normalize-space()='" + ProductName + "']")
+	            		);
+	                return elements.isEmpty() ? null : elements.get(0);
+	            });
+
+	            // ✅ Relax condition → as soon as element is found
+	            if (titleElement != null) {
+	                titleFound = true;
+	                break;
+	            }
+
+	        } catch (TimeoutException te) {
+	            // keep looping until timeout
+	        }
+
+	        try {
+	            Thread.sleep(1000);
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	        }
+	    }
+
+	    // ✅ Final check
+	    if (titleFound) {
+	        System.out.println("✅ Product Name '" + ProductName + "' is visible in User Application.");
+	    } else {
+	        System.out.println("❌ Product Name '" + ProductName + "' not found within " + timeoutMinutes + " minutes.");
+	        Assert.fail("❌ Product Name '" + ProductName + "' not found within " + timeoutMinutes + " minutes.");
+	    }
+	}
+
+public void verifyPointerProductRedirect() {
+
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+    Actions actions = new Actions(driver);
+
+    // Hover influencer banner section first
+    WebElement bannerSection = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//section[@data-section='zi_influencer_banner']")
+    ));
+
+    actions.moveToElement(bannerSection).perform();
+
+    // Wait for product pointer to appear
+    WebElement product = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//section[@data-section='zi_influencer_banner']//h6[normalize-space()='" 
+            + ProductName + "']/ancestor::a[contains(@class,'influencer_prod_details_wrap')]")
+    ));
+
+    // Hover product
+    actions.moveToElement(product).perform();
+
+    // Click product
+    wait.until(ExpectedConditions.elementToBeClickable(product)).click();
+    Common.waitForElement(2);
+
+    // Wait for product details page
+    WebElement productHeading = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//h4[@class='prod_name']")
+    ));
+
+    String actualProductName = productHeading.getText().trim();
+
+    if(actualProductName.equals(ProductName)) {
+        System.out.println("✅ Product redirected successfully: " + actualProductName);
+    } else {
+        throw new AssertionError("❌ Product name mismatch. Expected: "
+                + ProductName + " but found: " + actualProductName);
+    }
+} 
+//Home Page Test Case		    
 //TC-01		
 	public void verifyZlaataIndiaHomePageBanner() {
 		
@@ -2322,7 +2539,7 @@ public void verifyCollectionBannerRedirect(String expectedLinkEnd) {
 	
 	
 	
-////TC-02
+//TC-02
 //		public void  validateProductSuccessfullyRemoved() throws InterruptedException{
 //			
 //			copyProductNameFromHomePageTopSelling();
@@ -2405,13 +2622,20 @@ public void verifyCollectionBannerRedirect(String expectedLinkEnd) {
 		verifyCollectionBannerOnHomePage();
 		
 		verifyCollectionBannerRedirect("/zlaata-india/all");
-
-
 	}
 	
+//TC-07	
 	
-	
-	
+	public void validateZlaataIndiaHomePageInfluencerPointer() throws InterruptedException {
+		
+		createInfluencerPointer();
+		
+		launchHomepage("ZLAATA INDIA");
+		
+		verifyInfluencerPointerOnHomePage();
+		
+		verifyPointerProductRedirect();
+	}
 	
 	
 	

@@ -60,14 +60,14 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	    System.out.println("✅ Admin Login Successfull");
 	    
 	}
-	
+	String category ="Dresses";
 	//Sort catagory
-	public void sortTheCategoriesInAdminPanel() throws IOException {
+	public void sortTheCategoriesInAdminPanel() throws IOException, InterruptedException {
 	    Common.waitForElement(2);
 //	    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
 //	    System.out.println("✅ Redirected to Admin product Categories page");
 	    
-	    String categoryName = Common.getValueFromTestDataMap("Shop Name");
+	    
 	    
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Actions actions = new Actions(driver);
@@ -100,17 +100,30 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 
 	        click(addProductSort);
 	        System.out.println("✅ Clicked add product Sort");
+	        
+	        Common.waitForElement(2);
+		    ((JavascriptExecutor) driver)
+	        .executeScript("arguments[0].click();", brandType);
+		    Common.waitForElement(1);
+		    Thread.sleep(2000);
+		    ((JavascriptExecutor) driver).executeScript(
+		            "arguments[0].scrollIntoView({block:'center'});", selectbrandType
+		    );
+
+		    selectbrandType.click();  // ✅ THIS WILL WORK IN HEADLESS
+		    System.out.println("✅ Selected Brand Type");
 	        Common.waitForElement(2);
 
 	        click(categoryType);
 	        type(categorySearchTextBox, "Category");
 	        categorySearchTextBox.sendKeys(Keys.ENTER);
+	        Common.waitForElement(1);
 	        click(categoryId);
 	        Common.waitForElement(2);
-	        type(categorySearchTextBox, categoryName);
+	        type(categorySearchTextBox, category);
 	        categorySearchTextBox.sendKeys(Keys.ENTER);
 	        System.out.println("✅ Category selected for Product Sort");
-
+	        Common.waitForElement(2);
 	     // All product cards
 	        List<WebElement> allProducts = driver.findElements(By.xpath("//div[contains(@class,'sortable-card')]"));
 	        if (allProducts.size() < 3) {
@@ -148,7 +161,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 
 	        // Save sort
 	        wait.until(ExpectedConditions.elementToBeClickable(saveButton)).click();
-	        System.out.println("✅ Sorting saved for category: " + categoryName);
+	        System.out.println("✅ Sorting saved for category: " + category);
 	    
 
 	    // Clear cache
@@ -166,7 +179,17 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	
 	public void verifySortingCategoriesInUserApp() throws IOException, InterruptedException {
 		HomePage home = new HomePage(driver);
-		home.homeLaunch();
+        home.homeLaunch();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+        ));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+        System.out.println("Clicked ZLAATA INDIA Home Page Banner");
 	    Common.waitForElement(3);
 
 	 
@@ -174,19 +197,18 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	    ExtentManager.setTest(test);
 	    
 	    //for moving catagory
-	    String category = Common.getValueFromTestDataMap("Shop Name");
+	 //   String category = Common.getValueFromTestDataMap("Shop Name");
 		   
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Actions actions = new Actions(driver);
 
-	    // Hover Shop menu
-	    WebElement shopMenu = wait.until(ExpectedConditions
-	            .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
-	    actions.moveToElement(shopMenu).perform();
+	     // ✅ Hover Shop menu
+        WebElement shopMenu = wait.until(ExpectedConditions
+                .visibilityOfElementLocated(By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")));
+        actions.moveToElement(shopMenu).perform();
 
 	    // Get dropdown links
 	    List<WebElement> dropdownLinks = wait.until(ExpectedConditions
-	            .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
+	            .visibilityOfAllElementsLocatedBy(By.xpath("//h5[text()='CATEGORIES']/following-sibling::a")));
 
 	    boolean foundCategory = false;
 	    for (WebElement link : dropdownLinks) {
@@ -240,7 +262,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	        try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
 
 	        // ---------- FETCH FIRST PRODUCT IMAGE ALT ----------
-	        String imgXpath = "(//div[@id='cls_newproduct_sec_dev']//div[contains(@class,'product_list_cards_list')]//picture[@class='prod_main_img']//img)[1]";
+	        String imgXpath = "(//div[contains(@class,'prod_listing_card')])[1]//a[contains(@class,'prod_listing_img')]//img";
 	        List<WebElement> productImgs = d.findElements(By.xpath(imgXpath));
 
 	        String altText = "";
@@ -251,7 +273,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	        }
 
 	        // ---------- FETCH FIRST PRODUCT HEADING ----------
-	        String headingXpath = "(//div[@id='cls_newproduct_sec_dev']//h2[@class='product_list_cards_heading'])[1]";
+	        String headingXpath = "(//div[contains(@class,'prod_listing_card')])[1]//a[contains(@class,'product_list_name')]";
 	        List<WebElement> headingList = d.findElements(By.xpath(headingXpath));
 
 	        String headingText = "";
@@ -294,13 +316,13 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 
 	
 	//Sort Collection
-	
-	public void sortTheCollectionInAdminPanel() throws IOException {
+    String collectionName = "Adyein";
+
+	public void sortTheCollectionInAdminPanel() throws IOException, InterruptedException {
 	    Common.waitForElement(2);
 //	    driver.get(Common.getValueFromTestDataMap("ExcelPath"));
 //	    System.out.println("✅ Redirected to Admin product Categories page");
 	    
-	    String collectionName = Common.getValueFromTestDataMap("Shop Name");
 	    
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
   
@@ -314,16 +336,28 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	        click(addProductSort);
 	        System.out.println("✅ Clicked add product Sort");
 	        Common.waitForElement(2);
+		    ((JavascriptExecutor) driver)
+	        .executeScript("arguments[0].click();", brandType);
+		    Common.waitForElement(1);
+		    Thread.sleep(2000);
+		    ((JavascriptExecutor) driver).executeScript(
+		            "arguments[0].scrollIntoView({block:'center'});", selectbrandType
+		    );
+
+		    selectbrandType.click();  // ✅ THIS WILL WORK IN HEADLESS
+		    System.out.println("✅ Selected Brand Type");
+	        Common.waitForElement(2);
 
 	        click(categoryType);
 	        type(categorySearchTextBox, "Collection");
 	        categorySearchTextBox.sendKeys(Keys.ENTER);
+	        Common.waitForElement(1);
 	        click(categoryId);
 	        Common.waitForElement(2);
 	        type(categorySearchTextBox, collectionName);
 	        categorySearchTextBox.sendKeys(Keys.ENTER);
-	        System.out.println("✅ Collection selected for Product Sort");
-
+	        System.out.println("✅ collection selected for Product Sort");
+	        Common.waitForElement(2);
 	     // All product cards
 	        List<WebElement> allProducts = driver.findElements(By.xpath("//div[contains(@class,'sortable-card')]"));
 	        if (allProducts.size() < 3) {
@@ -378,7 +412,17 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	
 	public void verifySortingCollectionInUserApp() throws IOException, InterruptedException {
 		HomePage home = new HomePage(driver);
-		home.homeLaunch();
+        home.homeLaunch();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+        ));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+        System.out.println("Clicked ZLAATA INDIA Home Page Banner");
 	    Common.waitForElement(3);
 
 	 
@@ -388,17 +432,16 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	    //for moving catagory
 	    String collection = Common.getValueFromTestDataMap("Shop Name");
 		   
-	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Actions actions = new Actions(driver);
 
-	    // Hover Shop menu
-	    WebElement shopMenu = wait.until(ExpectedConditions
-	            .visibilityOfElementLocated(By.xpath("//span[@class='navigation_menu_txt'][normalize-space()='Shop']")));
-	    actions.moveToElement(shopMenu).perform();
+	    // ✅ Hover Shop menu
+        WebElement shopMenu = wait.until(ExpectedConditions
+                .visibilityOfElementLocated(By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")));
+        actions.moveToElement(shopMenu).perform();
 
 	    // Get dropdown links
 	    List<WebElement> dropdownLinks = wait.until(ExpectedConditions
-	            .visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='nav_drop_down_box_category active']//ul/li/a")));
+	            .visibilityOfAllElementsLocatedBy(By.xpath("//h5[text()='COLLECTIONS']/following-sibling::a")));
 
 	    boolean foundCollection = false;
 	    for (WebElement link : dropdownLinks) {
@@ -443,7 +486,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	        try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
 
 	        // ---------- FETCH FIRST PRODUCT IMAGE ALT ----------
-	        String imgXpath = "(//div[@id='cls_newproduct_sec_dev']//div[contains(@class,'product_list_cards_list')]//picture[@class='prod_main_img']//img)[1]";
+	        String imgXpath = "(//div[contains(@class,'prod_listing_card')])[1]//a[contains(@class,'prod_listing_img')]//img";
 	        List<WebElement> productImgs = d.findElements(By.xpath(imgXpath));
 
 	        String altText = "";
@@ -454,7 +497,7 @@ public class AdminPanelSortingPage extends AdminPanelSortingObjRepo {
 	        }
 
 	        // ---------- FETCH FIRST PRODUCT HEADING ----------
-	        String headingXpath = "(//div[@id='cls_newproduct_sec_dev']//h2[@class='product_list_cards_heading'])[1]";
+	        String headingXpath = "(//div[contains(@class,'prod_listing_card')])[1]//a[contains(@class,'product_list_name')]";
 	        List<WebElement> headingList = d.findElements(By.xpath(headingXpath));
 
 	        String headingText = "";

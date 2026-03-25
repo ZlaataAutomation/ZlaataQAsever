@@ -72,7 +72,7 @@ public class AdminPanelStepDef {
 				public void i_should_see_zlaata_india_the_updated_banner_in_the_user_application() {
 			
 				}
-//TC-05  Caategories Boss Lady
+//TC-05  Categories Boss Lady
 				
 					@Given("I upload the Boss Lady category banner with image in admin panel")
 					public void i_upload_the_boss_lady_category_banner_with_image_in_admin_panel() {
@@ -82,7 +82,7 @@ public class AdminPanelStepDef {
 					public void i_should_see_boss_lady_the_updated_banner_in_the_user_application() {
 		
 					}
-//TC-06
+//TC-06,  Collection
 					
 						@Given("I upload the Zlaata India Collection banner with image in admin panel")
 						public void i_upload_the_zlaata_india_collection_banner_with_image_in_admin_panel() {
@@ -92,6 +92,17 @@ public class AdminPanelStepDef {
 						public void i_should_see_zlaata_india_the_updated_collection_banner_in_the_user_application() {
 						 admin.validatezlaataIndiaHomePageCollection();
 						}
+//TC-07, Influencer Pointer					
+	
+		@Given("I upload the influencer banner and map the product in the admin panel")
+		public void i_upload_the_influencer_banner_and_map_the_product_in_the_admin_panel() throws InterruptedException {
+		admin.validateZlaataIndiaHomePageInfluencerPointer();					
+		}
+		@Then("I should see the product influencer pointer displayed on the homepage")
+		public void i_should_see_the_product_influencer_pointer_displayed_on_the_homepage() {
+							    
+		}
+
 
 
 				

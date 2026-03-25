@@ -33,7 +33,7 @@ public final class LoginPage extends LoginObjRepository {
 //				type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
 //				click(submit);
 		handleAccessCodeIfPresentFast();
-//		popup();
+		popup();
 		closeDebugBarIfPresent();
 		
     }
@@ -59,7 +59,7 @@ public final class LoginPage extends LoginObjRepository {
         }
     private void popup() {
         List<WebElement> popUps = driver.findElements(
-                By.xpath("//div[contains(@class,'chrismas_closebtn')]")
+                By.xpath("//div[contains(@class,'cross_bttn_for_earthpopup popup_containers_cls_btn')]")
         );
 
         if (!popUps.isEmpty()) {
