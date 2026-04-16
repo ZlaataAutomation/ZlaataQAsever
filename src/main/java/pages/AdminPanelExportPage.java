@@ -47,6 +47,10 @@ public class AdminPanelExportPage extends AdminPanelExportObjRepo {
 	        type(adminPassword, FileReaderManager.getInstance().getJsonReader().getValueFromJson("AdminPassword"));
 	        click(adminLogin);
 	        System.out.println(GREEN + "✅ Admin Login Successful" + RESET);
+	        
+	        Common.waitForElement(2);
+	        HomePage home= new HomePage(driver);
+	        home.closeDebugBarIfPresent();
 
 	    
 	}
