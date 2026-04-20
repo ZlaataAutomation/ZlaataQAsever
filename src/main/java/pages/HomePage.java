@@ -35,12 +35,14 @@ public final class HomePage extends HomePageObjRepo {
 //				type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
 //				click(submit);
 		handleAccessCodeIfPresentFast();
-		popup();
+		
 		closeDebugBarIfPresent();
+		popup();
 
 
 	}
 	public void popup() {
+		Common.waitForElement(2);
 	    List<WebElement> popUps = driver.findElements(
 	            By.xpath("//div[contains(@class,'cross_bttn_for_earthpopup popup_containers_cls_btn')]")
 	    );

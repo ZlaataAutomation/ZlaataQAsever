@@ -71,7 +71,7 @@ public abstract class StockQuantityObjRepo extends BasePage {
 		protected WebElement addToBag;
 		
 		    
-		@FindBy(xpath = "//button[contains(@class,'add_bag_prod_buy_now_btn') and normalize-space()='Add to Bag']")
+		@FindBy(xpath = "//button[contains(@class,'prod_add_cart_btn') and normalize-space()='Add to cart']")
 		protected WebElement addToCartBtn;
 		
 		@FindBy(xpath = "//button[contains(@class,'Cls_cart_btn') and contains(@class,'header_cta_btn')]")
