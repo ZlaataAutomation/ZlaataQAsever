@@ -199,12 +199,23 @@ public class StockQuantityPage extends StockQuantityObjRepo{
 	    userSearchBox.sendKeys(productName);
 	    userSearchBox.sendKeys(Keys.ENTER);
 	    Common.waitForElement(3);
+	
 
-	    wait.until(ExpectedConditions.elementToBeClickable(addToBag));
-	    click(addToBag);
-	    System.out.println(GREEN + "✅ Clicked 'Add To Bag'" + RESET);
+	    // ---------------- STEP 2: CLICK PRODUCT ----------------
+	    WebElement productLink = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[contains(@class,'product_list_name') and contains(text(),'" + productName + "')]")
+	    ));
 
+	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", productLink);
+	    js.executeScript("arguments[0].click();", productLink);
+
+	    System.out.println("✅ Clicked product");
 	    Common.waitForElement(2);
+//	    wait.until(ExpectedConditions.elementToBeClickable(addToBag));
+//	    click(addToBag);
+//	    System.out.println(GREEN + "✅ Clicked 'Add To Bag'" + RESET);
+//
+//	    Common.waitForElement(2);
 	    wait.until(ExpectedConditions.elementToBeClickable(addToCartBtn));
 	    click(addToCartBtn);
 	    System.out.println(GREEN + "✅ Added product to cart" + RESET);

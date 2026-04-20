@@ -32,6 +32,10 @@ public class StockQuantityStepDef {
 			public void the_order_is_not_placed_and_shows_out_of_stock() {
 		
 			}
+				@Then("the after order placed and shows Out of Stock")
+				public void the_after_order_placed_and_shows_out_of_stock() {
+				    
+				}
 
 
 
