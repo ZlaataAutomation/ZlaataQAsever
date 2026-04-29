@@ -35,6 +35,7 @@ public class AdminEmailVerifyOrderFlowPage extends AdminEmailVerifyOrderFlowObjR
 	}
 	
 	 public void adminLoginApp() {
+		 Common.waitForElement(2);
 	        driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationAdminUrl());
 	        type(adminEmail, FileReaderManager.getInstance().getJsonReader().getValueFromJson("AdminName"));
 	        type(adminPassword, FileReaderManager.getInstance().getJsonReader().getValueFromJson("AdminPassword"));
