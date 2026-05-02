@@ -32,6 +32,7 @@ public class PageObjectManager {
     private Reg_TrackOrder_Page trackOrder;
     private Landing_Page land;
     private StockQuantityPage stock;
+    private Review_Page review;
 
    
 
@@ -119,5 +120,8 @@ public class PageObjectManager {
 	}
 	public StockQuantityPage getStockQuantityPage() {
 		return (stock == null) ? stock = new StockQuantityPage(driver): stock;
+	}
+	public Review_Page getReview_Page() {
+		return (review == null) ? review = new Review_Page(driver): review;
 	}
 }

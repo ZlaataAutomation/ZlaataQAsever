@@ -37,6 +37,18 @@ public class StockQuantityStepDef {
 				    
 				}
 
+@Given("the product stock quantity for the product is greater than {int}")
+					public void the_product_stock_quantity_for_the_product_is_greater_than(Integer int1) throws InterruptedException {
+	stock.validateAlmostSoldOut();   
+					}
+
+					@Then("the product should display the Almost Sold Out message")
+					public void the_product_should_display_the_almost_sold_out_message() {
+					
+					}
+
+
+
 
 
 	

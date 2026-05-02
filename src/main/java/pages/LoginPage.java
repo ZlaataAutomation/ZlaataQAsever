@@ -33,7 +33,7 @@ public final class LoginPage extends LoginObjRepository {
 //				type(accessCode, FileReaderManager.getInstance().getJsonReader().getValueFromJson("Access"));
 //				click(submit);
 		handleAccessCodeIfPresentFast();
-		popup();
+//		popup();
 		closeDebugBarIfPresent();
 		
     }
