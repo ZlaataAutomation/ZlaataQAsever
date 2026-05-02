@@ -13,3 +13,14 @@ Examples:
   | TD_ID                  |  
   | TD_UI_Zlaata_Stock_01   |
   
+  
+  @Stock
+@TC_UI_Zlaata_Stock_02
+Scenario Outline: TC_UI_Zlaata_Stock_02 |Verify Almost Sold Out message on Product Details Page.| "<TD_ID>"
+    Given the product stock quantity for the product is greater than 2
+Then the product should display the Almost Sold Out message
+    
+
+Examples:  
+  | TD_ID                  |  
+  | TD_UI_Zlaata_Stock_02   |

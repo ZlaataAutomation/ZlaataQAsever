@@ -1,0 +1,699 @@
+package pages;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Random;
+
+import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import manager.FileReaderManager;
+import objectRepo.Review_ObjRepo;
+import utils.Common;
+
+
+public class Review_Page extends Review_ObjRepo{
+	public Review_Page(WebDriver driver) 
+	{
+		this.driver = driver;
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		PageFactory.initElements(this.driver, this);
+	}
+	
+	
+	public void adminLogin() {
+		Common.waitForElement(2);
+		driver.get(FileReaderManager.getInstance().getConfigReader().getApplicationAdminUrl());
+	    type(adminEmail, FileReaderManager.getInstance().getJsonReader().getValueFromJson("AdminName"));
+	    type(adminPassword, FileReaderManager.getInstance().getJsonReader().getValueFromJson("AdminPassword"));
+	    click(adminLogin);
+	    System.out.println("✅ Admin Login Successfull");
+	    
+	}
+	public void userLoginWithZlaataIndia(){
+		LoginPage log = new LoginPage(driver);
+	    log.userLogin();
+	    Common.waitForElement(1);
+
+	    WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+        ));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+        System.out.println("Clicked ZLAATA INDIA Home Page Banner");
+	}
+	public void launchHomepage(String page) {
+
+        HomePage home = new HomePage(driver);
+        home.homeLaunch();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//h2[normalize-space()='" + page + "']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+        ));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+        System.out.println("Clicked " + page + " Home Page Banner");
+    }
+	public void launchHomepageWithBrand(String page) {
+
+        HomePage home = new HomePage(driver);
+        home.homeLaunch();
+        String formattedBrand = page.toUpperCase();
+        
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//h2[normalize-space()='" + formattedBrand + "']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+        ));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+        System.out.println("Clicked " + formattedBrand + " Home Page Banner");
+    }
+	
+	String productlistingName;
+
+	public String takeRandomProductFromAll() {
+	
+	    
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+	    Actions actions = new Actions(driver);
+	    Common.waitForElement(1);
+
+	 // Hover on Shop
+	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")
+	    ));
+	    actions.moveToElement(shopMenu).perform();
+
+	    // Click All
+	    WebElement allButton = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//div[contains(@class,'dropdown_content')]//a[normalize-space()='All']")
+	    ));
+	    allButton.click();
+
+	    System.out.println("✅ Clicked on 'All' under Shop menu");
+	    Common.waitForElement(2);
+	    // Collect all product cards
+	    List<WebElement> products = wait.until(ExpectedConditions
+	            .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'prod_listing_card')]")));
+
+	    if (products.isEmpty()) {
+	        System.out.println("⚠️ No products found on listing page!");
+	        return null;
+	    }
+
+	    Random rand = new Random();
+	    int maxAttempts = Math.min(5, products.size());
+	    boolean productFound = false;
+
+	    for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+
+	        int randomIndex = rand.nextInt(products.size()) + 1;
+	        System.out.println("🎯 Checking random product index: " + randomIndex);
+
+	        WebElement productCard = driver.findElement(
+	                By.xpath("(//div[contains(@class,'prod_listing_card')])[" + randomIndex + "]"));
+
+	        String name = productCard.findElement(
+	                By.xpath(".//a[contains(@class,'product_list_name')]"))
+	                .getText().trim();
+//	        List<WebElement> stockLabels = productCard.findElements(
+//	                By.xpath(".//span[contains(@class,'prod_listing_hurry') and normalize-space()='Out of Stock']"));
+//
+//	        boolean isOutOfStock = !stockLabels.isEmpty() && stockLabels.get(0).isDisplayed();
+//
+//	        if (isOutOfStock) {
+//	            System.out.println("❌ '" + name + "' is OUT OF STOCK. Retrying...");
+//	            continue;
+//	        }
+
+	        // Found in-stock product
+	        String  productName = name;
+
+	        WebElement productNameElement = productCard.findElement(
+	                By.xpath(".//a[contains(@class,'product_list_name')]"));
+
+	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
+
+	        productFound = true;
+	        System.out.println("✅ Selected random in-stock product: " + productName);
+	        break;
+	    }
+
+	    if (!productFound) {
+	        System.out.println("⚠️ No in-stock product found after trying " + maxAttempts);
+	        return null;
+	    }
+	    // Click ADD TO CART button on PDP
+	    
+	    productlistingName = driver.findElement(
+	            By.xpath("//h4[@class='prod_name']")
+	    ).getText().trim();
+	    System.out.println("Product Name: " + productlistingName);
+	    
+
+	    return productlistingName;
+	}
+	
+	public void completeReviewFlow() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+		Common.waitForElement(2);
+	    WebElement writeReview = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("(//button[contains(text(),'Review')])[1]")));
+	    Common.waitForElement(2);
+	 // scroll it into center
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({block: 'center'});", writeReview);
+
+	    // click via JS (bypasses click interception)
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", writeReview);
+	     System.out.println("🛒 Review clicked on PDP for: " + productlistingName);
+	     Common.waitForElement(2);
+	     WebElement star5 = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	             By.xpath("(//div[contains(@class,'order_review_cont')]//*[name()='svg' and @data-star])[last()]")
+	     ));
+	    
+	     star5.click();
+	     System.out.println("⭐ Selected 5-star rating");
+	     Common.waitForElement(1);
+	     // ✍️ Enter review text
+	     WebElement reviewBox1 = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	             By.xpath("//textarea[@placeholder='Write a review']")
+	     ));
+	     reviewBox1.clear();
+	     reviewBox1.sendKeys("Best");
+	     System.out.println("✍️ Entered review text");
+	     Common.waitForElement(2);
+
+	     // 📷 Upload image
+	     WebElement uploadInput = driver.findElement(
+	             By.xpath("(//input[@type='file'])[1]")
+	     );
+
+	     // 👉 Give full system path
+	     String imagePath = System.getProperty("user.dir") + "/src/test/resources/images/Review.jpg";
+	     uploadInput.sendKeys(imagePath);
+
+	     System.out.println("📷 Image uploaded");
+	     Common.waitForElement(1);
+
+	     // 🔘 Select "True to size"
+	     WebElement trueToSize = wait.until(ExpectedConditions.elementToBeClickable(
+	             By.xpath("//input[@id='overallFit_true']")
+	     ));
+	     js.executeScript("arguments[0].click();", trueToSize);
+
+	     System.out.println("📏 Selected 'True to size'");
+	     Common.waitForElement(1);
+
+	     // ✅ Click Submit
+	     WebElement submitBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	             By.xpath("//button[contains(@class,'write_review_submit_btn')]")
+	     ));
+	     js.executeScript("arguments[0].click();", submitBtn);
+	     Common.waitForElement(2);
+	     WebElement successMsg = wait.until(
+	                ExpectedConditions.visibilityOf(mailValidationMessage)
+	        );
+
+	        Assert.assertEquals("❌ successfully success message mismatch",
+	                "Review updated successfully!",
+	                successMsg.getText().trim());
+	     System.out.println("✅ Review submitted successfully");
+	}
+	
+	
+	public String normalize(String text) {
+	    return text.toLowerCase().replaceAll("\\s+", "");
+	}
+	public void approveReviewIfProductMatches() {
+		adminLogin();
+	     Common.waitForElement(2);
+	        click(searchMenu);
+	        type(searchMenu, "Product Reviews");
+	        click(clickProductReview);
+	        System.out.println("✅ Selected Product Reviews");
+	        Common.waitForElement(3);
+	    
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+
+	    // Normalize expected name
+	    String expected = normalize(productlistingName);
+
+	    // Get FIRST product name from admin table
+	    WebElement firstProduct = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	        By.xpath("(//table//tr[1]/td[3]//span)[1]")
+	    ));
+
+	    String actualProductName = firstProduct.getText();
+	    String actual = normalize(actualProductName);
+
+	    System.out.println("Expected: " + expected);
+	    System.out.println("Actual: " + actual);
+
+	    // Compare
+	    if (expected.equals(actual)) {
+
+	        System.out.println("✅ Product matched. Approving review...");
+
+	        // Click Approve button (✓)
+	        WebElement approveBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("(//table//tr[1]//button[@data-status='approve'])[1]")
+	        ));
+	        approveBtn.click();
+	        Common.waitForElement(3);
+	        // Verify Approved badge
+	        WebElement approvedBadge = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("(//table//tr[1]//span[contains(@class,'badge-success') and contains(text(),'Approved')])[1]")
+	        ));
+
+	        if (approvedBadge.isDisplayed()) {
+	            System.out.println("✅ Review successfully approved");
+	        } else {
+	            System.out.println("❌ Approval failed");
+	        }
+	        
+	     // Clear cache
+		    Common.waitForElement(3);
+		    click(clearCatchButton);
+		    System.out.println("✅ Cleared cache");
+		     Common.waitForElement(2);
+
+	    } else {
+	        System.out.println("❌ Product NOT matched — skipping approval");
+	    }
+	    
+	}
+	
+	public void verifyApproveReview() {
+
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+
+	    // ---------------- STEP 1: SEARCH PRODUCT ----------------
+	    System.out.println(YELLOW + "🔍 Searching for product: " + productlistingName + RESET);
+
+	    Common.waitForElement(2);
+
+	    wait.until(ExpectedConditions.elementToBeClickable(searchIcon)).click();
+
+	    wait.until(ExpectedConditions.visibilityOf(userSearchBox));
+	    userSearchBox.clear();
+	    userSearchBox.sendKeys(productlistingName);
+	    userSearchBox.sendKeys(Keys.ENTER);
+
+	    Common.waitForElement(3);
+
+	    // ---------------- STEP 2: CLICK PRODUCT ----------------
+	    WebElement productLink = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[contains(@class,'product_list_name') and contains(text(),'" + productlistingName + "')]")
+	    ));
+
+	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", productLink);
+	    js.executeScript("arguments[0].click();", productLink);
+
+	    System.out.println("✅ Clicked product");
+	    Common.waitForElement(2);
+	    WebElement writeReview = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("(//button[contains(text(),'Review')])[1]")));
+	    Common.waitForElement(2);
+	 // scroll it into center
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({block: 'center'});", writeReview);
+
+	    // click via JS (bypasses click interception)
+	//    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", writeReview);
+	     System.out.println("🛒 Review clicked on PDP for: " + productlistingName);
+	}
+	
+	public void verifyFirstReviewDetails() {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+	    Common.waitForElement(2);
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    try {
+	        // ---------------- FIRST REVIEW CARD ----------------
+	        WebElement firstReview = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("(//div[contains(@class,'customer_review_card')])[1]")
+	        ));
+
+	        // ---------------- NAME ----------------
+	        String actualName = firstReview.findElement(
+	                By.xpath(".//h6[contains(@class,'review_customer_name')]")
+	        ).getText().trim().toLowerCase().replaceAll("\\s+", "");
+
+	        if (actualName.contains("saroj")) {
+	            System.out.println(GREEN + "✅ Name verified: " + actualName + RESET);
+	        } else {
+	            throw new AssertionError("❌ Name mismatch: " + actualName);
+	        }
+
+	        // ---------------- REVIEW TEXT ----------------
+	        String reviewText = firstReview.findElements(
+	                By.xpath(".//p[contains(@class,'review_card_content')]")
+	        ).size() > 0 ?
+	                firstReview.findElement(By.xpath(".//p[contains(@class,'review_card_content')]")).getText().trim()
+	                : "";
+
+	        if (reviewText.equalsIgnoreCase("Best")) {
+	            System.out.println(GREEN + "✅ Review text verified: " + reviewText + RESET);
+	        } else {
+	            throw new AssertionError("❌ Review text mismatch: " + reviewText);
+	        }
+
+	        // ---------------- IMAGE ----------------
+	        boolean imagePresent = firstReview.findElements(
+	                By.xpath(".//div[contains(@class,'review_card_pics')]//img")
+	        ).size() > 0;
+
+	        if (imagePresent) {
+	            System.out.println(GREEN + "✅ Image is displayed" + RESET);
+	        } else {
+	            throw new AssertionError("❌ Image not found");
+	        }
+	        Common.waitForElement(2);
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Review verification FAILED: " + e.getMessage() + RESET);
+	        throw e;
+	    }
+	}
+	
+	
+	String productName;
+	public void verifyMyOrderReviewFlow() {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+		 String CYAN = "\u001B[36m";
+		    String YELLOW = "\u001B[33m";
+		    String GREEN = "\u001B[32m";
+		    String RED = "\u001B[31m";
+		    String RESET = "\u001B[0m";
+		    String line = "──────────────────────────────────────────────────────────────";
+
+		    System.out.println(CYAN + line + RESET);
+		    System.out.println(GREEN + "🚀 Starting My Order Review Flow..." + RESET);
+		    System.out.println(CYAN + line + RESET);
+		    Common.waitForElement(2);
+		    wait.until(ExpectedConditions.elementToBeClickable(myProfileIcon));
+		    waitFor(myProfileIcon);
+			click(myProfileIcon);
+			Common.waitForElement(1);
+		    wait.until(ExpectedConditions.elementToBeClickable(myOrdersBtn));
+		    waitFor(myOrdersBtn);
+			click(myOrdersBtn);
+			Common.waitForElement(2);
+			wait.until(ExpectedConditions.elementToBeClickable(pendingReview));
+		    waitFor(pendingReview);
+			click(pendingReview);
+		    Common.waitForElement(3);
+			// Build dynamic XPath
+			String xpath = "(//a[contains(@class,'order_placed_redirect_btn')])[1]";
+			WebElement btn = driver.findElement(By.xpath(xpath));
+
+			// 1️⃣ Scroll to the element
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
+			
+			((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+		    
+		    
+		    Common.waitForElement(2);
+		    String xpath1 = "(//button[contains(text(),'Write a Review')])[1]";
+		    WebElement btn1 = driver.findElement(By.xpath(xpath1));
+
+		    // 1️⃣ Scroll to the element
+		    ((JavascriptExecutor) driver).executeScript(
+		        "arguments[0].scrollIntoView({block:'center'});", btn1
+		    );
+
+		    // 2️⃣ Click using JS
+		    ((JavascriptExecutor) driver).executeScript(
+		        "arguments[0].click();", btn1
+		    );
+		    Common.waitForElement(2);
+		    
+		    
+		     WebElement star5 = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		             By.xpath("(//div[contains(@class,'order_review_cont')]//*[name()='svg' and @data-star])[last()]")
+		     ));
+		    
+		     star5.click();
+		     System.out.println("⭐ Selected 5-star rating");
+		     productName = driver.findElement(
+			            By.xpath("(//h4[@class='placed_prod_name'])[last()]")
+			    ).getText().trim();
+			    System.out.println("Product Name: " + productName);
+			    System.out.println("🛒 Review clicked on PDP for: " + productName);
+		     Common.waitForElement(1);
+		     // ✍️ Enter review text
+		     WebElement reviewBox1 = wait.until(ExpectedConditions.visibilityOfElementLocated(
+		             By.xpath("//textarea[@placeholder='Write a review']")
+		     ));
+		     reviewBox1.clear();
+		     reviewBox1.sendKeys("Best");
+		     System.out.println("✍️ Entered review text");
+		     Common.waitForElement(2);
+
+		     // 📷 Upload image
+		     WebElement uploadInput = driver.findElement(
+		             By.xpath("(//input[@type='file'])[1]")
+		     );
+
+		     // 👉 Give full system path
+		     String imagePath = System.getProperty("user.dir") + "/src/test/resources/images/Review.jpg";
+		     uploadInput.sendKeys(imagePath);
+
+		     System.out.println("📷 Image uploaded");
+		     Common.waitForElement(1);
+
+		     // 🔘 Select "True to size"
+		     WebElement trueToSize = wait.until(ExpectedConditions.elementToBeClickable(
+		             By.xpath("//input[@id='overallFit_true']")
+		     ));
+		     js.executeScript("arguments[0].click();", trueToSize);
+
+		     System.out.println("📏 Selected 'True to size'");
+		     Common.waitForElement(1);
+
+		     // ✅ Click Submit
+		     WebElement submitBtn = wait.until(ExpectedConditions.elementToBeClickable(
+		             By.xpath("//button[contains(@class,'write_review_submit_btn')]")
+		     ));
+		     js.executeScript("arguments[0].click();", submitBtn);
+		     Common.waitForElement(2);
+		     WebElement successMsg = wait.until(
+		                ExpectedConditions.visibilityOf(mailValidationMessage)
+		        );
+
+		        Assert.assertEquals("❌ successfully success message mismatch",
+		                "Review updated successfully!",
+		                successMsg.getText().trim());
+		     System.out.println("✅ Review submitted successfully");
+	
+	
+	}
+	
+	String brandName;
+	public void approveMyOrderReviewIfProductMatches() {
+		adminLogin();
+	     Common.waitForElement(2);
+	        click(searchMenu);
+	        type(searchMenu, "Product Reviews");
+	        click(clickProductReview);
+	        System.out.println("✅ Selected Product Reviews");
+	        Common.waitForElement(3);
+	    
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+
+	    // Normalize expected name
+	    String expected = normalize(productName);
+
+	    // Get FIRST product name from admin table
+	    WebElement firstProduct = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	        By.xpath("(//table//tr[1]/td[3]//span)[1]")
+	    ));
+
+	    String actualProductName = firstProduct.getText();
+	    String actual = normalize(actualProductName);
+
+	    System.out.println("Expected: " + expected);
+	    System.out.println("Actual: " + actual);
+
+	    // Compare
+	    if (expected.equals(actual)) {
+
+	        System.out.println("✅ Product matched. Approving review...");
+	        
+	        WebElement brandEle = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	        	    By.xpath("(//table//tr[1]/td[4]//span)[1]")
+	        	));
+
+	        	 brandName = brandEle.getText().trim();
+	        	System.out.println("Brand: " + brandName);
+
+	        // Click Approve button (✓)
+	        WebElement approveBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("(//table//tr[1]//button[@data-status='approve'])[1]")
+	        ));
+	        approveBtn.click();
+	        Common.waitForElement(3);
+	        // Verify Approved badge
+	        WebElement approvedBadge = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("(//table//tr[1]//span[contains(@class,'badge-success') and contains(text(),'Approved')])[1]")
+	        ));
+
+	        if (approvedBadge.isDisplayed()) {
+	            System.out.println("✅ Review successfully approved");
+	        } else {
+	            System.out.println("❌ Approval failed");
+	        }
+	        
+	     // Clear cache
+		    Common.waitForElement(3);
+		    click(clearCatchButton);
+		    System.out.println("✅ Cleared cache");
+		     Common.waitForElement(2);
+
+	    } else {
+	        System.out.println("❌ Product NOT matched — skipping approval");
+	    }
+	    
+	}
+	public void verifyApproveMyOrderReview() {
+
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+
+	    // ---------------- STEP 1: SEARCH PRODUCT ----------------
+	    System.out.println(YELLOW + "🔍 Searching for product: " + productName + RESET);
+
+	    Common.waitForElement(2);
+
+	    wait.until(ExpectedConditions.elementToBeClickable(searchIcon)).click();
+
+	    wait.until(ExpectedConditions.visibilityOf(userSearchBox));
+	    userSearchBox.clear();
+	    userSearchBox.sendKeys(productName);
+	    Common.waitForElement(2);
+	    userSearchBox.sendKeys(Keys.ENTER);
+
+	    Common.waitForElement(3);
+
+	    // ---------------- STEP 2: CLICK PRODUCT ----------------
+	    WebElement productLink = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[contains(@class,'product_list_name') and contains(text(),'" + productName + "')]")
+	    ));
+
+	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", productLink);
+	    js.executeScript("arguments[0].click();", productLink);
+
+	    System.out.println("✅ Clicked product");
+	    Common.waitForElement(2);
+	    WebElement writeReview = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("(//button[contains(text(),'Review')])[1]")));
+	    Common.waitForElement(2);
+	 // scroll it into center
+	    ((JavascriptExecutor) driver).executeScript(
+	            "arguments[0].scrollIntoView({block: 'center'});", writeReview);
+
+	    // click via JS (bypasses click interception)
+	//    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", writeReview);
+	     System.out.println("🛒 Review clicked on PDP for: " + productName);
+	}
+	public void validateUserReview() {
+		
+		userLoginWithZlaataIndia();
+		
+		takeRandomProductFromAll();
+		
+		completeReviewFlow();
+		
+		approveReviewIfProductMatches();
+		
+		launchHomepage("ZLAATA INDIA");
+		
+		verifyApproveReview();
+		
+		verifyFirstReviewDetails();
+		
+	}
+	
+	
+	public void validateMyOrderReview() {
+		
+		userLoginWithZlaataIndia();
+
+		verifyMyOrderReviewFlow();
+		
+		approveMyOrderReviewIfProductMatches();
+		
+		launchHomepageWithBrand(brandName);
+		
+		verifyApproveMyOrderReview();
+		
+		verifyFirstReviewDetails();
+
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public boolean verifyExactText(WebElement ele, String expectedText) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public WebDriver gmail(String browserName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean isAt() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+}
+

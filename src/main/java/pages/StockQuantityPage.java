@@ -109,20 +109,8 @@ public class StockQuantityPage extends StockQuantityObjRepo{
 		
 	}
 	 public void userLoginApp() {
-		    HomePage home = new HomePage(driver);
-		    home.homeLaunch();
-
-		    Common.waitForElement(2);
-		    click(profile);
-		    type(loginNumber, "9348714087");
-		    Common.waitForElement(1);
-		    click(sendotp);
-		    Common.waitForElement(2);
-		    type(enterotp, "12345");
-		    click(verifyotp);
-		    Common.waitForElement(3);
-
-		    System.out.println("\u001B[32m✅ Login successful\u001B[0m");
+		 LoginPage home = new LoginPage(driver);
+		    home.userLogin();
 		}
 	 
 	 public void deleteAllProductsFromCart() {
@@ -432,6 +420,20 @@ public class StockQuantityPage extends StockQuantityObjRepo{
         System.out.println("Clicked " + page + " Home Page Banner");
     }
 	
+	public void logionWithlaunchHomepage(String page) {
+
+		userLoginApp();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//h2[normalize-space()='" + page + "']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+        ));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+        System.out.println("Clicked " + page + " Home Page Banner");
+    }
 	public void verifyOutOfStockProductFlow() throws InterruptedException {
 
 	    String YELLOW = "\u001B[33m";
@@ -496,6 +498,151 @@ public class StockQuantityPage extends StockQuantityObjRepo{
 	}
 	
 	
+	public void verifyAndUpdateStockForSoldOut() throws InterruptedException {
+		adminLogin();
+	     Common.waitForElement(2);
+	        click(searchMenu);
+	        type(searchMenu, "Track Inventory");
+	        click(clickTrackInvetory);
+	        System.out.println("✅ Selected Track Inventory");
+	        Common.waitForElement(2);
+	    
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+	        // ✅ Step 1: Click "Product Colour Name / SKU"
+	        WebElement productColorDropdown = wait.until(ExpectedConditions.elementToBeClickable(
+	                By.xpath("//a[contains(text(),'Product Colour Name')]")
+	        ));
+	        productColorDropdown.click();
+
+	        System.out.println("✅ Clicked Product Colour Name");
+	        Common.waitForElement(2);
+	        // ✅ Step 2: Enter value in search box
+	        WebElement searchBox = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("//input[contains(@class,'select2-search__field')]")
+	        ));
+
+	        searchBox.sendKeys("Test By Auto2");
+	        Common.waitForElement(2);
+	        searchBox.sendKeys(Keys.ENTER);
+
+	        System.out.println("✅ Entered product in search");
+
+	        // 🔄 Small wait for result load
+	        Thread.sleep(2000);
+
+	     // ✅ Get stock input field
+	        WebElement stockInput = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("(//input[contains(@class,'quantity_increment')])[3]")
+	        ));
+
+	        String stockValueStr = stockInput.getAttribute("value").trim();
+	        int stockValue = stockValueStr.isEmpty() ? 0 : Integer.parseInt(stockValueStr);
+
+	        System.out.println("📦 Current Stock: " + stockValue);
+
+	        // ✅ Condition
+	        if (stockValue > 0) {
+
+	            System.out.println("⚠ Stock > 0 → Updating to 0");
+
+	            stockInput.clear();
+	            stockInput.sendKeys("0");
+
+	            // ✅ Click tick mark
+	            WebElement tickBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	                    By.xpath("(//i[contains(@class,'la-check-circle')])[3]")
+	            ));
+
+	            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", tickBtn);
+
+	            System.out.println("✅ Stock updated to 0 and saved");
+
+	            // ✅ Optional: Clear cache
+	            Common.waitForElement(3);
+	            click(clearCatchButton);
+	            System.out.println("✅ Cleared cache");
+
+	        } else {
+	            System.out.println("✅ Stock already 0 → No action needed");
+	        }
+		
+	}
+	String productName2 ="Test By Auto2";
+	public void verifAlmostSoldOutProductFlow() throws InterruptedException {
+
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+
+	    // ---------------- STEP 1: SEARCH PRODUCT ----------------
+	    System.out.println(YELLOW + "🔍 Searching for product: " + productName2 + RESET);
+
+	    Common.waitForElement(2);
+
+	    wait.until(ExpectedConditions.elementToBeClickable(searchIcon)).click();
+
+	    wait.until(ExpectedConditions.visibilityOf(userSearchBox));
+	    userSearchBox.clear();
+	    userSearchBox.sendKeys(productName2);
+	    userSearchBox.sendKeys(Keys.ENTER);
+
+	    Common.waitForElement(3);
+
+	    // ---------------- STEP 2: CLICK PRODUCT ----------------
+	    WebElement productLink = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[contains(@class,'product_list_name') and contains(text(),'" + productName2 + "')]")
+	    ));
+
+	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", productLink);
+	    js.executeScript("arguments[0].click();", productLink);
+
+	    System.out.println("✅ Clicked product");
+	    Common.waitForElement(2);
+	 // ---------------- STEP 3: VERIFY "ONLY FEW LEFT" MESSAGE ----------------
+	    WebElement fewLeftMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//div[contains(@class,'prod_hurryUp')]")
+	    ));
+
+	    String msgText = fewLeftMsg.getText().trim();
+
+	    if (msgText.equalsIgnoreCase("Only Few Left")) {
+	        System.out.println("✅ 'Only Few Left' message is displayed");
+	    } else {
+	        Assert.fail("❌ 'Only Few Left' message NOT displayed. Found: " + msgText);
+	    }
+
+
+	    // ---------------- STEP 4: VERIFY ADD TO CART BUTTON ----------------
+	    WebElement addToCartBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//button[contains(@class,'prod_add_cart_btn')]")
+	    ));
+
+	    if (addToCartBtn.isDisplayed() && addToCartBtn.isEnabled()) {
+	        System.out.println("✅ Add to Cart button is visible & enabled");
+	    } else {
+	        Assert.fail("❌ Add to Cart button is NOT enabled/visible");
+	    }
+
+
+	    // ---------------- STEP 5: VERIFY BUY NOW BUTTON ----------------
+	    WebElement buyNowBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//button[contains(@class,'prod_buy_now_btn')]")
+	    ));
+
+	    if (buyNowBtn.isDisplayed() && buyNowBtn.isEnabled()) {
+	        System.out.println("✅ Buy Now button is visible & enabled");
+	    } else {
+	        Assert.fail("❌ Buy Now button is NOT enabled/visible");
+	    }
+
+
+	    System.out.println("🎉 FEW LEFT STOCK VALIDATION PASSED");
+	}
+	
 //TC-01
 	public void validateStockQuantity() throws InterruptedException {
 		
@@ -511,7 +658,14 @@ public class StockQuantityPage extends StockQuantityObjRepo{
 		
 	}
 	
-	
+	public void validateAlmostSoldOut() throws InterruptedException {
+		
+		verifyAndUpdateStockForSoldOut();
+		
+		logionWithlaunchHomepage("ZLAATA INDIA");
+		
+		verifAlmostSoldOutProductFlow();
+	}
 	
 	
 	
