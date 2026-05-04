@@ -33,7 +33,8 @@ public class PageObjectManager {
     private Landing_Page land;
     private StockQuantityPage stock;
     private Review_Page review;
-
+    private  ExpressDeliveryPage express;
+    private AccountSettingsPage account;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -123,5 +124,15 @@ public class PageObjectManager {
 	}
 	public Review_Page getReview_Page() {
 		return (review == null) ? review = new Review_Page(driver): review;
+	}
+	
+
+	public ExpressDeliveryPage getExpressDeliveryPage() {
+		return (express == null) ? express = new  ExpressDeliveryPage(driver): express;
+	}
+	
+	
+	public AccountSettingsPage getAccountSettingsPage() {
+	   return (account== null) ? account = new AccountSettingsPage(driver) : account;
 	}
 }
