@@ -35,6 +35,7 @@ public class PageObjectManager {
     private Review_Page review;
     private  ExpressDeliveryPage express;
     private AccountSettingsPage account;
+    private AdminFlashNotification adminFlashNotification;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -134,5 +135,9 @@ public class PageObjectManager {
 	
 	public AccountSettingsPage getAccountSettingsPage() {
 	   return (account== null) ? account = new AccountSettingsPage(driver) : account;
+	}
+	
+	public AdminFlashNotification getAdminFlashNotification() {
+		return (adminFlashNotification == null) ? adminFlashNotification = new AdminFlashNotification(driver) : adminFlashNotification;
 	}
 }
