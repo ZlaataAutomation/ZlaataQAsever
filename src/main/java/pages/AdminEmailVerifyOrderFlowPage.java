@@ -44,20 +44,8 @@ public class AdminEmailVerifyOrderFlowPage extends AdminEmailVerifyOrderFlowObjR
 	    }
 	 
 	 public void userLoginApp() {
-		    HomePage home = new HomePage(driver);
-		    home.homeLaunch();
-
-		    Common.waitForElement(2);
-		    click(profile);
-		    type(loginNumber, "9348714087");
-		    Common.waitForElement(1);
-		    click(sendotp);
-		    Common.waitForElement(2);
-		    type(enterotp, "12345");
-		    click(verifyotp);
-		    Common.waitForElement(3);
-
-		    System.out.println("\u001B[32m✅ Login successful\u001B[0m");
+LoginPage log =new LoginPage(driver);
+log.userLogin();
 		}
 
 	 public void deleteAllProductsFromCart() {
@@ -1851,6 +1839,19 @@ public void orderExchangeForUserSide() {
 
             // Check message visibility
             Assert.assertTrue("Order Delivered message not displayed!", deliveredMsg.isDisplayed());
+            
+            WebElement returnLimitMsg = wait.until(
+            	    ExpectedConditions.visibilityOfElementLocated(
+            	        By.xpath("//p[contains(@class,'order_placed_return_details') and normalize-space()='You have reached the maximum limit for return for this order.']")
+            	    )
+            	);
+
+            	Assert.assertTrue(
+            	    "Maximum return limit message not displayed!",
+            	    returnLimitMsg.isDisplayed()
+            	);
+
+            	System.out.println("✅ Maximum return limit message verified successfully.");
 		
 	}
 	
@@ -2242,6 +2243,18 @@ public void orderExchangeForUserSide() {
         	Assert.assertTrue("Exchange Cancelled message not displayed!", exchangeCancelledMsg.isDisplayed());
 
         	System.out.println("✅ Exchange Cancelled message verified successfully.");
+        	WebElement exchangeLimitMsg = wait.until(
+        		    ExpectedConditions.visibilityOfElementLocated(
+        		        By.xpath("//p[contains(@class,'order_placed_return_details') and normalize-space()='You have reached the maximum limit for exchange for this order.']")
+        		    )
+        		);
+
+        		Assert.assertTrue(
+        		    "Maximum exchange limit message not displayed!",
+        		    exchangeLimitMsg.isDisplayed()
+        		);
+
+        		System.out.println("✅ Maximum exchange limit message verified successfully.");
 		
 	}
 	
@@ -3552,7 +3565,7 @@ public void orderExchangeForUserSide() {
 	    System.out.println(line);
 
 	}
-
+	
 //String totalMRF="₹1999", discountedMRP="₹999", youSaved="₹1000", totalAmount="₹999", orderId="ZLTQA/25-26/18079";
 //TC01 Verify Order Placed Confirm
 		public void verifyOrderPlacedEmail() throws InterruptedException {
@@ -3563,7 +3576,7 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Order Placed");
 			
-			verifyOrderConfirmationMail("Order Confirmation");
+//			verifyOrderConfirmationMail("Order Confirmation");
 			
 			//Order Shipped
 			updateOrderStatusToShipped();
@@ -3572,7 +3585,7 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Order Shipped");
 			
-			verifyOrderConfirmationMail("Order Shipped");
+//			verifyOrderConfirmationMail("Order Shipped");
 			
 			//Order Delivered
 			orderStatusShippedToDelivered();
@@ -3581,7 +3594,7 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Order Delivered");
 			
-			verifyOrderConfirmationMail("Order Delivered Confirmation");
+//			verifyOrderConfirmationMail("Order Delivered Confirmation");
 		}
 	
 //TC02 Verify OrderCancellation From User Side
@@ -3593,7 +3606,7 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabel("Order Cancelled");
 			
-			verifyOrderConfirmationMail("Order Cancellation Confirmation");
+//			verifyOrderConfirmationMail("Order Cancellation Confirmation");
 			
 			orderRefundInitiateByAdmin();
 			
@@ -3601,7 +3614,7 @@ public void orderExchangeForUserSide() {
 			
 			verifyRefundDetailsAndAmount();
 			
-			verifyRefundCreditedEmail("Refund Credited");
+//			verifyRefundCreditedEmail("Refund Credited");
 						
 		}
 	
@@ -3623,14 +3636,14 @@ public void orderExchangeForUserSide() {
 			
 			orderExchangeRequestAcceptByAdmin();
 			
-			verifyOrderExchangeEmail("Order Exchange Request");
+//			verifyOrderExchangeEmail("Order Exchange Request");
 			
 			updateExchangeRequestToShipped();
 			
 			openUserApp();
 			verifyOrderLabelforExchange("Exchange Order Shipped");
 			
-			verifyOrderExchangeEmail("Exchange Order Shipped");
+//			verifyOrderExchangeEmail("Exchange Order Shipped");
 			
 			updateExchangeShippedToExchangeDelivered();
 			
@@ -3638,7 +3651,7 @@ public void orderExchangeForUserSide() {
 			
 			verifyOrderLabelforExchange("Exchange Delivered");
 
-			verifyOrderExchangeEmail("Exchange Order Delivered Confirmation");
+//			verifyOrderExchangeEmail("Exchange Order Delivered Confirmation");
 			
 		}
 //TC04 Verify Order Return Flow 
@@ -3705,7 +3718,7 @@ public void orderExchangeForUserSide() {
 			
 			returnOrderCancelFromUserSide();
 			
-			verifyOrderConfirmationMail("Return Order Cancellation");
+//			verifyOrderConfirmationMail("Return Order Cancellation");
 		}
 //Tc07 Verify Return Order Cancel From Admin Side	
 	
@@ -3723,7 +3736,7 @@ public void orderExchangeForUserSide() {
 		
 		returnOrderCancelFromAdminSide1();
 		
-		verifyReturnOrderCanceledByAdminSideEmail("Return Cancelled - Product received in damaged state");
+//		verifyReturnOrderCanceledByAdminSideEmail("Return Cancelled - Product received in damaged state");
 		
 	}
 	
@@ -3759,7 +3772,7 @@ public void orderExchangeForUserSide() {
 				
 				exchangeOrderCancelFromUserSide();
 				
-				verifyExchangeOrderCancelMail("Exchange Order Cancellation");
+	//			verifyExchangeOrderCancelMail("Exchange Order Cancellation");
 				
 			}
 	

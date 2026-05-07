@@ -36,6 +36,7 @@ public class PageObjectManager {
     private  ExpressDeliveryPage express;
     private AccountSettingsPage account;
     private AdminFlashNotification adminFlashNotification;
+    private Estimatdelivery_Page estimate;
    
 
     public PageObjectManager(WebDriver driver) {
@@ -139,5 +140,9 @@ public class PageObjectManager {
 	
 	public AdminFlashNotification getAdminFlashNotification() {
 		return (adminFlashNotification == null) ? adminFlashNotification = new AdminFlashNotification(driver) : adminFlashNotification;
+	}
+	
+	public Estimatdelivery_Page getEstimatdelivery_Page() {
+		return (estimate == null) ? estimate = new Estimatdelivery_Page(driver) : estimate;
 	}
 }
