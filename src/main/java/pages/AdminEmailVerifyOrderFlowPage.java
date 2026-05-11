@@ -132,7 +132,7 @@ log.userLogin();
 		    Thread.sleep(3000);
 
 		    System.out.println("🗑️ All emails deleted successfully.");
-		}
+	 }
 
 		// Fetch from Excel
 		String productName = Common.getValueFromTestDataMap("ProductListingName");
