@@ -37,6 +37,8 @@ public class PageObjectManager {
     private AccountSettingsPage account;
     private AdminFlashNotification adminFlashNotification;
     private Estimatdelivery_Page estimate;
+   private NewLabel_Page newlabel;
+   
    
 
     public PageObjectManager(WebDriver driver) {
@@ -144,5 +146,9 @@ public class PageObjectManager {
 	
 	public Estimatdelivery_Page getEstimatdelivery_Page() {
 		return (estimate == null) ? estimate = new Estimatdelivery_Page(driver) : estimate;
+	}
+	
+	public NewLabel_Page getNewLabel_Page() {
+		return (newlabel == null) ? newlabel = new NewLabel_Page(driver) : newlabel;
 	}
 }

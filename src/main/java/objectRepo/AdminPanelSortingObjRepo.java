@@ -77,6 +77,12 @@ public abstract class AdminPanelSortingObjRepo extends BasePage{
 
     @FindBy(xpath="//li[contains(@class,'select2-results__option') and normalize-space()='Zlaata India']")
     protected WebElement selectbrandType;
+    
+	@FindBy(xpath = "//button[@id='searchBtn']")
+	protected WebElement searchIcon;
+	
+	@FindBy(xpath = "//input[@id='globalSearchInput']")
+	protected WebElement userSearchBox;
 	
 	
 	

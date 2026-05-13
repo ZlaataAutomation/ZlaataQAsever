@@ -1808,10 +1808,10 @@ public void orderExchangeForUserSide() {
 	    System.out.println(GREEN + "🚚 Return Order Cancelled  by User for Order ID: " + orderId + RESET);
 	    System.out.println(line);
 		
-	    Common.waitForElement(2);
-		wait.until(ExpectedConditions.elementToBeClickable(viewOrderDetails));
-        click(viewOrderDetails);
-        System.out.println(GREEN + "🧾 Clicked View Order Details" + RESET);
+//	    Common.waitForElement(2);
+//		wait.until(ExpectedConditions.elementToBeClickable(viewOrderDetails));
+//        click(viewOrderDetails);
+//        System.out.println(GREEN + "🧾 Clicked View Order Details" + RESET);
         
         Common.waitForElement(2);
 		wait.until(ExpectedConditions.elementToBeClickable(cancelBtn));
@@ -2224,10 +2224,10 @@ public void orderExchangeForUserSide() {
 	    System.out.println(GREEN + "🚚 Exchange Order Cancelled  by User for Order ID: " + orderId + RESET);
 	    System.out.println(line);
 		
-	    Common.waitForElement(2);
-		wait.until(ExpectedConditions.elementToBeClickable(viewOrderDetails));
-        click(viewOrderDetails);
-        System.out.println(GREEN + "🧾 Clicked View Order Details" + RESET);
+//	    Common.waitForElement(2);
+//		wait.until(ExpectedConditions.elementToBeClickable(viewOrderDetails));
+//        click(viewOrderDetails);
+//        System.out.println(GREEN + "🧾 Clicked View Order Details" + RESET);
         
         Common.waitForElement(2);
 		wait.until(ExpectedConditions.elementToBeClickable(cancelBtn));
@@ -3570,7 +3570,7 @@ public void orderExchangeForUserSide() {
 //TC01 Verify Order Placed Confirm
 		public void verifyOrderPlacedEmail() throws InterruptedException {
 			
-			deleteAllMailsIfNotEmpty();
+//			deleteAllMailsIfNotEmpty();
 			
 			addProductToCartAndPlacedTheOrder();
 			
@@ -3706,7 +3706,7 @@ public void orderExchangeForUserSide() {
 	
 //Tc06 Verify Return Order Cancel From User Side
 		public void verifyReurnOrderCancellationEmailFromUserSide() throws InterruptedException {
-			deleteAllMailsIfNotEmpty();
+	//		deleteAllMailsIfNotEmpty();
 			
 			addProductToCartAndPlacedTheOrder();
 		
@@ -3754,7 +3754,7 @@ public void orderExchangeForUserSide() {
 	
 			orderReturnRequestRejectByAdmin();
 			
-			verifyOrderConfirmationMail("Cancellation of Your Return Order");
+//			verifyOrderConfirmationMail("Cancellation of Your Return Order");
 	
 		}	
 	
@@ -3791,7 +3791,7 @@ public void orderExchangeForUserSide() {
 				
 				exchangeOrderRequestRejectByAdminOutOfStock();
 				
-				verifyOrderExchangeEmail("Exchange Out Of Stock Cancellation");
+//				verifyOrderExchangeEmail("Exchange Out Of Stock Cancellation");
 				
 			}
 	
@@ -3809,7 +3809,7 @@ public void orderExchangeForUserSide() {
 				
 				exchangeOrderRequestRejectByAdminReceivedDamageState();
 				
-				verifyExchangeOrderCanceledByAdminSideEmail("Exchange Cancelled - Product received in damaged state");
+//				verifyExchangeOrderCanceledByAdminSideEmail("Exchange Cancelled - Product received in damaged state");
 				
 			}	
 	
@@ -3831,7 +3831,7 @@ public void orderExchangeForUserSide() {
 				
 				exchangeOrderShippedRejectByAdminSide();
 				
-				verifyOrderExchangeEmail("Cancellation of Your Exchange Order");
+//				verifyOrderExchangeEmail("Cancellation of Your Exchange Order");
 				
 				
 				

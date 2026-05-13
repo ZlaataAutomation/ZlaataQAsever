@@ -76,7 +76,7 @@ public class AdminPanelSortingStepDef {
 
 	
 	@When("I sort the products in a All Product")
-	public void i_sort_the_products_in_a_All_Product() throws IOException {
+	public void i_sort_the_products_in_a_All_Product() throws IOException, InterruptedException {
 	  adminSort.sortTheAllProductInAdminPanel();
 	}
 	
@@ -100,7 +100,7 @@ public class AdminPanelSortingStepDef {
 
 
 		@When("I sort the products in a Search Style")
-			public void i_sort_the_products_in_a_search_style() throws IOException {
+			public void i_sort_the_products_in_a_search_style() throws IOException, InterruptedException {
 			adminSort.sortTheSearchStyleInAdminPanel();
 			}
 
