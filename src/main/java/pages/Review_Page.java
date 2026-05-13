@@ -160,7 +160,7 @@ public class Review_Page extends Review_ObjRepo{
 	    // Click ADD TO CART button on PDP
 	    
 	    productlistingName = driver.findElement(
-	            By.xpath("//h4[@class='prod_name']")
+	            By.xpath("//h3[@class='prod_name']")
 	    ).getText().trim();
 	    System.out.println("Product Name: " + productlistingName);
 	    

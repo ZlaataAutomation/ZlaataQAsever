@@ -128,7 +128,7 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	    public void selectDropdownByVisibleText(WebElement dropdown, String text) {
 	        new Select(dropdown).selectByVisibleText(text);
 	    }
-	    @FindBy(xpath = "(//input[@name='filters[0][listing_name]'])[1]")
+	    @FindBy(xpath = "(//input[@name='filters[0][name]'])[1]")
 		protected WebElement productListingBoxText;
 	    
 	    @FindBy(xpath = "(//label[text()='Stock Status']/following-sibling::input[@type='text'])[1]")
