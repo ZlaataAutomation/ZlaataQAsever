@@ -1,4 +1,4 @@
-package objectRepo;
+	package objectRepo;
 
 import java.time.Duration;
 
@@ -111,10 +111,50 @@ public abstract class EstimateDelivery_ObjRepo extends BasePage {
 	protected WebElement continueButtonOnChekcoutpage;
 	
 	@FindBy(xpath = "//span[@class='estimated_delivery_date Cls_delivery_date']")
-	protected WebElement estimateddeliveryInAddressPage;
+	protected WebElement estimateddeliveryDateInAddressandPaymentPages;
 	
 	@FindBy(xpath = "//span[@class='estimated_delivery_date_status']")
 	protected WebElement  estimateddeliveryInMyOrderPage;
+	
+	@FindBy(xpath = "//input[@id='payment_type_COD']")
+	protected WebElement paymentCod;
+	
+	@FindBy(xpath = "//button[@class='place_order_btn Cls_place_order btn___2']")
+	protected WebElement placeOrderButton;
+	
+	@FindBy(xpath = "//h5[@class='checkout_success_heading']")
+	protected WebElement orderConfirmedMessage;
+	
+	@FindBy(xpath = "//a[@class='view_details_btn']")
+	protected WebElement viewOrderDetailsPage;
+	
+	@FindBy(xpath = "//a[normalize-space()='Brand Type']")
+	protected WebElement brandMenu;
+	
+	@FindBy(xpath = "//li[@id='select2-filter_brandType-result-rpau-1']")
+	protected WebElement firstBrandOption;
+	
+	@FindBy(xpath = "//*[@class='prod_list_sortby_btn']")
+	protected WebElement sortByButton;
+	
+	@FindBy(xpath = "//li[@data-category_checked_id='Price Low to High']")
+	protected WebElement priceLowToHigh;
+	
+	@FindBy(xpath = "//input[@name='set_value[estimate_pickup_date]']")
+	protected WebElement  estimatePickupDate;
+	
+	@FindBy(xpath = "//input[@name='set_value[estimate_exchange_delivery_date]']")
+	protected WebElement estimateExchangeDeliveryDate;
+	
+	
+	@FindBy(xpath = "//button[@class='header_cta_btn account_icon_btn ']")
+	protected WebElement profileIcon;
+	
+	@FindBy(xpath = "//h2[contains(@class,'account_tabs_text') and contains(text(),'My Orders')]")
+	protected WebElement myOrder;
+	
+	
+	
 
 }
 	

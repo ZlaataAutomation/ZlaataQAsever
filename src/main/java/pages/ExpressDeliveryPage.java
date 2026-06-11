@@ -159,7 +159,7 @@ public final class ExpressDeliveryPage extends ExpressDeliveryObjRepo {
 
 	    productDetailsName = wait.until(
 	            ExpectedConditions.visibilityOfElementLocated(
-	                    By.xpath("//h4[@class='prod_name']")
+	                    By.xpath("//h3[@class='prod_name']")
 	            )
 	    ).getText();
 
@@ -610,74 +610,169 @@ public final class ExpressDeliveryPage extends ExpressDeliveryObjRepo {
 	    
 	    Assert.assertTrue(RED + "❌ No products found" + RESET, products.size() > 0);
 
-	    sortByButton.click();
+	    filterButton.click();
 	    Common.waitForElement(2);
-	 // =========================
-	 // CLICK EXPRESS DELIVERY
-	 // =========================
-	 By expressBy = By.xpath("//li[contains(.,'Express Delivery')]");
 
-	 List<WebElement> expressList = driver.findElements(expressBy);
+	    // Open DELIVERY filter
+	    deliveryFilterButton.click();
+	    Common.waitForElement(2);
 
-	 if (expressList.isEmpty()) {
-	     Assert.fail("❌ Express Delivery option is NOT available in Sort By");
-	 }
+	    // Get Express Delivery count BEFORE selecting filter
+	    String text = driver.findElement(
+	            By.xpath("//span[contains(.,'Express Delivery')]")
+	    ).getText();
 
-	 // wait + click
-
-	 WebElement expressBtn = wait.until(
-	         ExpectedConditions.elementToBeClickable(expressList.get(0))
-	 );
-
-	 ((JavascriptExecutor) driver).executeScript(
-	         "arguments[0].scrollIntoView({block:'center'});", expressBtn
-	 );
-
-	 ((JavascriptExecutor) driver).executeScript(
-	         "arguments[0].click();", expressBtn
-	 );
-
-	 System.out.println("✅ Express Delivery option clicked");
-
-	 // =========================
-	 // WAIT FOR PRODUCT REFRESH
-	 // =========================
-	 wait.until(ExpectedConditions.stalenessOf(products.get(0)));
-
-	 // re-fetch updated products (IMPORTANT)
-	 List<WebElement> updatedProducts = wait.until(
-	         ExpectedConditions.presenceOfAllElementsLocatedBy(
-	                 By.xpath("//div[contains(@class,'prod_listing_card')]")
-	         )
-	 );
-
-	 // =========================
-	 // CLICK FIRST PRODUCT
-	 // =========================
-	 WebElement selectedProduct = updatedProducts.get(0);
-
-	 WebElement productLink = selectedProduct.findElement(
-	         By.xpath(".//a[contains(@class,'product_list_name')]")
-	 );
-
-	 wait.until(ExpectedConditions.elementToBeClickable(productLink));
-	 productLink.click();
-	 
-	 
-	 try {
-		    if (expressDelivery.isDisplayed()) {
-		        System.out.println("✅ Express Delivery Available");
-		    } else {
-		        Assert.fail("❌ Express Delivery NOT Available");
-		    }
-		} catch (Exception e) {
-		    Assert.fail("❌ Express Delivery NOT Available");
-		}
+	    String count = text.replaceAll("[^0-9]", "");
+	    System.out.println("Express Delivery Count: " + count);
 	    
-	    
+	    int expectedCount = Integer.parseInt(count);
+	    int totalProductCount = 0;
 
+	    // Select Express Delivery
+	    expressDeliveryButtonInFilter.click();
+	    Common.waitForElement(2);
+
+	    // Click Apply button
+	    applyButton.click();
+	    Common.waitForElement(3);
+
+	    System.out.println("✅ Express Delivery option clicked");
+
+	    // =========================
+	    // WAIT FOR PRODUCT REFRESH
+	    // =========================
+	    wait.until(ExpectedConditions.stalenessOf(products.get(0)));
+
+	    // =========================
+	    // GET UPDATED PRODUCTS
+	    // =========================
+	    List<WebElement> updatedProducts = wait.until(
+	            ExpectedConditions.presenceOfAllElementsLocatedBy(
+	                    By.xpath("//div[contains(@class,'prod_listing_card')]")
+	            )
+	    );
+
+	    // PRINT PRODUCT COUNT
+	    System.out.println("Total Products After Filter: " + updatedProducts.size());
+	    
+	    totalProductCount += updatedProducts.size();
+
+	    
+	    // =========================
+	    // CLICK FIRST PRODUCT
+	    // =========================
+	    WebElement selectedProduct = updatedProducts.get(0);
+
+	    WebElement productLink = selectedProduct.findElement(
+	            By.xpath(".//a[contains(@class,'product_list_name')]")
+	    );
+
+	    wait.until(ExpectedConditions.elementToBeClickable(productLink));
+	    productLink.click();
+
+	    // =========================
+	    // VERIFY EXPRESS DELIVERY
+	    // =========================
+	    try {
+	        if (expressDelivery.isDisplayed()) {
+	            System.out.println("✅ Express Delivery Available");
+	        } else {
+	            Assert.fail("❌ Express Delivery NOT Available");
+	        }
+	    } catch (Exception e) {
+	        Assert.fail("❌ Express Delivery NOT Available");
+	    }
+	 // Go back to Product Listing Page
+	    driver.navigate().back();
+	    Common.waitForElement(3);
+
+	    
+	    // =========================
+	    // PAGINATION LOOP
+	    // =========================
+	    while (true) {
+
+	        // Check if Next button exists
+	        List<WebElement> nextButtons = driver.findElements(
+	                By.xpath("//a[@class='next Cls_navigatebtn paginate_btn_filter']")
+	        );
+
+	        if (nextButtons.isEmpty()) {
+	            System.out.println("✅ Last page reached. No Next button available.");
+	            break;
+	        }
+
+	        // Click Next Pagination
+	        nextButtons.get(0).click();
+	        Common.waitForElement(3);
+
+	        // Get products from current page
+	        List<WebElement> pageProducts = wait.until(
+	                ExpectedConditions.presenceOfAllElementsLocatedBy(
+	                        By.xpath("//div[contains(@class,'prod_listing_card')]")
+	                )
+	        );
+
+	        // Print product count
+	     // Print product count
+	        System.out.println("Products Count: " + pageProducts.size());
+
+	        totalProductCount += pageProducts.size();
+	        // Open first product
+	        WebElement product = pageProducts.get(0);
+
+	        WebElement pdpLink = product.findElement(
+	                By.xpath(".//a[contains(@class,'product_list_name')]")
+	        );
+
+	        wait.until(ExpectedConditions.elementToBeClickable(pdpLink));
+	        pdpLink.click();
+
+	        // Verify Express Delivery
+	        try {
+	            if (expressDelivery.isDisplayed()) {
+	                System.out.println("✅ Express Delivery Available");
+	            } else {
+	                Assert.fail("❌ Express Delivery NOT Available");
+	            }
+	        } catch (Exception e) {
+	            Assert.fail("❌ Express Delivery NOT Available");
+	        }
+
+	        // Go back to PLP for next pagination
+	        driver.navigate().back();
+	        Common.waitForElement(3);
+
+	        // Stop if pagination is disabled
+	        List<WebElement> disabledPagination = driver.findElements(
+	                By.xpath("//div[@class='pagi_nav_btns disabled']")
+	        );
+
+	        if (!disabledPagination.isEmpty()) {
+
+	            System.out.println("✅ Reached Last Pagination Page");
+
+	            System.out.println("=================================");
+	            System.out.println("Express Delivery Count : " + expectedCount);
+	            System.out.println("Total Product Count    : " + totalProductCount);
+
+	            if (expectedCount == totalProductCount) {
+	                System.out.println("✅ Count Matched");
+	            } else {
+	                Assert.fail(
+	                    "❌ Count Mismatch - Expected: "
+	                    + expectedCount
+	                    + " Actual: "
+	                    + totalProductCount
+	                );
+	            }
+
+	            break;
+	        }
+	    }
 	}
-	
+	    
+	   
 	
 	public void expressDeliveryOption() {
 

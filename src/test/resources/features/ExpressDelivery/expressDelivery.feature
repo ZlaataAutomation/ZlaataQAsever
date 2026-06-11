@@ -7,7 +7,7 @@ Feature: This is Express Delivery feature
   #Expected:  Express Delivery sanity 
   #============================================================================
  
- 
+ @exp
  @TC_UI_Zlaata_ExpressDelivery_01
 Scenario Outline: TC_UI_Zlaata_ExpressDelivery_01|Verify that Express delivery functionality is working fine| "<TD_ID>"
 
@@ -17,6 +17,7 @@ Examples:
   | TD_ID                 |
   | TD_UI_Zlaata_ExpressDelivery_01 |
   
+   @exp
   
  @TC_UI_Zlaata_ExpressDelivery_02
 Scenario Outline: TC_UI_Zlaata_ExpressDelivery_02|Verify Express Delivery functionality in Sort By section on Product Listing Page | "<TD_ID>"

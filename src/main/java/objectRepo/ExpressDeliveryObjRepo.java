@@ -88,8 +88,18 @@ public abstract class ExpressDeliveryObjRepo extends BasePage {
 		@FindBy(xpath = "//button[@type='submit']")
 		protected WebElement adminLogin;
 		
-		@FindBy(xpath = "//*[@aria-label='Sort products']")
-		protected WebElement sortByButton;
+		@FindBy(xpath = "//*[@aria-label='Open filters']")
+		protected WebElement filterButton;
+		
+		@FindBy(xpath = "//span[normalize-space()='DELIVERY']")
+		protected WebElement deliveryFilterButton;
+		
+		
+		@FindBy(id = "delivery_true")
+		protected WebElement  expressDeliveryButtonInFilter;
+		
+		@FindBy(xpath = "//button[@class='btn___2 popup_containers_footerbtn_apply Cls_apply_filter']")
+		protected WebElement applyButton;
 		
 		@FindBy(xpath = "//li[normalize-space()='Express Delivery']")
 		protected WebElement expressList;
