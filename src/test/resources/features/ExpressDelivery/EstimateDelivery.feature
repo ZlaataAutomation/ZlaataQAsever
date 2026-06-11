@@ -24,3 +24,14 @@ Examples:
   | TD_UI_Zlaata_Estimate_02 |
   
   
+  
+@TC_UI_Zlaata_Estimate_03
+Scenario Outline: TC_UI_Zlaata_Estimate_03 |Verify that the Estimate Pickup Date and Estimate Exchange Delivery Date functionalities are working correctly during product exchange | "<TD_ID>"
+
+Given the user verifies that the Estimate Pickup Date and Estimate Exchange Delivery Date functionalities are working correctly for product exchange
+
+Examples:
+  | TD_ID                      |
+  | TD_UI_Zlaata_Estimate_03   |
+  
+  

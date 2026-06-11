@@ -79,13 +79,13 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 	public void takeRandomProductFromAl() {
 
-		//		HomePage home = new HomePage(driver);
-		//		home.homeLaunch();
-		//
-		//		zlaataIndiaShopButton.click();
+//				HomePage home = new HomePage(driver);
+//				home.homeLaunch();
+//		
+//				zlaataIndiaShopButton.click();
 
 		userLoginApp();
-
+//
 		deleteAllProductsFromCart();
 
 
@@ -107,6 +107,8 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 								By.xpath("//span[contains(@class,'header_nav_link') and translate(normalize-space(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='shop']")));
 
 		actions.moveToElement(shopMenu).perform();
+		
+		Common.waitForElement(2);
 
 		WebElement dressesButton =
 				wait.until(ExpectedConditions
@@ -114,6 +116,8 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 								By.xpath("//div[contains(@class,'dropdown_content')]//a[normalize-space()='dresses']")));
 
 		dressesButton.click();
+		
+		Common.waitForElement(2);
 
 		System.out.println(BLUE
 				+ "================================================="
@@ -430,6 +434,8 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 		System.out.println(GREEN
 				+ "✅ Entered Pincode : 110001"
 				+ RESET);
+		
+		Common.waitForElement(2);
 
 		wait.until(ExpectedConditions
 				.elementToBeClickable(checkButton));
@@ -441,55 +447,54 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 		System.out.println(GREEN
 				+ "✅ Clicked Check Button"
 				+ RESET);
-
 		// =========================================================
 		// GET PDP DELIVERY DATE
 		// =========================================================
 
 		String estimatedDateText =
-				wait.until(ExpectedConditions
-						.visibilityOf(estimateDate))
-				.getText()
-				.trim();
+		        wait.until(ExpectedConditions
+		                .visibilityOf(estimateDate))
+		                .getText()
+		                .trim();
 
 		System.out.println(GREEN
-				+ "✅ PDP Estimated Date : "
-				+ estimatedDateText
-				+ RESET);
+		        + "✅ PDP Estimated Date : "
+		        + estimatedDateText
+		        + RESET);
 
 		LocalDate today =
-				LocalDate.now();
+		        LocalDate.now();
 
 		DateTimeFormatter formatter =
-				DateTimeFormatter.ofPattern(
-						"MMMM d, yyyy",
-						Locale.ENGLISH);
+		        DateTimeFormatter.ofPattern(
+		                "MMM d, yyyy",
+		                Locale.ENGLISH);
 
 		LocalDate estimatedDate =
-				LocalDate.parse(
-						estimatedDateText,
-						formatter);
+		        LocalDate.parse(
+		                estimatedDateText,
+		                formatter);
 
 		long totalDays =
-				ChronoUnit.DAYS.between(
-						today,
-						estimatedDate);
+		        ChronoUnit.DAYS.between(
+		                today,
+		                estimatedDate);
 
 		int applicationDeliveryDays =
-				(int) totalDays;
+		        (int) totalDays;
 
 		productPdpDaysMap.put(
-				pdpProductName,
-				applicationDeliveryDays);
+		        pdpProductName,
+		        applicationDeliveryDays);
 
 		System.out.println(CYAN
-				+ "📌 PDP Delivery Days : "
-				+ applicationDeliveryDays
-				+ RESET);
+		        + "📌 PDP Delivery Days : "
+		        + applicationDeliveryDays
+		        + RESET);
 
 		System.out.println(BLUE
-				+ "================================================="
-				+ RESET);
+		        + "================================================="
+		        + RESET);
 
 		return pdpProductName;
 	}
@@ -1351,257 +1356,284 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 		// STEP 7 : VERIFY CHECKOUT ESTIMATE DATE
 		// =========================================================
 
-		System.out.println(BLUE
-				+ "================================================="
-				+ RESET);
-
-		System.out.println(CYAN
-				+ "📌 VERIFY CHECKOUT ESTIMATE DELIVERY DATE"
-				+ RESET);
+		System.out.println(BLUE + "=================================================" + RESET);
+		System.out.println(CYAN + "📌 VERIFY CHECKOUT ESTIMATE DELIVERY DATE" + RESET);
 
 		boolean firstProductAdded = false;
+		int checkoutDays = 0;
+		boolean allMatched = true;
 
 		for (String product : productPdpDaysMap.keySet()) {
 
-			try {
+		    try {
 
-				System.out.println(BLUE
-						+ "================================================="
-						+ RESET);
+		        System.out.println(BLUE + "=================================================" + RESET);
+		        System.out.println(CYAN + "🔍 Opening Product In Application : " + product + RESET);
 
-				System.out.println(CYAN
-						+ "🔍 Opening Product In Application : "
-						+ product
-						+ RESET);
+		        // =========================================================
+		        // OPEN APPLICATION ONLY FIRST TIME
+		        // =========================================================
+		        if (!firstProductAdded) {
+
+		            driver.get(FileReaderManager.getInstance()
+		                    .getConfigReader()
+		                    .getApplicationUrl());
+
+		            Common.waitForElement(3);
+		            click(zlaataIndiaShopButton);
+		            Common.waitForElement(3);
+		        }
+
+		        // =========================================================
+		        // SEARCH PRODUCT
+		        // =========================================================
+		        wait.until(ExpectedConditions.elementToBeClickable(clickOnSearchBar)).click();
+
+		        searchBoxPlaceholder.clear();
+		        searchBoxPlaceholder.sendKeys(product);
+		        searchBoxPlaceholder.sendKeys(Keys.ENTER);
+
+		        Common.waitForElement(5);
+
+		        System.out.println(GREEN + "✅ Product Search Done : " + product + RESET);
+
+		        // =========================================================
+		        // OPEN PRODUCT
+		        // =========================================================
+		        WebElement searchedProduct =
+		                wait.until(ExpectedConditions.elementToBeClickable(
+		                        By.xpath("(//a[contains(@class,'product_list_name')])[1]")));
+
+		        ((JavascriptExecutor) driver)
+		                .executeScript("arguments[0].click();", searchedProduct);
+
+		        Common.waitForElement(3);
+
+		        System.out.println(GREEN + "✅ Product Opened : " + product + RESET);
+
+		        // =========================================================
+		        // CLICK BUY NOW
+		        // =========================================================
+		        wait.until(ExpectedConditions.elementToBeClickable(buyNowButton)).click();
+		        Common.waitForElement(5);
+
+		        System.out.println(GREEN + "✅ Clicked Buy Now" + RESET);
+
+		        // =========================================================
+		        // FIRST PRODUCT ONLY ADD
+		        // =========================================================
+		        if (!firstProductAdded) {
+
+		            firstProductAdded = true;
+		            System.out.println(GREEN + "✅ First Product Added Into Checkout" + RESET);
+		            continue;
+		        }
 
+		        // =========================================================
+		        // CHECKOUT DATE CALCULATION
+		        // =========================================================
+		        String checkoutEstimateDate =
+		                wait.until(ExpectedConditions.visibilityOf(checkoutEstimateDateText))
+		                        .getText().trim();
 
+		        checkoutEstimateDate =
+		                checkoutEstimateDate.replace("Estimated delivery date:", "").trim();
+
+		        int currentYear = LocalDate.now().getYear();
 
+		        checkoutEstimateDate = checkoutEstimateDate + " " + currentYear;
 
-				// =========================================================
-				// OPEN APPLICATION ONLY FIRST TIME
-				// =========================================================
+		        LocalDate checkoutDate =
+		                LocalDate.parse(
+		                        checkoutEstimateDate,
+		                        DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
 
-				if (!firstProductAdded) {
+		        checkoutDays =
+		                (int) ChronoUnit.DAYS.between(LocalDate.now(), checkoutDate);
 
-					driver.get(FileReaderManager.getInstance()
-							.getConfigReader()
-							.getApplicationUrl());
+		        System.out.println(CYAN + "📌 Checkout Delivery Days : " + checkoutDays + RESET);
 
-					Common.waitForElement(3);
+		        // =========================================================
+		        // ADDRESS PAGE
+		        // =========================================================
+		        continueButtonOnChekcoutpage.click();
+		        Common.waitForElement(3);
 
-					click(zlaataIndiaShopButton);
+		        System.out.println(GREEN
+		                + "📌 Address Page Estimate Date : "
+		                + estimateddeliveryDateInAddressandPaymentPages.getText().trim()
+		                + " / " + checkoutDays + " days"
+		                + RESET);
 
-					Common.waitForElement(3);
-				}
+		        // =========================================================
+		        // PAYMENT PAGE
+		        // =========================================================
+		        continueButtonOnChekcoutpage.click();
+		        Common.waitForElement(3);
 
-				// =========================================================
-				// SEARCH PRODUCT
-				// =========================================================
+		        System.out.println(GREEN
+		                + "📌 Payment Page Estimate Date : "
+		                + estimateddeliveryDateInAddressandPaymentPages.getText().trim()
+		                + " / " + checkoutDays + " days"
+		                + RESET);
 
-				wait.until(ExpectedConditions
-						.elementToBeClickable(clickOnSearchBar));
+		        // =========================================================
+		        // SELECT COD
+		        // =========================================================
+		        wait.until(ExpectedConditions.elementToBeClickable(paymentCod)).click();
+		        Common.waitForElement(2);
 
-				clickOnSearchBar.click();
+		        System.out.println(GREEN + "✅ COD Selected" + RESET);
 
-				Common.waitForElement(2);
+		        // =========================================================
+		        // PLACE ORDER
+		        // =========================================================
+		        wait.until(ExpectedConditions.elementToBeClickable(placeOrderButton)).click();
+		        Common.waitForElement(8);
 
-				wait.until(ExpectedConditions
-						.visibilityOf(searchBoxPlaceholder));
+		        WebElement successMessage =
+		                wait.until(ExpectedConditions.visibilityOfElementLocated(
+		                        By.xpath("//h5[contains(@class,'checkout_success_heading')]")));
 
-				searchBoxPlaceholder.clear();
+		        System.out.println(GREEN
+		                + "✅ Order Confirmed : "
+		                + successMessage.getText().trim()
+		                + RESET);
 
-				Common.waitForElement(1);
+		        // =========================================================
+		        // OPEN ORDER DETAILS
+		        // =========================================================
+		        viewOrderDetailsPage.click();
+		        Common.waitForElement(5);
 
-				searchBoxPlaceholder.sendKeys(product);
+		     // =========================================================
+		     // MY ORDER VALIDATION (2 PRODUCTS)
+		     // =========================================================
+		     List<WebElement> myOrderEstimateDates =
+		             wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(
+		                     By.xpath("//span[contains(@class,'estimated')]")));
 
-				Common.waitForElement(2);
+		     int productCount = Math.min(myOrderEstimateDates.size(), 2);
 
-				searchBoxPlaceholder.sendKeys(Keys.ENTER);
+		     System.out.println(BLUE + "=================================================" + RESET);
+		     System.out.println(CYAN + "📌 MY ORDER VALIDATION (2 PRODUCTS)" + RESET);
 
-				System.out.println(GREEN
-						+ "✅ Product Search Done : "
-						+ product
-						+ RESET);
+		     boolean allMatched1 = true;
 
-				Common.waitForElement(5);
+		     for (int i = 0; i < productCount; i++) {
 
-				// =========================================================
-				// OPEN PRODUCT
-				// =========================================================
+		         String text = myOrderEstimateDates.get(i).getText().trim();
 
-				WebElement searchedProduct =
-						wait.until(ExpectedConditions
-								.elementToBeClickable(
-										By.xpath("(//a[contains(@class,'product_list_name')])[1]")));
+		         System.out.println(GREEN
+		                 + "📌 Product " + (i + 1) + " : " + text
+		                 + RESET);
 
-				((JavascriptExecutor) driver)
-				.executeScript(
-						"arguments[0].click();",
-						searchedProduct);
+		         try {
 
-				Common.waitForElement(3);
+		             // remove prefix text
+		             String cleanDate = text
+		                     .replace("Estimated delivery by", "")
+		                     .trim();
 
-				System.out.println(GREEN
-						+ "✅ Product Opened : "
-						+ product
-						+ RESET);
+		             // convert to date
+		             DateTimeFormatter formatter =
+		                     DateTimeFormatter.ofPattern("EEEE, d MMM yyyy", Locale.ENGLISH);
 
-				// =========================================================
-				// CLICK BUY NOW
-				// =========================================================
+		             LocalDate orderDate = LocalDate.parse(cleanDate, formatter);
 
-				wait.until(ExpectedConditions
-						.elementToBeClickable(buyNowButton));
+		             int myOrderDays =
+		                     (int) ChronoUnit.DAYS.between(LocalDate.now(), orderDate);
 
-				buyNowButton.click();
+		             if (myOrderDays == checkoutDays) {
 
-				Common.waitForElement(5);
+		                 System.out.println(GREEN
+		                         + "✅ Product " + (i + 1) + " MATCHED"
+		                         + RESET);
 
-				System.out.println(GREEN
-						+ "✅ Clicked Buy Now"
-						+ RESET);
+		             } else {
 
-				// =========================================================
-				// FIRST PRODUCT ONLY ADD
-				// =========================================================
-
-				if (!firstProductAdded) {
+		                 allMatched1 = false;
 
-					firstProductAdded = true;
-
-					System.out.println(GREEN
-							+ "✅ First Product Added Into Checkout"
-							+ RESET);
-
-					continue;
-				}
+		                 System.out.println(RED
+		                         + "❌ Product " + (i + 1) + " NOT MATCHED"
+		                         + RESET);
 
-				// =========================================================
-				// AFTER SECOND PRODUCT VERIFY DATE
-				// =========================================================
+		                 System.out.println(RED
+		                         + "❌ MyOrder Days : " + myOrderDays
+		                         + RESET);
 
-				String checkoutEstimateDate =
-						wait.until(ExpectedConditions
-								.visibilityOf(checkoutEstimateDateText))
-						.getText()
-						.trim();
-
-				System.out.println(GREEN
-						+ "✅ Checkout Estimate Date : "
-						+ checkoutEstimateDate
-						+ RESET);
-
-				// =========================================================
-				// CLEAN DATE TEXT
-				// =========================================================
-
-				checkoutEstimateDate =
-						checkoutEstimateDate
-						.replace("Estimated delivery date:", "")
-						.trim();
-
-				// =========================================================
-				// ADD CURRENT YEAR
-				// =========================================================
-
-				int currentYear =
-						LocalDate.now().getYear();
-
-				checkoutEstimateDate =
-						checkoutEstimateDate
-						+ " "
-						+ currentYear;
-
-				// =========================================================
-				// CONVERT DATE TO DAYS
-				// =========================================================
-
-				LocalDate today =
-						LocalDate.now();
-
-				DateTimeFormatter formatter =
-						DateTimeFormatter.ofPattern(
-								"d MMM yyyy",
-								Locale.ENGLISH);
-
-				LocalDate checkoutDate =
-						LocalDate.parse(
-								checkoutEstimateDate,
-								formatter);
-
-				int checkoutDays =
-						(int) ChronoUnit.DAYS.between(
-								today,
-								checkoutDate);
-
-				System.out.println(CYAN
-						+ "📌 Checkout Delivery Days : "
-						+ checkoutDays
-						+ RESET);
-
-				// =========================================================
-				// FINAL VALIDATION
-				// =========================================================
-
-				System.out.println(CYAN
-						+ "📌 OVERALL Admin Highest Days : "
-						+ overallHighestDeliveryDays
-						+ RESET);
-
-				if (checkoutDays == overallHighestDeliveryDays) {
-
-					System.out.println(GREEN
-							+ "✅ CHECKOUT DELIVERY DATE MATCHED WITH OVERALL ADMIN HIGHEST DELIVERY DAYS"
-							+ RESET);
-
-				} else {
-
-					System.out.println(RED
-							+ "❌ CHECKOUT DELIVERY DATE NOT MATCHED"
-							+ RESET);
-
-					System.out.println(RED
-							+ "❌ Checkout Days : "
-							+ checkoutDays
-							+ RESET);
-
-					System.out.println(RED
-							+ "❌ Overall Admin Highest Days : "
-							+ overallHighestDeliveryDays
-							+ RESET);
-				}
-
-				break;
-
-			} catch (Exception e) {
-
-				System.out.println(RED
-						+ "❌ Failed Checkout Validation For Product : "
-						+ product
-						+ RESET);
-
-				System.out.println(RED
-						+ "❌ Error : "
-						+ e.getMessage()
-						+ RESET);
-			}
+		                 System.out.println(RED
+		                         + "❌ Checkout Days : " + checkoutDays
+		                         + RESET);
+		             }
+
+		         } catch (Exception e) {
+
+		             allMatched1 = false;
+
+		             System.out.println(RED
+		                     + "❌ Date Parsing Failed For Product " + (i + 1)
+		                     + RESET);
+
+		             System.out.println(RED
+		                     + "❌ Error : " + e.getMessage()
+		                     + RESET);
+		         }
+		     }
+		        // =========================================================
+		        // FINAL RESULT
+		        // =========================================================
+		        System.out.println(BLUE + "=================================================" + RESET);
+
+		        if (allMatched1 && checkoutDays == overallHighestDeliveryDays) {
+
+		            System.out.println(GREEN
+		                    + "✅ ESTIMATE DELIVERY DATE MATCHED IN ALL PAGES"
+		                    + RESET);
+
+		        } else {
+
+		            System.out.println(RED + "❌ MISMATCH FOUND" + RESET);
+		            System.out.println(RED + "Checkout Days : " + checkoutDays + RESET);
+		            System.out.println(RED + "Admin Days : " + overallHighestDeliveryDays + RESET);
+		        }
+
+		        System.out.println(BLUE + "=================================================" + RESET);
+
+		        break;
+
+		    } catch (Exception e) {
+
+		        System.out.println(RED
+		                + "❌ Failed Checkout Validation For Product : "
+		                + product
+		                + RESET);
+
+		        System.out.println(RED + "❌ Error : " + e.getMessage() + RESET);
+		    }
 		}
-
-		System.out.println(BLUE
-				+ "================================================="
-				+ RESET);
 	}
-
+		
 	//second Test case 
 
 	public String takeRandomProductFromAll() {
 
-		HomePage home = new HomePage(driver);
-		home.homeLaunch();
+//		HomePage home = new HomePage(driver);
+//		home.homeLaunch();
+//
+//		zlaataIndiaShopButton.click();
 
-		zlaataIndiaShopButton.click();
+		
+		userLoginApp();
+		
+		
+
+		deleteAllProductsFromCart();
+
 
 		Common.waitForElement(2);
+
+
 
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 		//
@@ -1613,12 +1645,15 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 				By.xpath("//span[contains(@class,'header_nav_link') and translate(normalize-space(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='shop']")));
 
 		actions.moveToElement(shopMenu).perform();
+		Common.waitForElement(2);
 
 		// Click Dresses
 		WebElement dressesButton = wait.until(ExpectedConditions.elementToBeClickable(
 				By.xpath("//div[contains(@class,'dropdown_content')]//a[normalize-space()='dresses']")));
 
 		dressesButton.click();
+		
+		Common.waitForElement(2);
 
 		System.out.println(BLUE
 				+ "================================================="
@@ -1720,7 +1755,7 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 		String pdpProductName = wait.until(
 				ExpectedConditions.visibilityOfElementLocated(
-						By.xpath("//h3[@class='prod_name']")))
+						By.xpath("//*[self::h3 or self::h3][@class='prod_name']")))
 				.getText()
 				.trim();
 
@@ -1737,7 +1772,7 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 		String categoryText = wait.until(
 				ExpectedConditions.visibilityOfElementLocated(
-						By.xpath("//div[@class='prod_category_wrap']")))
+						By.xpath("//*[self::h2 or self::h5][@class='prod_category']")))
 				.getText()
 				.trim();
 
@@ -1874,10 +1909,37 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 				driver.get(baseUrl + "/admin/categories");
 
-				wait.until(ExpectedConditions.elementToBeClickable(categoryMenu));
-				categoryMenu.click();
+				
 
 				Common.waitForElement(2);
+
+
+				// =========================================================
+				// BRAND MENU CLICK + SEARCH OPTION
+				// =========================================================
+
+				wait.until(ExpectedConditions.elementToBeClickable(brandMenu));
+				brandMenu.click();
+
+				Common.waitForElement(2);
+
+				// TYPE BRAND NAME
+				searchBoxdropdown.clear();
+				searchBoxdropdown.sendKeys("Zlaata India");
+
+				Common.waitForElement(1);
+
+				// PRESS ENTER
+				searchBoxdropdown.sendKeys(Keys.ENTER);
+
+				Common.waitForElement(2);
+
+				// =========================================================
+				// CATEGORY SEARCH
+				// =========================================================
+				
+				wait.until(ExpectedConditions.elementToBeClickable(categoryMenu));
+				categoryMenu.click();
 
 				searchBoxdropdown.clear();
 				searchBoxdropdown.sendKeys(categoryName);
@@ -1929,11 +1991,9 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 			}
 		}
 
-
 		System.out.println(BLUE
 				+ "================================================="
 				+ RESET);
-
 
 		// =========================================================
 		// STEP 5 : PRODUCT SECTION
@@ -1973,7 +2033,6 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 				+ RESET);
 
 		// =========================================================
-		// =========================================================
 		// STEP 6 : PRODUCT COLLECTION
 		// =========================================================
 
@@ -1981,22 +2040,34 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 		Common.waitForElement(3);
 
+		// =========================================================
+		// SELECT ACTIVE STATUS
+		// =========================================================
+
 		wait.until(ExpectedConditions.elementToBeClickable(statusButton));
+
 		statusButton.click();
 
 		Common.waitForElement(2);
 
 		wait.until(ExpectedConditions.elementToBeClickable(activeButton));
+
 		activeButton.click();
 
 		Common.waitForElement(3);
 
+		// =========================================================
+		// SELECT PRODUCT NAME FILTER
+		// =========================================================
+
 		wait.until(ExpectedConditions.elementToBeClickable(productNameMenu));
+
 		productNameMenu.click();
 
 		Common.waitForElement(2);
 
 		searchBoxdropdown.clear();
+
 		searchBoxdropdown.sendKeys(ProductMainNameInadminPaenl);
 
 		Common.waitForElement(2);
@@ -2005,10 +2076,34 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 		Common.waitForElement(5);
 
-		// ================= CHECK COLLECTION AVAILABLE =================
+		// =========================================================
+		// WAIT UNTIL TABLE LOAD COMPLETED
+		// =========================================================
 
-		List<WebElement> totalCollections = driver.findElements(
-				By.xpath("//a[contains(@class,'edit')]"));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(
+				By.id("crudTable_processing")));
+
+		Common.waitForElement(3);
+
+		// =========================================================
+		// GET FILTERED COLLECTIONS COUNT
+		// =========================================================
+
+		List<WebElement> totalCollections =
+				driver.findElements(
+						By.xpath("//table/tbody/tr//a[contains(@class,'edit')]"));
+
+		System.out.println(BLUE
+				+ "================================================="
+				+ RESET);
+
+		System.out.println(CYAN
+				+ "📌 Filter Applied Successfully"
+				+ RESET);
+
+		// =========================================================
+		// CHECK COLLECTION AVAILABLE
+		// =========================================================
 
 		if (totalCollections.isEmpty()) {
 
@@ -2020,11 +2115,17 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 		} else {
 
 			System.out.println(GREEN
-					+ "✅ Total Collections Found : "
+					+ "✅ Total Filtered Collections Found : "
 					+ totalCollections.size()
 					+ RESET);
 
-			for (int i = 1; i <= totalCollections.size(); i++) {
+			// =========================================================
+			// OPEN EACH COLLECTION
+			// =========================================================
+
+			for (int i = 1;
+					i <= totalCollections.size();
+					i++) {
 
 				try {
 
@@ -2037,26 +2138,42 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 							+ i
 							+ RESET);
 
+					// =====================================================
+					// RELOAD PAGE
+					// =====================================================
+
 					driver.get(baseUrl + "/admin/product-collection");
 
 					Common.waitForElement(3);
 
+					// =====================================================
+					// SELECT ACTIVE STATUS
+					// =====================================================
+
 					wait.until(ExpectedConditions.elementToBeClickable(statusButton));
+
 					statusButton.click();
 
 					Common.waitForElement(2);
 
 					wait.until(ExpectedConditions.elementToBeClickable(activeButton));
+
 					activeButton.click();
 
 					Common.waitForElement(3);
 
+					// =====================================================
+					// SELECT PRODUCT FILTER
+					// =====================================================
+
 					wait.until(ExpectedConditions.elementToBeClickable(productNameMenu));
+
 					productNameMenu.click();
 
 					Common.waitForElement(2);
 
 					searchBoxdropdown.clear();
+
 					searchBoxdropdown.sendKeys(ProductMainNameInadminPaenl);
 
 					Common.waitForElement(2);
@@ -2065,22 +2182,31 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 					Common.waitForElement(5);
 
-					List<WebElement> editButtons = driver.findElements(
-							By.xpath("(//a[contains(@class,'edit')])[" + i + "]"));
+					wait.until(ExpectedConditions.invisibilityOfElementLocated(
+							By.id("crudTable_processing")));
+
+					Common.waitForElement(2);
+
+					// =====================================================
+					// GET EDIT BUTTON
+					// =====================================================
+
+					List<WebElement> editButtons =
+							driver.findElements(
+									By.xpath("//table/tbody/tr//a[contains(@class,'edit')]"));
 
 					if (editButtons.isEmpty()) {
 
 						System.out.println(YELLOW
-								+ "⚠️ Collection Edit Button Not Found For Index : "
-								+ i
+								+ "⚠️ Collection Edit Button Not Found"
 								+ RESET);
 
 						continue;
 					}
 
-					WebElement editButton = wait.until(
-							ExpectedConditions.elementToBeClickable(
-									By.xpath("(//a[contains(@class,'edit')])[" + i + "]")));
+					WebElement editButton =
+							wait.until(ExpectedConditions.elementToBeClickable(
+									By.xpath("(//table/tbody/tr//a[contains(@class,'edit')])[" + i + "]")));
 
 					((JavascriptExecutor) driver).executeScript(
 							"arguments[0].scrollIntoView({block:'center'});",
@@ -2094,15 +2220,34 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 					Common.waitForElement(3);
 
-					String collectionName = wait.until(ExpectedConditions
-							.visibilityOf(collectionNameTextBox))
+					// =====================================================
+					// COLLECTION NAME
+					// =====================================================
+
+					String collectionName =
+							wait.until(ExpectedConditions
+									.visibilityOf(collectionNameTextBox))
 							.getAttribute("value")
 							.trim();
 
-					String collectionDeliveryDays = wait.until(ExpectedConditions
-							.visibilityOf(categoryDeliveryDate))
+					// =====================================================
+					// COLLECTION DELIVERY DAYS
+					// =====================================================
+
+					String collectionDeliveryDays =
+							wait.until(ExpectedConditions
+									.visibilityOf(categoryDeliveryDate))
 							.getAttribute("value")
 							.trim();
+
+					System.out.println(GREEN
+							+ "✅ Collection Name : "
+							+ collectionName
+							+ RESET);
+
+					// =====================================================
+					// EMPTY DELIVERY DAYS
+					// =====================================================
 
 					if (collectionDeliveryDays.isEmpty()) {
 
@@ -2114,7 +2259,12 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 						continue;
 					}
 
-					int collectionDays = Integer.parseInt(collectionDeliveryDays);
+					// =====================================================
+					// STORE COLLECTION DAYS
+					// =====================================================
+
+					int collectionDays =
+							Integer.parseInt(collectionDeliveryDays);
 
 					adminDeliveryDaysList.add(collectionDays);
 
@@ -2123,11 +2273,6 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 									+ collectionName
 									+ " -> "
 									+ collectionDays);
-
-					System.out.println(GREEN
-							+ "✅ Collection Name : "
-							+ collectionName
-							+ RESET);
 
 					System.out.println(GREEN
 							+ "✅ Collection Delivery Days : "
@@ -2139,6 +2284,11 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 					System.out.println(RED
 							+ "❌ Failed Collection Index : "
 							+ i
+							+ RESET);
+
+					System.out.println(RED
+							+ "❌ Error : "
+							+ e.getMessage()
 							+ RESET);
 
 					System.out.println(YELLOW
@@ -2218,6 +2368,7 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 				+ "✅ Reopened Product In Application"
 				+ RESET);
 
+		Common.waitForElement(3);
 		// =========================================================
 		// STEP 9 : ENTER PINCODE
 		// =========================================================
@@ -2243,43 +2394,86 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 				+ RESET);
 
 		// =========================================================
-		// STEP 10 : PDP DELIVERY DATE
+		// STEP 10 : PDP DELIVERY DATE VALIDATION
 		// =========================================================
 
+		// Example UI Text:
+		// "Delivery by Jun 1, 2026"
+
 		String estimatedDateText = wait.until(
-				ExpectedConditions.visibilityOf(estimateDate))
-				.getText()
-				.trim();
+		        ExpectedConditions.visibilityOf(estimateDate))
+		        .getText()
+		        .trim();
 
 		System.out.println(GREEN
-				+ "✅ PDP Estimated Date : "
-				+ estimatedDateText
-				+ RESET);
+		        + "✅ Raw Estimated Date Text : "
+		        + estimatedDateText
+		        + RESET);
+
+		// =========================================================
+		// REMOVE EXTRA TEXT
+		// =========================================================
+
+		estimatedDateText = estimatedDateText
+		        .replace("Delivery by", "")
+		        .trim();
+
+		System.out.println(CYAN
+		        + "📌 Formatted Estimated Date : "
+		        + estimatedDateText
+		        + RESET);
+
+		// =========================================================
+		// CURRENT DATE
+		// =========================================================
 
 		LocalDate today = LocalDate.now();
 
+		System.out.println(YELLOW
+		        + "📅 Today Date : "
+		        + today
+		        + RESET);
+
+		// =========================================================
+		// DATE FORMATTER
+		// "Jun 1, 2026" -> MMM d, yyyy
+		// =========================================================
+
 		DateTimeFormatter formatter =
-				DateTimeFormatter.ofPattern(
-						"MMMM d, yyyy",
-						Locale.ENGLISH);
+		        DateTimeFormatter.ofPattern(
+		                "MMM d, yyyy",
+		                Locale.ENGLISH);
+
+		// =========================================================
+		// CONVERT STRING TO LOCALDATE
+		// =========================================================
 
 		LocalDate estimatedDate =
-				LocalDate.parse(
-						estimatedDateText,
-						formatter);
+		        LocalDate.parse(
+		                estimatedDateText,
+		                formatter);
+
+		System.out.println(GREEN
+		        + "✅ Converted Estimated Date : "
+		        + estimatedDate
+		        + RESET);
+
+		// =========================================================
+		// CALCULATE DELIVERY DAYS
+		// =========================================================
 
 		long totalDays =
-				ChronoUnit.DAYS.between(
-						today,
-						estimatedDate);
+		        ChronoUnit.DAYS.between(
+		                today,
+		                estimatedDate);
 
 		int applicationDeliveryDays =
-				(int) totalDays;
+		        (int) totalDays;
 
 		System.out.println(CYAN
-				+ "📌 PDP Delivery Days : "
-				+ applicationDeliveryDays
-				+ RESET);
+		        + "📦 Delivery Days : "
+		        + applicationDeliveryDays
+		        + RESET);
 
 		// =========================================================
 		// STEP 11 : BUY NOW
@@ -2351,8 +2545,9 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 				+ checkoutDeliveryDays
 				+ RESET);
 
+//
 		// =========================================================
-		// STEP 13 : FINAL 3-WAY VALIDATION
+		// STEP 13 : FINAL APPLICATION VS ADMIN VALIDATION
 		// =========================================================
 
 		System.out.println(BLUE
@@ -2360,16 +2555,16 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 				+ RESET);
 
 		System.out.println(CYAN
-				+ "📌 FINAL DELIVERY DAYS COMPARISON"
+				+ "📌 FINAL DELIVERY DAYS VALIDATION"
 				+ RESET);
 
 		System.out.println(GREEN
-				+ "📌 Admin Highest Days     : "
+				+ "📌 Admin Highest Days : "
 				+ highestAdminDays
 				+ RESET);
 
 		System.out.println(GREEN
-				+ "📌 PDP Application Days   : "
+				+ "📌 PDP Delivery Days : "
 				+ applicationDeliveryDays
 				+ RESET);
 
@@ -2377,6 +2572,130 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 				+ "📌 Checkout Delivery Days : "
 				+ checkoutDeliveryDays
 				+ RESET);
+		// =========================================================
+		// ADDRESS PAGE ESTIMATE DATE
+		// =========================================================
+
+		continueButtonOnChekcoutpage.click();
+
+		Common.waitForElement(3);
+
+		String addressPageEstimateDate =
+				estimateddeliveryDateInAddressandPaymentPages
+						.getText()
+						.trim();
+
+		System.out.println(GREEN
+				+ "📌 Address Page Estimate Date : "
+				+ addressPageEstimateDate
+				+ " / " + checkoutDeliveryDays + " days"
+				+ RESET);
+
+
+		// =========================================================
+		// PAYMENT PAGE ESTIMATE DATE
+		// =========================================================
+
+		continueButtonOnChekcoutpage.click();
+
+		Common.waitForElement(3);
+
+		String paymentPageEstimateDate =
+				wait.until(ExpectedConditions
+						.visibilityOf(estimateddeliveryDateInAddressandPaymentPages))
+						.getText()
+						.trim();
+
+		System.out.println(GREEN
+				+ "📌 Payment Page Estimate Date : "
+				+ paymentPageEstimateDate
+				+ " / " + checkoutDeliveryDays + " days"
+				+ RESET);
+
+
+		// =========================================================
+		// SELECT COD PAYMENT
+		// =========================================================
+
+		wait.until(ExpectedConditions
+				.elementToBeClickable(paymentCod));
+
+		paymentCod.click();
+
+		Common.waitForElement(2);
+
+		System.out.println(GREEN
+				+ "✅ COD Payment Option Selected"
+				+ RESET);
+
+
+		// =========================================================
+		// CLICK PLACE ORDER BUTTON
+		// =========================================================
+
+		wait.until(ExpectedConditions
+				.elementToBeClickable(placeOrderButton));
+
+		placeOrderButton.click();
+
+		Common.waitForElement(5);
+
+		System.out.println(GREEN
+				+ "✅ Place Order Button Clicked"
+				+ RESET);
+
+
+		// =========================================================
+		// VERIFY ORDER CONFIRMATION
+		// =========================================================
+
+		String orderSuccessMessage =
+				wait.until(ExpectedConditions
+						.visibilityOf(orderConfirmedMessage))
+						.getText()
+						.trim();
+
+		System.out.println(GREEN
+				+ "✅ Order Confirmed Message : "
+				+ orderSuccessMessage
+				+ RESET);
+
+
+		// =========================================================
+		// OPEN ORDER DETAILS PAGE
+		// =========================================================
+
+		wait.until(ExpectedConditions
+				.elementToBeClickable(viewOrderDetailsPage));
+
+		viewOrderDetailsPage.click();
+
+		Common.waitForElement(3);
+
+		System.out.println(GREEN
+				+ "✅ Opened View Order Details Page"
+				+ RESET);
+
+
+		// =========================================================
+		// MY ORDER PAGE ESTIMATE DATE
+		// =========================================================
+
+		String myOrderEstimateDate =
+				estimateddeliveryInMyOrderPage
+						.getText()
+						.trim();
+
+		System.out.println(GREEN
+				+ "📌 My Order Estimate Date : "
+				+ myOrderEstimateDate
+				+ " / " + checkoutDeliveryDays + " days"
+				+ RESET);
+
+
+		// =========================================================
+		// FINAL VALIDATION
+		// =========================================================
 
 		System.out.println(BLUE
 				+ "================================================="
@@ -2386,38 +2705,345 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 				&& checkoutDeliveryDays == highestAdminDays) {
 
 			System.out.println(GREEN
-					+ "✅ FINAL RESULT : ALL 3 VALUES MATCHED"
+					+ "✅ ADMIN HIGHEST DELIVERY DAYS MATCHED WITH APPLICATION"
 					+ RESET);
 
 		} else {
 
 			System.out.println(RED
-					+ "❌ FINAL RESULT : MISMATCH FOUND"
+					+ "❌ ADMIN HIGHEST DELIVERY DAYS NOT MATCHED WITH APPLICATION"
 					+ RESET);
 
 			if (applicationDeliveryDays != highestAdminDays) {
 
 				System.out.println(YELLOW
-						+ "⚠️ PDP vs ADMIN NOT MATCHED"
+						+ "⚠️ PDP DELIVERY DAYS MISMATCH"
 						+ RESET);
 			}
 
 			if (checkoutDeliveryDays != highestAdminDays) {
 
 				System.out.println(YELLOW
-						+ "⚠️ CHECKOUT vs ADMIN NOT MATCHED"
+						+ "⚠️ CHECKOUT DELIVERY DAYS MISMATCH"
 						+ RESET);
 			}
 		}
-		
-		
 
 		System.out.println(BLUE
 				+ "================================================="
 				+ RESET);
 	}
+	
+	
+	
+	
+	//Three Test case
+	
+	
+	private String randomProducyForExchageProcess() {
+
+	 
+	    Common.waitForElement(2);
+
+	    WebDriverWait wait =
+	            new WebDriverWait(driver, Duration.ofSeconds(20));
+
+	    Actions actions =
+	            new Actions(driver);
+
+	    Random random =
+	            new Random();
+
+	    // =========================================================
+	    // OPEN SHOP MENU
+	    // =========================================================
+
+	    WebElement shopMenu = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath(
+	                            "//span[contains(@class,'header_nav_link') and " +
+	                            "translate(normalize-space(), " +
+	                            "'ABCDEFGHIJKLMNOPQRSTUVWXYZ', " +
+	                            "'abcdefghijklmnopqrstuvwxyz')='shop']")));
+
+	    actions.moveToElement(shopMenu).perform();
+
+	    Common.waitForElement(2);
+
+	    // =========================================================
+	    // CLICK DRESSES CATEGORY
+	    // =========================================================
+
+	    WebElement dressesButton = wait.until(
+	            ExpectedConditions.elementToBeClickable(
+	                    By.xpath(
+	                            "//div[contains(@class,'dropdown_content')]//a[normalize-space()='dresses']")));
+
+	    dressesButton.click();
+
+	    Common.waitForElement(2);
+
+	    System.out.println(BLUE
+	            + "================================================="
+	            + RESET);
+
+	    System.out.println(GREEN
+	            + "✅ Clicked On Dresses Category"
+	            + RESET);
+
+	    // =========================================================
+	    // GET PRODUCT LIST
+	    // =========================================================
+
+	    List<WebElement> products = wait.until(
+	            ExpectedConditions.visibilityOfAllElementsLocatedBy(
+	                    By.xpath(
+	                            "//div[contains(@class,'prod_listing_card')]")));
+
+	    if (products.isEmpty()) {
+
+	        System.out.println(YELLOW
+	                + "⚠️ No Products Found"
+	                + RESET);
+
+	        return null;
+	    }
+
+	    int maxAttempts =
+	            Math.min(5, products.size());
+
+	    boolean productSelected =
+	            false;
+
+	    String productName =
+	            "";
+
+	    // =========================================================
+	    // SELECT RANDOM PRODUCT
+	    // =========================================================
+
+	    for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+
+	        int randomIndex =
+	                random.nextInt(products.size()) + 1;
+
+	        System.out.println(CYAN
+	                + "🎯 Checking Product Index : "
+	                + randomIndex
+	                + RESET);
+
+	        WebElement productCard = driver.findElement(
+	                By.xpath(
+	                        "(//div[contains(@class,'prod_listing_card')])["
+	                                + randomIndex + "]"));
+
+	        // =========================================================
+	        // GET PRODUCT NAME
+	        // =========================================================
+
+	        String selectedProductName = productCard.findElement(
+	                By.xpath(
+	                        ".//a[contains(@class,'product_list_name')]"))
+	                .getText()
+	                .trim();
+
+	        // =========================================================
+	        // CHECK OUT OF STOCK
+	        // =========================================================
+
+	        List<WebElement> outOfStockLabel =
+	                productCard.findElements(
+	                        By.xpath(
+	                                ".//span[contains(@class,'prod_listing_hurry') and normalize-space()='Out of Stock']"));
+
+	        boolean isOutOfStock =
+	                !outOfStockLabel.isEmpty()
+	                        && outOfStockLabel.get(0).isDisplayed();
+
+	        if (isOutOfStock) {
+
+	            System.out.println(RED
+	                    + "❌ Product Is Out Of Stock : "
+	                    + selectedProductName
+	                    + RESET);
+
+	            continue;
+	        }
+
+	        // =========================================================
+	        // STORE PRODUCT NAME
+	        // =========================================================
+
+	        productName =
+	                selectedProductName;
+
+	        // =========================================================
+	        // CLICK PRODUCT
+	        // =========================================================
+
+	        WebElement productElement = productCard.findElement(
+	                By.xpath(
+	                        ".//a[contains(@class,'product_list_name')]"));
+
+	        ((JavascriptExecutor) driver).executeScript(
+	                "arguments[0].click();",
+	                productElement);
+
+	        productSelected =
+	                true;
+
+	        System.out.println(GREEN
+	                + "✅ Selected Product : "
+	                + productName
+	                + RESET);
+
+	        break;
+	    }
+
+	    // =========================================================
+	    // NO PRODUCT FOUND
+	    // =========================================================
+
+	    if (!productSelected) {
+
+	        System.out.println(YELLOW
+	                + "⚠️ No In-Stock Product Found"
+	                + RESET);
+
+	        return null;
+	    }
+
+	    // =========================================================
+	    // GET PDP PRODUCT NAME
+	    // =========================================================
+
+	    String pdpProductName = wait.until(
+	            ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath(
+	                            "//*[self::h3 or self::h4][@class='prod_name']")))
+	            .getText()
+	            .trim();
+
+	    System.out.println(BLUE
+	            + "================================================="
+	            + RESET);
+
+	    System.out.println(GREEN
+	            + "✅ PDP Product Name : "
+	            + pdpProductName
+	            + RESET);
+
+	    System.out.println(BLUE
+	            + "================================================="
+	            + RESET);
+
+	    return pdpProductName;
+	}
 
 
+	
+	private void estimatedpickupbyandDeliveryby() {
+
+		// =========================================================
+		// STEP 1 : ADMIN LOGIN
+		// =========================================================
+
+		adminLogin();
+
+		Common.waitForElement(2);
+
+		String baseUrl = driver.getCurrentUrl().split("/admin")[0];
+
+		// =========================================================
+		// STEP 2 : GENERAL SETTING
+		// =========================================================
+
+		driver.get(baseUrl + "/admin/general-setting");
+
+		wait.until(ExpectedConditions.elementToBeClickable(clickOnSetkey));
+		clickOnSetkey.click();
+
+		wait.until(ExpectedConditions.visibilityOf(searchBoxdropdown));
+
+		searchBoxdropdown.clear();
+		searchBoxdropdown.sendKeys("estimate_date");
+		searchBoxdropdown.sendKeys(Keys.ENTER);
+
+		Common.waitForElement(2);
+
+		wait.until(ExpectedConditions.elementToBeClickable(editItemButton));
+		editItemButton.click();
+
+		Common.waitForElement(2);
+
+		// =========================================================
+		// STORE PICKUP DATE VALUE
+		// =========================================================
+
+		String adminEstimatePickupDate = wait.until(
+		        ExpectedConditions.visibilityOf(estimatePickupDate))
+		        .getAttribute("value")
+		        .trim();
+
+		System.out.println(GREEN
+		        + "✅ Admin Estimate Pickup Date : "
+		        + adminEstimatePickupDate
+		        + RESET);
+
+		// =========================================================
+		// STORE EXCHANGE DELIVERY DATE VALUE
+		// =========================================================
+
+		String adminEstimateExchangeDeliveryDate = wait.until(
+		        ExpectedConditions.visibilityOf(estimateExchangeDeliveryDate))
+		        .getAttribute("value")
+		        .trim();
+
+		System.out.println(GREEN
+		        + "✅ Admin Estimate Exchange Delivery Date : "
+		        + adminEstimateExchangeDeliveryDate
+		        + RESET);
+
+		// =========================================================
+		// STORE BOTH VALUES INTO VARIABLES
+		// =========================================================
+
+		int pickupDays = Integer.parseInt(adminEstimatePickupDate);
+
+		int exchangeDeliveryDays = Integer.parseInt(adminEstimateExchangeDeliveryDate);
+
+		System.out.println(GREEN
+		        + "✅ Pickup Days Stored : "
+		        + pickupDays
+		        + RESET);
+
+		System.out.println(GREEN
+		        + "✅ Exchange Delivery Days Stored : "
+		        + exchangeDeliveryDays
+		        + RESET);
+		
+		
+		   // =========================================================
+	    // LOGIN TO APPLICATION
+	    // =========================================================
+
+	    userLoginApp();
+
+//	    deleteAllProductsFromCart();
+
+	    zlaataIndiaShopButton.click();
+
+		
+		randomProducyForExchageProcess();
+		
+		
+
+
+		
+		
+		
+
+	} 
 
 	public void estimateDeliveryForSingleProduct() {
 
@@ -2436,11 +3062,33 @@ public class Estimatdelivery_Page extends EstimateDelivery_ObjRepo{
 
 
 	}
-
-
+	
 	
 
 
+	public void estimatePickupandExchangeDeliveryDate() {
+
+		estimatedpickupbyandDeliveryby();
+		
+
+ 
+			
+
+
+	}
+	
+
+	public void popup() {
+		Common.waitForElement(2);
+	    List<WebElement> popUps = driver.findElements(
+	            By.xpath("//div[@class='cross__bttn_for_topsecretpopup popup_containers_cls_btn']")
+	    );
+
+	    if (!popUps.isEmpty()) {
+	    	 ((JavascriptExecutor) driver)
+             .executeScript("arguments[0].click();", popUps.get(0));
+	    }
+	}
 
 
 
