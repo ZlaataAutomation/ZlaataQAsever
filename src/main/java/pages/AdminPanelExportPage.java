@@ -190,7 +190,7 @@ public class AdminPanelExportPage extends AdminPanelExportObjRepo {
 	            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
 
 	            WebElement statusElement = d.findElement(
-	                By.xpath("//tbody/tr[1]/td[6]//span[@class='d-inline-flex']")
+	                By.xpath("//tbody/tr[1]/td[7]//span[@class='d-inline-flex']")
 	            );
 	            String statusText = statusElement.getText().trim();
 	            System.out.println("📊 Current Status (row 1): " + statusText);
