@@ -144,6 +144,12 @@ public class HomePageStepdef {
 	public void the_user_verifies_that_the_monsoon_banner_section_is_available_on_the_home_page() {
 		home.verifyMonsoonBanner();
 	}
+	
+	
+	
+	
+	
+	
 
 
 

@@ -35,10 +35,10 @@ public abstract  class AdminPanelObjRepo extends BasePage {
 	@FindBy(name = "heading")
 	protected WebElement heading;	
 	
-	@FindBy(xpath = "//div[@data-field-name='desktop_img']//input[@data-handle='uploadImage']")
+	@FindBy(xpath = "(//input[@type='file'])[1]")
 	protected WebElement uploadDesktopImage;
 
-	@FindBy(xpath = "//div[@data-field-name='mobile_img']//input[@data-handle='uploadImage']")
+	@FindBy(xpath = "(//input[@type='file'])[2]")
 	protected WebElement uploadMobileImage;
 	
 	@FindBy(xpath = "//span[@data-value='save_and_back']")
