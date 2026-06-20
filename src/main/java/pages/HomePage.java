@@ -1068,9 +1068,6 @@ public final class HomePage extends HomePageObjRepo {
 
 
 
-
-
-
 	@Override
 	public boolean verifyExactText(WebElement ele, String expectedText) {
 		// TODO Auto-generated method stub

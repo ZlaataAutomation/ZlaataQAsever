@@ -83,7 +83,6 @@ Examples:
   
   
   
-    @Home
   @Regression
     @TC_UI_Zlaata_Home_08
 Scenario Outline: TC_UI_Zlaata_Home_08 |Verify all uploaded Special Timer products appear in Admin and User App.| "<TD_ID>" 

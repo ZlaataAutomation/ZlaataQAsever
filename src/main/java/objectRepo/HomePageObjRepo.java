@@ -152,9 +152,6 @@ public abstract class HomePageObjRepo extends BasePage {
 	@FindBy(xpath = "//div[@class='outfit_cards_list swiper-wrapper']")
 	protected WebElement partySection;
 	
-	@FindBy(xpath = "//img[@alt='zlaata Logo']")
-	protected WebElement logo;
-	
 	@FindBy(xpath = "//div[@class='thread_banner homepage_banner mb-80 home_section']")
 	protected WebElement threadBanner;
 	
@@ -163,6 +160,57 @@ public abstract class HomePageObjRepo extends BasePage {
 	
 	@FindBy(xpath = "//div[@class='monsoon_banner homepage_banner mb-80 home_section']")
 	protected WebElement monsoonBanner;
+	
+	
+	
+	//Changes
+	
+	@FindBy(xpath = "(//input[@name='title'])[1]")
+	protected WebElement feedTitle;
+	
+	@FindBy(xpath = "(//select[@name='type'])[1]")
+	protected WebElement BannerTypedropdown;
+	
+	@FindBy(xpath = "(//li[@id='select2-type-a7-result-ycde-2'])[1]")
+	protected WebElement HomeBannerType;
+	
+	@FindBy(xpath = "//select[@name='brand_type']")
+	protected WebElement BrandTypedropdown;
+	
+	@FindBy(xpath = "(//li[@id='select2-brand_type-4v-result-9s6z-1'])[1]")
+	protected WebElement ZlaataIndiaBrandType;
+	
+	@FindBy(xpath = "(//li[@id='select2-brand_type-4v-result-7vqz-2'])[1]")
+	protected WebElement BossLadyBrandType;
+	
+	@FindBy(xpath = "(//input[@name='heading'])[1]")
+	protected WebElement feedHeading;
+	
+	@FindBy(xpath = "(//input[@type='file'])[1]")
+	protected WebElement feedDesktopImage;
+	
+	@FindBy(xpath ="(//input[@type='file'])[2]")
+	protected WebElement feedMobileImage;
+	
+	@FindBy(xpath = "(//input[@id='checkbox_571531'])[1]")
+	protected WebElement feedStatus;
+	
+	@FindBy(xpath = "(//span[@data-value='save_and_back'])[1]")
+	protected WebElement feedSaveAndBackButton;
+	
+	@FindBy(xpath ="(//a[@class='btn btn-default'])[1]")
+	protected WebElement feedBackCancelButton;
+	
+	@FindBy(xpath = "(//img[@alt='zlaata_logo'])[1]")
+	protected WebElement logo;
+	
+	@FindBy(xpath = "(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[1]")
+	protected WebElement ZlaataShopNowButton;
+	
+	@FindBy(xpath = "(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[2]")
+	protected WebElement BossLadyShopNowButton;
+	
+	
 	
 	
 	
