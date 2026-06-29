@@ -100,7 +100,7 @@ public class Review_Page extends Review_ObjRepo{
 
 	    // Click All
 	    WebElement allButton = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.xpath("//div[contains(@class,'dropdown_content')]//a[normalize-space()='All']")
+	            By.xpath("(//a[contains(@class,'dropdown_category_link')])[1]")
 	    ));
 	    allButton.click();
 
@@ -169,71 +169,140 @@ public class Review_Page extends Review_ObjRepo{
 	}
 	
 	public void completeReviewFlow() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    JavascriptExecutor js = (JavascriptExecutor) driver;
-		Common.waitForElement(2);
-	    WebElement writeReview = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.xpath("(//button[contains(text(),'Review')])[1]")));
-	    Common.waitForElement(2);
-	 // scroll it into center
-	    ((JavascriptExecutor) driver).executeScript(
-	            "arguments[0].scrollIntoView({block: 'center'});", writeReview);
 
-	    // click via JS (bypasses click interception)
-	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", writeReview);
-	     System.out.println("🛒 Review clicked on PDP for: " + productlistingName);
-	     Common.waitForElement(2);
-	     WebElement star5 = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	             By.xpath("(//div[contains(@class,'order_review_cont')]//*[name()='svg' and @data-star])[last()]")
-	     ));
+	    // ============================================
+	    // STEP 1: Scroll to and click "Write a Review" button
+	    // ============================================
 	    
-	     star5.click();
-	     System.out.println("⭐ Selected 5-star rating");
-	     Common.waitForElement(1);
-	     // ✍️ Enter review text
-	     WebElement reviewBox1 = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	             By.xpath("//textarea[@placeholder='Write a review']")
-	     ));
-	     reviewBox1.clear();
-	     reviewBox1.sendKeys("Best");
-	     System.out.println("✍️ Entered review text");
-	     Common.waitForElement(2);
+	    WebElement writeReviewBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//button[normalize-space()='Write a Review'])[1]")
+	    ));
+	    
+	    // Scroll only until the button is visible (nearest edge)
+	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", writeReviewBtn);
+	    Common.waitForElement(1);
+	    
+	    // Re-find after scroll and click natively
+	    writeReviewBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//button[normalize-space()='Write a Review'])[1]")
+	    ));
+	    writeReviewBtn.click();
+	    System.out.println("🛒 'Write a Review' button clicked for: " + productlistingName);
+	    
+	    // Wait for form to fully open
+	    Common.waitForElement(3);
 
-	     // 📷 Upload image
-	     WebElement uploadInput = driver.findElement(
-	             By.xpath("(//input[@type='file'])[1]")
-	     );
+	    // ============================================
+	    // STEP 2: Select 5-star rating
+	    // ============================================
+	    
+	    WebElement star5 = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//*[name()='svg'][contains(@class,'order_review_star Cls_order_review_star')])[15]")
+	    ));
+	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", star5);
+	    star5 = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//*[name()='svg'][contains(@class,'order_review_star Cls_order_review_star')])[15]")
+	    ));
+	    star5.click();
+	    System.out.println("⭐ Selected 5-star rating");
 
-	     // 👉 Give full system path
-	     String imagePath = System.getProperty("user.dir") + "/src/test/resources/images/Review.jpg";
-	     uploadInput.sendKeys(imagePath);
+	    // ============================================
+	    // STEP 3: Select Tags
+	    // ============================================
+	    
+	    WebElement tagsBest = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//span[normalize-space()='Best'])[1]")
+	    ));
+	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", tagsBest);
+	    tagsBest = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//span[normalize-space()='Best'])[1]")
+	    ));
+	    tagsBest.click();
+	    System.out.println("🏷️ Selected tag: Best");
 
-	     System.out.println("📷 Image uploaded");
-	     Common.waitForElement(1);
+	    // ============================================
+	    // STEP 4: Enter review description
+	    // ============================================
+	    
+	    WebElement reviewBox = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	        By.xpath("(//textarea[@placeholder='Write a review'])[1]")
+	    ));
+	    reviewBox.clear();
+	    reviewBox.sendKeys("Best product! Highly recommended.");
+	    System.out.println("✍️ Entered review text");
 
-	     // 🔘 Select "True to size"
-	     WebElement trueToSize = wait.until(ExpectedConditions.elementToBeClickable(
-	             By.xpath("//input[@id='overallFit_true']")
-	     ));
-	     js.executeScript("arguments[0].click();", trueToSize);
+	    // ============================================
+	    // STEP 5: Upload image
+	    // ============================================
+	    
+	    WebElement uploadInput = driver.findElement(By.xpath("(//input[@id='reviewImageInput'])[1]"));
+	    String imagePath = System.getProperty("user.dir") + "/src/test/resources/images/Review.jpg";
+	    uploadInput.sendKeys(imagePath);
+	    System.out.println("📷 Image uploaded");
 
-	     System.out.println("📏 Selected 'True to size'");
-	     Common.waitForElement(1);
+	    // ============================================
+	    // STEP 6: Select "True to size"
+	    // ============================================
+	    
+	    WebElement trueToSize = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//span[normalize-space()='True to size'])[1]")
+	    ));
+	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", trueToSize);
+	    trueToSize = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//span[normalize-space()='True to size'])[1]")
+	    ));
+	    trueToSize.click();
+	    System.out.println("📏 Selected 'True to size'");
 
-	     // ✅ Click Submit
-	     WebElement submitBtn = wait.until(ExpectedConditions.elementToBeClickable(
-	             By.xpath("//button[contains(@class,'write_review_submit_btn')]")
-	     ));
-	     js.executeScript("arguments[0].click();", submitBtn);
-	     Common.waitForElement(2);
-	     WebElement successMsg = wait.until(
-	                ExpectedConditions.visibilityOf(mailValidationMessage)
-	        );
+	    // ============================================
+	    // STEP 7: Enter Name
+	    // ============================================
+	    
+	    WebElement nameField = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	        By.xpath("(//input[@id='reviewUserName'])[1]")
+	    ));
+	    nameField.clear();
+	    nameField.sendKeys("Test User");
+	    System.out.println("👤 Entered name");
 
-	        Assert.assertEquals("❌ successfully success message mismatch",
-	                "Review updated successfully!",
-	                successMsg.getText().trim());
-	     System.out.println("✅ Review submitted successfully");
+	    // ============================================
+	    // STEP 8: Enter Email
+	    // ============================================
+	    
+	    WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	        By.xpath("(//input[@id='reviewUserEmail'])[1]")
+	    ));
+	    emailField.clear();
+	    emailField.sendKeys("testuser@example.com");
+	    System.out.println("📧 Entered email");
+
+	    // ============================================
+	    // STEP 9: Submit review
+	    // ============================================
+	    
+	    WebElement submitBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//button[normalize-space()='Submit'])[1]")
+	    ));
+	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", submitBtn);
+	    submitBtn = wait.until(ExpectedConditions.elementToBeClickable(
+	        By.xpath("(//button[normalize-space()='Submit'])[1]")
+	    ));
+	    submitBtn.click();
+	    System.out.println("📤 Review submitted");
+
+	    // ============================================
+	    // STEP 10: Verify success message
+	    // ============================================
+	    
+	    WebElement successMsg = wait.until(
+	        ExpectedConditions.visibilityOf(mailValidationMessage)
+	    );
+	    Assert.assertEquals("❌ Success message mismatch",
+	        "Review updated successfully!",
+	        successMsg.getText().trim());
+	    System.out.println("✅ Review submitted successfully");
 	}
 	
 	

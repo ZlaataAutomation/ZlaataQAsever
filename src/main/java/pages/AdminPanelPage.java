@@ -3,6 +3,10 @@ package pages;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1474,106 +1478,6 @@ public final class AdminPanelPage extends AdminPanelObjRepo  {
 	    }
 	    ExtentManager.getExtentReports().flush();
 	}
-
-
-//Special Timer Product
-	
-	public void clickPlusOrResetFlow() throws InterruptedException {
-
-	    // 1️⃣ Click Active Status
-	    Common.waitForElement(3);
-	    waitFor(statusActiveOption);
-	    click(statusActiveOption);
-	    System.out.println("✅ Selected Active status");
-
-	    Common.waitForElement(2);
-
-	    // 2️⃣ TRY clicking Plus button
-	    try {
-	        if (plusButton.isDisplayed() && plusButton.isEnabled()) {
-	            click(plusButton);
-	            System.out.println("✅ Clicked '+' Plus button (Direct)");
-	            return; // SUCCESS, exit method
-	        }
-	    } catch (Exception e) {
-	        System.out.println("⚠️ Plus Button NOT visible, switching to fallback flow...");
-	    }
-
-	    // ---------------------------------------------------------
-	    // 3️⃣ FALLBACK FLOW: Reset → Search Event Name → Enable status → Enable promotional → Click plus
-	    // ---------------------------------------------------------
-
-	    // Click Reset
-	    WebElement resetBtn = driver.findElement(By.id("crudTable_reset_button"));
-	    click(resetBtn);
-	    System.out.println("🔄 Clicked Reset");
-
-	    Common.waitForElement(2);
-
-	    // Click Event Name dropdown
-	    WebElement eventNameDropdown = driver.findElement(By.xpath("//a[contains(text(),'Event Name')]"));
-	    click(eventNameDropdown);
-	    System.out.println("📂 Opened Event Name dropdown");
-
-	    Common.waitForElement(1);
-
-	    // Enter search text
-	    WebElement searchBox = driver.findElement(By.id("text-filter-eventName"));
-	    searchBox.clear();
-	    searchBox.sendKeys("Festiv Sale");
-	    searchBox.sendKeys(Keys.ENTER);
-	    System.out.println("🔍 Entered event name: Festiv Sale");
-
-	    Common.waitForElement(2);
-
-	    // Enable Status toggle
-	    WebElement statusToggle = driver.findElement(By.xpath("//label[@for='V_status_54']"));
-	    if (!statusToggle.isSelected()) {
-	    	((JavascriptExecutor) driver).executeScript("arguments[0].click();", statusToggle);
-	        System.out.println("🔘 Enabled EVENT Status");
-	    }
-
-	    Common.waitForElement(2);
-
-	    // Enable Promotional Offer toggle
-	    WebElement promoToggle = driver.findElement(By.xpath("//label[@for='V_promotional_offer_54']"));
-	    if (!promoToggle.isSelected()) {
-	    	((JavascriptExecutor) driver).executeScript("arguments[0].click();", promoToggle);
-	        System.out.println("🎁 Enabled Promotional Offer");
-	    }
-
-	    Common.waitForElement(2);
-
-	    // Click PLUS button again
-	    //waitFor(plusButton);
-	    Common.waitForElement(2);
-	    click(plusButton);
-	    System.out.println("🚀 Clicked '+' Plus button (AFTER fallback)");
-	}
-
-   
-
-    private List<Map<String, String>> readAdminProductsFromTable() {
-    	List<WebElement> productRows = driver.findElements(
-    		    By.xpath("//tbody[@id='specialEventTimerProduct']/tr")
-    		);
-    	//	waitFor(productRows.get(0));  // wait for first row to be visible
-        List<Map<String, String>> adminProducts = new ArrayList<>();
-
-        for (WebElement row : productRows) {
-            List<WebElement> cols = row.findElements(By.tagName("td"));
-            if (cols.size() >= 6) {
-                Map<String, String> product = new HashMap<>();
-                product.put("ColorName", cols.get(2).getText().trim());
-                product.put("Sku", cols.get(3).getText().trim());
-                product.put("DiscountType", cols.get(4).getText().trim());
-                product.put("Discount", cols.get(5).getText().trim());
-                adminProducts.add(product);
-            }
-        }
-        return adminProducts;
-    }
-	
     
 		 
 		 String productName;
@@ -2379,29 +2283,201 @@ public void verifyPointerProductRedirect() {
 //TC-08
 // ✅ Upload excel
 public void uploadTheSpecialTimerProductExcel(String filePath) throws InterruptedException {
+    
+    // ─── STEP 1: Navigate to Special Timer Product Page ───
     Common.waitForElement(2);
     driver.get(Common.getValueFromTestDataMap("ExcelPath"));
-    
+    System.out.println("✅ Navigated to Special Timer Product page");
+
+    // ─── STEP 2: Select Brand Type ───
     Common.waitForElement(2);
     ((JavascriptExecutor) driver)
-    .executeScript("arguments[0].click();", brandType);
+        .executeScript("arguments[0].click();", brandType);
     Common.waitForElement(1);
     Thread.sleep(2000);
-    ((JavascriptExecutor) driver).executeScript(
-            "arguments[0].scrollIntoView({block:'center'});", selectbrandType
-    );
-
-    selectbrandType.click();  // ✅ THIS WILL WORK IN HEADLESS
-    System.out.println("✅ Selected Brand Type");
     
-    System.out.println("✅ Redirected to Admin Special Timer Product page");
+    ((JavascriptExecutor) driver).executeScript(
+        "arguments[0].scrollIntoView({block:'center'});", selectbrandType
+    );
+    selectbrandType.click();
+    System.out.println("✅ Selected Brand Type");
+
+    // ─── STEP 3: Click Status Filter Dropdown ───
     Common.waitForElement(3);
     waitFor(clickStatus);
     click(clickStatus);
+    System.out.println("✅ Clicked Status Filter Dropdown");
+    Common.waitForElement(1);
+    Thread.sleep(2000);
 
-    clickPlusOrResetFlow();
+    // ─── STEP 4: Select "Active" from the dropdown (DYNAMIC) ───
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    
+    WebElement activeStatusOption = wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("//li[contains(@class,'select2-results__option') and normalize-space()='Active']")
+    ));
+    
+    ((JavascriptExecutor) driver).executeScript(
+        "arguments[0].scrollIntoView({block:'center'});", activeStatusOption
+    );
+    activeStatusOption.click();
+    System.out.println("✅ Selected Active Status from dropdown");
 
+    // ─── STEP 5: Wait for filtered results to load ───
+    try {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(
+            By.xpath("//div[contains(@class,'loading') or contains(@class,'spinner')]")
+        ));
+    } catch (Exception e) {
+        // Loading spinner may not exist, continue
+    }
+    
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+        By.xpath("(//i[@class='las la-edit'])[1]")
+    ));
+    
+    Common.waitForElement(3);
+    System.out.println("✅ Filtered results loaded after Brand Type + Active Status filter");
+
+    // ─── STEP 6: Click Edit Button on first filtered result ───
+    WebElement editButton = wait.until(ExpectedConditions.elementToBeClickable(
+        By.xpath("(//i[@class='las la-edit'])[1]")
+    ));
+    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", editButton);
+    System.out.println("✅ Clicked Edit Button on first filtered result");
+    Common.waitForElement(3);
+
+ // ─── STEP 7: Check if date range is still active ───
+    boolean needDateReset = false;
+
+    try {
+        // Get the from_date and end_date values (ISO format: 2026-06-01T13:53)
+        WebElement fromDateField = driver.findElement(By.xpath("(//input[@name='from_date[]'])[1]"));
+        WebElement endDateField = driver.findElement(By.xpath("(//input[@name='end_date[]'])[1]"));
+
+        String fromDateValue = fromDateField.getAttribute("value").trim();
+        String endDateValue = endDateField.getAttribute("value").trim();
+
+        System.out.println("📅 Current From Date: " + fromDateValue);
+        System.out.println("📅 Current End Date: " + endDateValue);
+
+        // Parse ISO datetime format: yyyy-MM-dd'T'HH:mm
+        DateTimeFormatter isoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime fromDateTime = LocalDateTime.parse(fromDateValue, isoFormatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(endDateValue, isoFormatter);
+        LocalDateTime now = LocalDateTime.now();
+
+        System.out.println("📅 Parsed From DateTime: " + fromDateTime);
+        System.out.println("📅 Parsed End DateTime: " + endDateTime);
+        System.out.println("📅 Current DateTime: " + now);
+
+        // Check if current datetime is between from and end (inclusive)
+        if (now.isBefore(fromDateTime) || now.isAfter(endDateTime)) {
+            System.out.println("⚠️ Date range is NOT active (expired or not started) — need to reset dates");
+            needDateReset = true;
+        } else {
+            System.out.println("✅ Date range is active — no date change needed");
+            needDateReset = false;
+        }
+
+    } catch (Exception e) {
+        System.out.println("⚠️ Could not read/parse date fields — assuming need to reset: " + e.getMessage());
+        needDateReset = true;
+    }
+
+    // ─── STEP 8: Reset dates if needed ───
+    if (needDateReset) {
+        System.out.println("⚠️ Resetting dates...");
+
+        // Click X icon to remove previous date range
+        WebElement resetDateButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("(//button[@class='btn btn-sm btn-danger remove-date-range'])[1]")
+        ));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", resetDateButton);
+        System.out.println("✅ Clicked X icon to reset previous dates");
+        Common.waitForElement(2);
+
+        // Click "Add More Dates" button to add new date fields
+        WebElement addMoreDatesButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("(//button[normalize-space()='Add More Dates'])[1]")
+        ));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", addMoreDatesButton);
+        System.out.println("✅ Clicked Add More Dates button");
+        Common.waitForElement(2);
+
+        // Calculate new dates and times
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endDateTime = now.plusDays(10);
+        
+        // Format for datetime-local input: yyyy-MM-dd'T'HH:mm
+        DateTimeFormatter isoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        String fromDateTimeValue = now.format(isoFormatter);
+        String endDateTimeValue = endDateTime.format(isoFormatter);
+
+        System.out.println("📅 New From DateTime: " + fromDateTimeValue);
+        System.out.println("📅 New End DateTime: " + endDateTimeValue);
+
+        // ─── Set From Date using JavaScript (bypasses calendar UI) ───
+        WebElement fromDateField = wait.until(ExpectedConditions.presenceOfElementLocated(
+            By.xpath("(//input[@name='from_date[]'])[1]")
+        ));
+        ((JavascriptExecutor) driver).executeScript(
+            "arguments[0].value = arguments[1];" +
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));" +
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+            fromDateField, fromDateTimeValue
+        );
+        System.out.println("✅ Set From DateTime: " + fromDateTimeValue);
+        Common.waitForElement(1);
+
+        // ─── Set End Date using JavaScript (bypasses calendar UI) ───
+        WebElement endDateField = wait.until(ExpectedConditions.presenceOfElementLocated(
+            By.xpath("(//input[@name='end_date[]'])[1]")
+        ));
+        ((JavascriptExecutor) driver).executeScript(
+            "arguments[0].value = arguments[1];" +
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));" +
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+            endDateField, endDateTimeValue
+        );
+        System.out.println("✅ Set End DateTime: " + endDateTimeValue);
+        Common.waitForElement(1);
+
+    } else {
+        System.out.println("✅ Date range is active — no date change needed");
+    }
+
+    // ─── STEP 9: Click Save and Back ───
+    WebElement saveAndBackButton = wait.until(ExpectedConditions.elementToBeClickable(
+        By.xpath("(//span[@data-value='save_and_preview'])[1]")
+    ));
+    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", saveAndBackButton);
+    System.out.println("✅ Clicked Save and Back");
+    Common.waitForElement(3);
+
+    // ─── STEP 10: Wait for page to return to list after save ───
+    try {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("(//i[@class='las la-edit'])[1]")
+        ));
+        System.out.println("✅ Returned to filtered results page");
+    } catch (Exception e) {
+        System.out.println("⚠️ Could not confirm return to list page, proceeding anyway");
+    }
     Common.waitForElement(2);
+    
+    
+    
+    
+ // ─── STEP 11: Click the "+" (Add) button to open import options ───
+    WebElement addButton = wait.until(ExpectedConditions.elementToBeClickable(
+        By.xpath("(//i[@class='las la-plus-circle'])[1]")
+    ));
+    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", addButton);
+    System.out.println("✅ Clicked Add (+) Button");
+    Common.waitForElement(2);
+
+    // ─── STEP 12: Proceed with Import Flow ───
     waitFor(importButton);
     click(importButton);
     System.out.println("✅ Clicked Import Button");
@@ -2415,14 +2491,12 @@ public void uploadTheSpecialTimerProductExcel(String filePath) throws Interrupte
     waitFor(submitButton);
     submitButton.click();
     System.out.println("✅ Excel uploaded successfully");
-    
-  //Clear Catch
+
+    // ─── STEP 13: Clear Cache ───
     Common.waitForElement(4);
     waitFor(clearCatchButton);
     click(clearCatchButton);
-    System.out.println("✅ Successfull click Clear Catch Button");
-    
-    
+    System.out.println("✅ Successfully clicked Clear Cache Button");
 }
 
 
@@ -2457,118 +2531,240 @@ public void verifySpecialProductsinAdmin(String excelPath) throws IOException {
 }
 
 
+
 //✅ Verify in User app
 public void verifyProductsUserApp(String excelPath) throws IOException {
-    // ✅ Step 1: Read products from Excel
-    List<Map<String, Object>> excelProducts = ExcelXLSReader.readProductsWithMultipleListing(excelPath);
+  // ✅ Step 1: Read products from Excel
+  List<Map<String, Object>> excelProducts = ExcelXLSReader.readProductsWithMultipleListing(excelPath);
 
-    // ✅ Step 2: Read all Admin products into a map (Sku → ColorName)
-    Map<String, String> adminProducts = new HashMap<>();
-    List<WebElement> rows = driver.findElements(By.xpath("//table//tr"));
-    for (WebElement row : rows) {
-        try {
-            String sku = row.findElement(By.xpath(".//td[4]")).getText().trim();     // adjust index if SKU col is different
-            String colorName = row.findElement(By.xpath(".//td[3]")).getText().trim(); // adjust index for ColorName col
-            adminProducts.put(sku, colorName);
-        } catch (Exception e) {
-            // ignore header or invalid rows
-        }
-    }
+  // ✅ Step 2: Read all Admin products into a map (Sku → ColorName)
+  Map<String, String> adminProducts = new HashMap<>();
+  List<WebElement> rows = driver.findElements(By.xpath("//table//tr"));
+  for (WebElement row : rows) {
+      try {
+          String sku = row.findElement(By.xpath(".//td[4]")).getText().trim();
+          String colorName = row.findElement(By.xpath(".//td[3]")).getText().trim();
+          adminProducts.put(sku, colorName);
+      } catch (Exception e) {
+          // ignore header or invalid rows
+      }
+  }
 
-    Common.waitForElement(4);
-    waitFor(clearCatchButton);
-    click(clearCatchButton);
-    System.out.println("✅ Successfull click Clear Catch Button");
-    // ✅ Step 3: Switch to User App
-    HomePage home = new HomePage(driver);
-    home.homeLaunch();
+  Common.waitForElement(4);
+  waitFor(clearCatchButton);
+  click(clearCatchButton);
+  System.out.println("✅ Successfull click Clear Catch Button");
+  
+  // ✅ Step 3: Switch to User App
+  HomePage home = new HomePage(driver);
+  home.homeLaunch();
 
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+  WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-    WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
-            By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
-    ));
+  WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+          By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+  ));
 
-    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+  ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+  System.out.println("Clicked ZLAATA INDIA Home Page Banner");
+  
+  // ✅ Step 4: Loop through Excel SKUs and verify in User App
+  for (Map<String, Object> product : excelProducts) {
+      Object skuObj = product.get("sku");
+      if (skuObj == null) {
+          System.out.println("⚠ SKU missing in Excel row, skipping...");
+          continue;
+      }
 
-    System.out.println("Clicked ZLAATA INDIA Home Page Banner");
-    
-    
-    // ✅ Step 4: Loop through Excel SKUs and verify in User App
-    for (Map<String, Object> product : excelProducts) {
-        Object skuObj = product.get("sku");
-        if (skuObj == null) {
-            System.out.println("⚠ SKU missing in Excel row, skipping...");
-            continue;
-        }
+      String sku = skuObj.toString().trim();
 
-        String sku = skuObj.toString().trim();
+      // Get ColorName from Admin Map
+      String productColorName = adminProducts.get(sku);
+      if (productColorName == null) {
+          System.out.println("⚠ No ColorName found in Admin for SKU: " + sku);
+          continue;
+      }
 
-        // Get ColorName from Admin Map
-        String productColorName = adminProducts.get(sku);
-        if (productColorName == null) {
-            System.out.println("⚠ No ColorName found in Admin for SKU: " + sku);
-            continue;
-        }
+      // Search in user app
+      Common.waitForElement(2);
 
-        // Search in user app
-        Common.waitForElement(2);
+      // Click search icon
+      wait.until(ExpectedConditions.elementToBeClickable(searchIcon)).click();
+      System.out.println("✅ Clicked search icon");
 
-        wait.until(ExpectedConditions.elementToBeClickable(searchIcon)).click();
+      // Wait for search box and enter product name
+      wait.until(ExpectedConditions.elementToBeClickable(userSearchBox));
+      userSearchBox.clear();
+      userSearchBox.sendKeys(productColorName);
+      System.out.println("✅ Typed in search box: " + productColorName);
+      
+      // Press Enter to submit search
+      userSearchBox.sendKeys(Keys.ENTER);
+      System.out.println("✅ Pressed Enter to search");
+      
+      // ─── FIX: Wait directly for the product link to appear ───
+      By productLocator = By.xpath("(//a[@class='product_list_name'])[1]");
+      
+      // Wait for product to be visible
+      WebElement productLink = wait.until(ExpectedConditions.visibilityOfElementLocated(productLocator));
+      System.out.println("✅ Product link found in search results");
+      
+      // Scroll into view
+      ((JavascriptExecutor) driver).executeScript(
+          "arguments[0].scrollIntoView({block: 'center', behavior: 'smooth'});", 
+          productLink
+      );
+      System.out.println("✅ Scrolled to product: " + productColorName);
+      Common.waitForElement(1);
+      
+      // Click the product
+      wait.until(ExpectedConditions.elementToBeClickable(productLocator)).click();
+      System.out.println("✅ Clicked product link: " + productColorName);
 
-        wait.until(ExpectedConditions.elementToBeClickable(userSearchBox));
-        userSearchBox.clear();
-        userSearchBox.sendKeys(productColorName);
+      // ✅ SPECIAL TIMER CHECK
+      try {
+          WebElement specialTimer = wait.until(ExpectedConditions.visibilityOfElementLocated(
+              By.xpath("//div[@id='prodTimer' and contains(@class,'prod_category_timer')]")
+          ));
 
-        // Wait until results load
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("searchProductWrapper")));
-        Common.waitForElement(2);
-        By locator = By.xpath("//div[@id='searchProductWrapper']//a[contains(@title,'" + productColorName + "')]");
+          if (specialTimer.isDisplayed()) {
+              System.out.println("⏳ Special Timer is displayed on Product Detail Page.");
+          } else {
+              throw new RuntimeException("❌ Special Timer element is present but NOT visible.");
+          }
 
-        WebElement productElement = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+      } catch (Exception e) {
+          throw new RuntimeException("❌ Special Timer is NOT displayed on Product Detail Page!", e);
+      }
 
-        Assert.assertTrue("❌ Product not found in User App: " + productColorName, productElement.isDisplayed());
+      // ✅ Verify price details
+      try {
+          WebElement currentPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                  By.xpath("//div[contains(@class,'prod_current_price')]")));
 
-        productElement.click();
+          WebElement actualPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                  By.xpath("//div[contains(@class,'prod_actual_price')]")));
 
-        System.out.println("✅ Product found in User App: " + productColorName);
-     // ✅ SPECIAL TIMER CHECK
-        try {
-            WebElement specialTimer = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//div[@id='prodTimer' and contains(@class,'prod_category_timer')]")
-            ));
+          WebElement discountPercentage = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                  By.xpath("//div[contains(@class,'prod_discount_percentage')]")));
 
-            if (specialTimer.isDisplayed()) {
-                System.out.println("⏳ Special Timer is displayed on Product Detail Page.");
-            } else {
-                throw new RuntimeException("❌ Special Timer element is present but NOT visible.");
-            }
+          System.out.println("   Actual Price   : " + actualPrice.getText());
+          System.out.println("   Special  Price  : " + currentPrice.getText());
+          System.out.println("   Discount Shown : " + discountPercentage.getText());
 
-        } catch (Exception e) {
-            throw new RuntimeException("❌ Special Timer is NOT displayed on Product Detail Page!", e);
-        }
-
-        // ✅ Verify price details
-        try {
-        	WebElement currentPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
-        	        By.xpath("//div[contains(@class,'prod_current_price')]")));
-
-        	WebElement actualPrice = wait.until(ExpectedConditions.visibilityOfElementLocated(
-        	        By.xpath("//div[contains(@class,'prod_actual_price')]")));
-
-        	WebElement discountPercentage = wait.until(ExpectedConditions.visibilityOfElementLocated(
-        	        By.xpath("//div[contains(@class,'prod_discount_percentage')]")));
-
-            System.out.println("   Actual Price   : " + actualPrice.getText());
-            System.out.println("   Special  Price  : " + currentPrice.getText());
-            System.out.println("   Discount Shown : " + discountPercentage.getText());
-
-        } catch (Exception e) {
-            System.out.println("⚠ Could not fetch all price details for: " + productColorName);
-        }
-    }
+      } catch (Exception e) {
+          System.out.println("⚠ Could not fetch all price details for: " + productColorName);
+      }
+      
+      // ─── Navigate back to home page for next product search ───
+      home.homeLaunch();
+      banner = wait.until(ExpectedConditions.elementToBeClickable(
+              By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
+      ));
+      ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+      System.out.println("Returned to ZLAATA INDIA banner for next search");
+  }
 }
 
+
+//Special Timer Product
+
+	public void clickPlusOrResetFlow() throws InterruptedException {
+
+	    // 1️⃣ Click Active Status
+	    Common.waitForElement(3);
+	    waitFor(statusActiveOption);
+	    click(statusActiveOption);
+	    System.out.println("✅ Selected Active status");
+
+	    Common.waitForElement(2);
+
+	    // 2️⃣ TRY clicking Plus button
+	    try {
+	        if (plusButton.isDisplayed() && plusButton.isEnabled()) {
+	            click(plusButton);
+	            System.out.println("✅ Clicked '+' Plus button (Direct)");
+	            return; // SUCCESS, exit method
+	        }
+	    } catch (Exception e) {
+	        System.out.println("⚠️ Plus Button NOT visible, switching to fallback flow...");
+	    }
+
+	    // ---------------------------------------------------------
+	    // 3️⃣ FALLBACK FLOW: Reset → Search Event Name → Enable status → Enable promotional → Click plus
+	    // ---------------------------------------------------------
+
+	    // Click Reset
+	    WebElement resetBtn = driver.findElement(By.id("crudTable_reset_button"));
+	    click(resetBtn);
+	    System.out.println("🔄 Clicked Reset");
+
+	    Common.waitForElement(2);
+
+	    // Click Event Name dropdown
+	    WebElement eventNameDropdown = driver.findElement(By.xpath("//a[contains(text(),'Event Name')]"));
+	    click(eventNameDropdown);
+	    System.out.println("📂 Opened Event Name dropdown");
+
+	    Common.waitForElement(1);
+
+	    // Enter search text
+	    WebElement searchBox = driver.findElement(By.id("text-filter-eventName"));
+	    searchBox.clear();
+	    searchBox.sendKeys("Festiv Sale");
+	    searchBox.sendKeys(Keys.ENTER);
+	    System.out.println("🔍 Entered event name: Festiv Sale");
+
+	    Common.waitForElement(2);
+
+	    // Enable Status toggle
+	    WebElement statusToggle = driver.findElement(By.xpath("//label[@for='V_status_54']"));
+	    if (!statusToggle.isSelected()) {
+	    	((JavascriptExecutor) driver).executeScript("arguments[0].click();", statusToggle);
+	        System.out.println("🔘 Enabled EVENT Status");
+	    }
+
+	    Common.waitForElement(2);
+
+	    // Enable Promotional Offer toggle
+	    WebElement promoToggle = driver.findElement(By.xpath("//label[@for='V_promotional_offer_54']"));
+	    if (!promoToggle.isSelected()) {
+	    	((JavascriptExecutor) driver).executeScript("arguments[0].click();", promoToggle);
+	        System.out.println("🎁 Enabled Promotional Offer");
+	    }
+
+	    Common.waitForElement(2);
+
+	    // Click PLUS button again
+	    //waitFor(plusButton);
+	    Common.waitForElement(2);
+	    click(plusButton);
+	    System.out.println("🚀 Clicked '+' Plus button (AFTER fallback)");
+	}
+
+ 
+
+  private List<Map<String, String>> readAdminProductsFromTable() {
+  	List<WebElement> productRows = driver.findElements(
+  		    By.xpath("//tbody[@id='specialEventTimerProduct']/tr")
+  		);
+  	//	waitFor(productRows.get(0));  // wait for first row to be visible
+      List<Map<String, String>> adminProducts = new ArrayList<>();
+
+      for (WebElement row : productRows) {
+          List<WebElement> cols = row.findElements(By.tagName("td"));
+          if (cols.size() >= 6) {
+              Map<String, String> product = new HashMap<>();
+              product.put("ColorName", cols.get(2).getText().trim());
+              product.put("Sku", cols.get(3).getText().trim());
+              product.put("DiscountType", cols.get(4).getText().trim());
+              product.put("Discount", cols.get(5).getText().trim());
+              adminProducts.add(product);
+          }
+      }
+      return adminProducts;
+  }
+	
 
 
 

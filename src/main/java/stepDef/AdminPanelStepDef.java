@@ -130,7 +130,7 @@ public class AdminPanelStepDef {
 				@Then("verify products from {string} should be visible in user app")
 				public void verify_products_from_should_be_visible_in_user_app(String filePath) throws IOException {
 					String excelPath = System.getProperty("user.dir") + "/src/test/resources/Bulk Excel File/SpecialTimerProduct/" + filePath;
-				    admin.verifyProductsUserApp(excelPath);
+				   admin.verifyProductsUserApp(excelPath);
 				 
 				}
 

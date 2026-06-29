@@ -36,7 +36,7 @@
 <a href="#"><span class="badge badge-primary">Zlaata_Automation_Reports</span></a>
 </li>
 <li class="m-r-10">
-<a href="#"><span class="badge badge-primary">Jun 20, 2026 10:21:00 am</span></a>
+<a href="#"><span class="badge badge-primary">Jun 29, 2026 10:45:16 am</span></a>
 </li>
 </ul>
 </div>
@@ -72,13 +72,13 @@
 <div class="col-md-3">
 <div class="card"><div class="card-body">
 <p class="m-b-0">Started</p>
-<h3>Jun 20, 2026 10:21:00 am</h3>
+<h3>Jun 29, 2026 10:45:16 am</h3>
 </div></div>
 </div>
 <div class="col-md-3">
 <div class="card"><div class="card-body">
 <p class="m-b-0">Ended</p>
-<h3>Jun 20, 2026 10:24:44 am</h3>
+<h3>Jun 29, 2026 10:48:10 am</h3>
 </div></div>
 </div>
 <div class="col-md-3">
@@ -149,10 +149,10 @@
 </div>
 </div>
 <div class="card-footer">
-<div><small data-tooltip='80%'><b>4</b> steps passed</small></div>
+<div><small data-tooltip='25%'><b>1</b> steps passed</small></div>
 <div>
-<small data-tooltip='20%'><b>1</b> steps failed,
-<b>0</b> skipped, <b data-tooltip='%'>0</b> others
+<small data-tooltip='25%'><b>1</b> steps failed,
+<b>2</b> skipped, <b data-tooltip='%'>0</b> others
 </small>
 </div>
 </div>
@@ -168,7 +168,7 @@
 </div></div>
 <script>
 var timeline = {
-"Home Page Banner upload verification admin panel":220.351
+"Verify Review Flow":173.34
 };
 </script>
 <div class="row">
@@ -178,6 +178,14 @@ var timeline = {
 <div class="card-body pb-0 pt-0"><table class="table table-sm table-bordered">
 <thead><tr class="bg-gray"><th>Name</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Others</th><th>Passed %</th></tr></thead><tbody>
 <tr>
+<td>@TC_UI_Zlaata_Review_01</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0%</td>
+</tr>
+<tr>
 <td>@Regression</td>
 <td>0</td>
 <td>1</td>
@@ -186,7 +194,7 @@ var timeline = {
 <td>0%</td>
 </tr>
 <tr>
-<td>@TC_UI_Zlaata_Home_08</td>
+<td>@Review</td>
 <td>0</td>
 <td>1</td>
 <td>0</td>
@@ -213,10 +221,10 @@ warningChild: 0,
 skipChild: 0,
 infoChild: 0,
 grandChildCount: 5,
-passGrandChild: 4,
+passGrandChild: 1,
 failGrandChild: 1,
 warningGrandChild: 0,
-skipGrandChild: 0,
+skipGrandChild: 2,
 infoGrandChild: 0,
 eventsCount: 5,
 };
@@ -238,7 +246,7 @@ eventsCount: 5,
 <li class="dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tag"></i></a>
 <ul id="tag-toggle" class="dropdown-menu dropdown-md p-v-0">
-<a class="dropdown-item" href="#">@Regression</a><a class="dropdown-item" href="#">@TC_UI_Zlaata_Home_08</a>
+<a class="dropdown-item" href="#">@TC_UI_Zlaata_Review_01</a><a class="dropdown-item" href="#">@Regression</a><a class="dropdown-item" href="#">@Review</a>
 </ul>
 </li>
 </ul>
@@ -249,9 +257,9 @@ eventsCount: 5,
           tag=""
           device="">
           <div class="test-detail">
-            <p class="name">Home Page Banner upload verification admin panel</p>
+            <p class="name">Verify Review Flow</p>
             <p class="text-sm">
-              <span>10:21:03 am</span> / <span>00:03:40:351</span>
+              <span>10:45:17 am</span> / <span>00:02:53:340</span>
               <span class="badge fail-bg log float-right">Fail</span>
             </p>
           </div>
@@ -259,10 +267,10 @@ eventsCount: 5,
 <div class="detail-head">
 <div class="p-v-10">
 <div class="info">
-<h5 class="test-status text-fail">Home Page Banner upload verification admin panel</h5>
-<span class='badge badge-success'>06.20.2026 10:21:03 am</span>
-<span class='badge badge-danger'>06.20.2026 10:24:43 am</span>
-<span class='badge badge-default'>00:03:40:351</span>
+<h5 class="test-status text-fail">Verify Review Flow</h5>
+<span class='badge badge-success'>06.29.2026 10:45:17 am</span>
+<span class='badge badge-danger'>06.29.2026 10:48:10 am</span>
+<span class='badge badge-default'>00:02:53:340</span>
 &middot; <span class='uri-anchor badge badge-default'>#test-id=1</span>
 <span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
 <span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
@@ -274,48 +282,44 @@ eventsCount: 5,
   <div class="card">
     <div class="card-header" role="tab">
       <div class="card-title">
-        <div class="node" id="2"><span class="badge log fail-bg mr-2">Fail</span>TC_UI_Zlaata_Home_08 |Verify all uploaded Special Timer products appear in Admin and User App.| "<TD_ID>"</div>
+        <div class="node" id="2"><span class="badge log fail-bg mr-2">Fail</span>TC_UI_Zlaata_Review_01 |Verify user able to  give review in user app.| "<TD_ID>"</div>
       </div>
     </div>
         <div class="scenario_outline ">
             <div class="card-body l1">
               <div class="card-header">
                 <div class="card-title outline-child">
-                  <div class="node" id="3"><span class="badge log fail-bg mr-2">Fail</span>TC_UI_Zlaata_Home_08 |Verify all uploaded Special Timer products appear in Admin and User App.| "TD_UI_Zlaata_Home_08"</div>
+                  <div class="node" id="3"><span class="badge log fail-bg mr-2">Fail</span>TC_UI_Zlaata_Review_01 |Verify user able to  give review in user app.| "TD_UI_Zlaata_Review_01"</div>
                 </div>
               </div>
               <div class="card-body mt-3 ">
-                  <div class="step pass-bg">
-                    <span>Given admin is logged in</span>
-      <div>
-      </div>
-                  </div>
-                  <div class="step pass-bg">
-                    <span>When I upload the special product excel "Test.xlsx"</span>
-      <div>
-      </div>
-                  </div>
-                  <div class="step pass-bg">
-                    <span>Then I verify products in Admin panel with "Test.xlsx"</span>
-      <div>
-      </div>
-                  </div>
                   <div class="step fail-bg">
-                    <span>And verify products from "Test.xlsx" should be visible in user app</span>
+                    <span>Given the user submits a review for a product</span>
       <div>
-        <textarea disabled class="code-block">org.openqa.selenium.TimeoutException: Expected condition failed: waiting for visibility of element located by By.id: searchProductWrapper (tried for 10 second(s) with 500 milliseconds interval)
+        <textarea disabled class="code-block">org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to be clickable: By.xpath: //div[contains(@class,'dropdown_content')]//a[normalize-space()='All'] (tried for 20 second(s) with 500 milliseconds interval)
 Build info: version: '4.34.0', revision: '707dcb4246*'
 System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.8'
-Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$ZlU8m0WI
-Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 148.0.7778.217, chrome: {chromedriverVersion: 148.0.7778.178 (d096af1c9e9..., userDataDir: C:\Users\Abdul\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55021}, goog:processID: 12384, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:55021/devtoo..., se:cdpVersion: 148.0.7778.217, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
-Session ID: efe84dfc4fcbc224de23b8e005b01b8e
+Driver info: net.bytebuddy.renamed.java.lang.Object$ByteBuddy$DUCySwK9
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 149.0.7827.156, chrome: {chromedriverVersion: 149.0.7827.155 (07b52360cc1..., userDataDir: C:\Users\Abdul\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:56031}, goog:processID: 31476, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:56031/devtoo..., se:cdpVersion: 149.0.7827.156, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 01e18542bf75c17fd51f9f0f4938f71f
 	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
-	at pages.AdminPanelPage.verifyProductsUserApp(AdminPanelPage.java:2524)
-	at stepDef.AdminPanelStepDef.verify_products_from_should_be_visible_in_user_app(AdminPanelStepDef.java:133)
-	at ✽.verify products from "Test.xlsx" should be visible in user app(file:///C:/Users/Abdul/git/ZlaataQAseverRegression/src/test/resources/features/AdminFeature/allHomePage.feature:92)
+	at pages.Review_Page.takeRandomProductFromAll(Review_Page.java:102)
+	at pages.Review_Page.validateUserReview(Review_Page.java:703)
+	at stepDef.Review_StepDef.the_user_submits_a_review_for_a_product(Review_StepDef.java:21)
+	at ✽.the user submits a review for a product(file:///C:/Users/Abdul/git/ZlaataQAseverRegression/src/test/resources/features/Review/review.feature:8)
 </textarea>
       
+      </div>
+                  </div>
+                  <div class="step skip-bg">
+                    <span>When the admin reviews and approves the submitted review</span>
+      <div>Step skipped
+      </div>
+                  </div>
+                  <div class="step skip-bg">
+                    <span>Then the approved review should be displayed in the user app</span>
+      <div>Step skipped
       </div>
                   </div>
                   <div class="step pass-bg">
@@ -325,7 +329,7 @@ Build info: version: '4.34.0', revision: '707dcb4246*'
 System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '21.0.8'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
 Command: [null, screenshot {}]
-Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 148.0.7778.217, chrome: {chromedriverVersion: 148.0.7778.178 (d096af1c9e9..., userDataDir: C:\Users\Abdul\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55021}, goog:processID: 12384, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:55021/devtoo..., se:cdpVersion: 148.0.7778.217, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 149.0.7827.156, chrome: {chromedriverVersion: 149.0.7827.155 (07b52360cc1..., userDataDir: C:\Users\Abdul\AppData\Loca...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:56031}, goog:processID: 31476, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:56031/devtoo..., se:cdpVersion: 149.0.7827.156, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
       </div>
       <div>
       </div>
@@ -350,10 +354,46 @@ Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 14
 <div class="test-list">
 <div class="test-list-tools">
 <ul class="tools pull-left"><li><a href=""><span class="font-size-14">Category</span></a></li></ul>
-<ul class="tools text-right"><li><a href="#"><span class="badge badge-primary">2</span></a></li></ul>
+<ul class="tools text-right"><li><a href="#"><span class="badge badge-primary">3</span></a></li></ul>
 </div>
 <div class="test-list-wrapper scrollable">
 <ul class="test-list-item">
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log badge-danger'>1</span>
+</span>
+<p class="name">@TC_UI_Zlaata_Review_01</p>
+<p class="duration text-sm">1 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>@TC_UI_Zlaata_Review_01</h4>
+<span status="fail" class='badge log badge-danger'>1 failed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="fail">
+<td><span class="badge log fail-bg">Fail</span></td>
+<td>10:45:17 am</td>
+<td>
+<a href="#" class="linked" test-id='1' id='3'>TC_UI_Zlaata_Review_01 |Verify user able to give review in user app.| "TD_UI_Zlaata_Review_01"</a>
+<div class="">
+<span class="badge badge-default">Verify Review Flow.TC_UI_Zlaata_Review_01 |Verify user able to give review in user app.| "TD_UI_Zlaata_Review_01"</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
 <li class="test-item">
 <div class="test-detail">
 <span class="meta">
@@ -378,11 +418,11 @@ Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 14
 <tbody>
 <tr class="tag-test-status" status="fail">
 <td><span class="badge log fail-bg">Fail</span></td>
-<td>10:21:03 am</td>
+<td>10:45:17 am</td>
 <td>
-<a href="#" class="linked" test-id='1' id='3'>TC_UI_Zlaata_Home_08 |Verify all uploaded Special Timer products appear in Admin and User App.| "TD_UI_Zlaata_Home_08"</a>
+<a href="#" class="linked" test-id='1' id='3'>TC_UI_Zlaata_Review_01 |Verify user able to give review in user app.| "TD_UI_Zlaata_Review_01"</a>
 <div class="">
-<span class="badge badge-default">Home Page Banner upload verification admin panel.TC_UI_Zlaata_Home_08 |Verify all uploaded Special Timer products appear in Admin and User App.| "TD_UI_Zlaata_Home_08"</span>
+<span class="badge badge-default">Verify Review Flow.TC_UI_Zlaata_Review_01 |Verify user able to give review in user app.| "TD_UI_Zlaata_Review_01"</span>
 </div>
 </td>
 </tr>
@@ -395,12 +435,12 @@ Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 14
 <span class="meta">
 <span class='badge log badge-danger'>1</span>
 </span>
-<p class="name">@TC_UI_Zlaata_Home_08</p>
+<p class="name">@Review</p>
 <p class="duration text-sm">1 tests</p>
 </div>
 <div class="test-contents d-none">
 <div class="info">
-<h4>@TC_UI_Zlaata_Home_08</h4>
+<h4>@Review</h4>
 <span status="fail" class='badge log badge-danger'>1 failed</span>
 </div>
 <table class='table table-sm mt-4'>
@@ -414,11 +454,11 @@ Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 14
 <tbody>
 <tr class="tag-test-status" status="fail">
 <td><span class="badge log fail-bg">Fail</span></td>
-<td>10:21:03 am</td>
+<td>10:45:17 am</td>
 <td>
-<a href="#" class="linked" test-id='1' id='3'>TC_UI_Zlaata_Home_08 |Verify all uploaded Special Timer products appear in Admin and User App.| "TD_UI_Zlaata_Home_08"</a>
+<a href="#" class="linked" test-id='1' id='3'>TC_UI_Zlaata_Review_01 |Verify user able to give review in user app.| "TD_UI_Zlaata_Review_01"</a>
 <div class="">
-<span class="badge badge-default">Home Page Banner upload verification admin panel.TC_UI_Zlaata_Home_08 |Verify all uploaded Special Timer products appear in Admin and User App.| "TD_UI_Zlaata_Home_08"</span>
+<span class="badge badge-default">Verify Review Flow.TC_UI_Zlaata_Review_01 |Verify user able to give review in user app.| "TD_UI_Zlaata_Review_01"</span>
 </div>
 </td>
 </tr>
@@ -466,11 +506,11 @@ Capabilities {acceptInsecureCerts: true, browserName: chrome, browserVersion: 14
 <tbody>
 <tr class="tag-test-status" status="fail">
 <td><span class="badge log fail-bg">Fail</span></td>
-<td>10:22:19 am</td>
+<td>10:45:20 am</td>
 <td>
-<a href="#" class="linked" test-id='1' id='12'>And verify products from "Test.xlsx" should be visible in user app</a>
+<a href="#" class="linked" test-id='1' id='6'>Given the user submits a review for a product</a>
 <div class="">
-<span class="badge badge-default">Home Page Banner upload verification admin panel.TC_UI_Zlaata_Home_08 |Verify all uploaded Special Timer products appear in Admin and User App.| "TD_UI_Zlaata_Home_08".And verify products from "Test.xlsx" should be visible in user app</span>
+<span class="badge badge-default">Verify Review Flow.TC_UI_Zlaata_Review_01 |Verify user able to give review in user app.| "TD_UI_Zlaata_Review_01".Given the user submits a review for a product</span>
 </div>
 </td>
 </tr>
