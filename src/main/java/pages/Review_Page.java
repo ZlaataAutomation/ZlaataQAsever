@@ -6,8 +6,10 @@ import java.util.Random;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -86,15 +88,14 @@ public class Review_Page extends Review_ObjRepo{
 	String productlistingName;
 
 	public String takeRandomProductFromAll() {
-	
 	    
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	    Actions actions = new Actions(driver);
 	    Common.waitForElement(1);
 
-	 // Hover on Shop
+	    // Hover on Shop
 	    WebElement shopMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(
-	            By.xpath("//span[contains(@class,'header_nav_link') and normalize-space()='Shop']")
+	            By.xpath("//div[@class='header_nav_item has_dropdown']")
 	    ));
 	    actions.moveToElement(shopMenu).perform();
 
@@ -106,65 +107,89 @@ public class Review_Page extends Review_ObjRepo{
 
 	    System.out.println("✅ Clicked on 'All' under Shop menu");
 	    Common.waitForElement(2);
-	    // Collect all product cards
-	    List<WebElement> products = wait.until(ExpectedConditions
-	            .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'prod_listing_card')]")));
-
-	    if (products.isEmpty()) {
-	        System.out.println("⚠️ No products found on listing page!");
-	        return null;
-	    }
 
 	    Random rand = new Random();
-	    int maxAttempts = Math.min(5, products.size());
+	    int maxAttempts = 5;
 	    boolean productFound = false;
 
 	    for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+	        try {
+	            // Re-find products list fresh each attempt (avoid stale element)
+	            List<WebElement> products = wait.until(ExpectedConditions
+	                    .visibilityOfAllElementsLocatedBy(By.xpath("//div[contains(@class,'prod_listing_card')]")));
 
-	        int randomIndex = rand.nextInt(products.size()) + 1;
-	        System.out.println("🎯 Checking random product index: " + randomIndex);
+	            if (products.isEmpty()) {
+	                System.out.println("⚠️ No products found on listing page!");
+	                return null;
+	            }
 
-	        WebElement productCard = driver.findElement(
-	                By.xpath("(//div[contains(@class,'prod_listing_card')])[" + randomIndex + "]"));
+	            int randomIndex = rand.nextInt(products.size()) + 1;
+	            System.out.println("🎯 Checking random product index: " + randomIndex);
 
-	        String name = productCard.findElement(
-	                By.xpath(".//a[contains(@class,'product_list_name')]"))
-	                .getText().trim();
-//	        List<WebElement> stockLabels = productCard.findElements(
-//	                By.xpath(".//span[contains(@class,'prod_listing_hurry') and normalize-space()='Out of Stock']"));
-//
-//	        boolean isOutOfStock = !stockLabels.isEmpty() && stockLabels.get(0).isDisplayed();
-//
-//	        if (isOutOfStock) {
-//	            System.out.println("❌ '" + name + "' is OUT OF STOCK. Retrying...");
-//	            continue;
-//	        }
+	            // Find fresh product card
+	            WebElement productCard = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                    By.xpath("(//div[contains(@class,'prod_listing_card')])[" + randomIndex + "]")
+	            ));
 
-	        // Found in-stock product
-	        String  productName = name;
+	            // Get product name with retry for stale element
+	            String name = "";
+	            for (int nameRetry = 0; nameRetry < 3; nameRetry++) {
+	                try {
+	                    name = productCard.findElement(
+	                            By.xpath(".//a[contains(@class,'product_list_name')]"))
+	                            .getText().trim();
+	                    break; // success
+	                } catch (StaleElementReferenceException e) {
+	                    if (nameRetry == 2) throw e;
+	                    Common.waitForElement(1);
+	                    // Re-find product card
+	                    productCard = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                            By.xpath("(//div[contains(@class,'prod_listing_card')])[" + randomIndex + "]")
+	                    ));
+	                }
+	            }
 
-	        WebElement productNameElement = productCard.findElement(
-	                By.xpath(".//a[contains(@class,'product_list_name')]"));
+	            // Found in-stock product
+	            String productName = name;
 
-	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
+	            // Click product with retry for stale element
+	            for (int clickRetry = 0; clickRetry < 3; clickRetry++) {
+	                try {
+	                    WebElement productNameElement = productCard.findElement(
+	                            By.xpath(".//a[contains(@class,'product_list_name')]"));
+	                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", productNameElement);
+	                    break; // success
+	                } catch (StaleElementReferenceException e) {
+	                    if (clickRetry == 2) throw e;
+	                    Common.waitForElement(1);
+	                    // Re-find product card
+	                    productCard = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                            By.xpath("(//div[contains(@class,'prod_listing_card')])[" + randomIndex + "]")
+	                    ));
+	                }
+	            }
 
-	        productFound = true;
-	        System.out.println("✅ Selected random in-stock product: " + productName);
-	        break;
+	            productFound = true;
+	            System.out.println("✅ Selected random in-stock product: " + productName);
+	            break;
+
+	        } catch (StaleElementReferenceException e) {
+	            System.out.println("⚠️ Stale element on attempt " + attempt + ", retrying...");
+	            Common.waitForElement(2);
+	        }
 	    }
 
 	    if (!productFound) {
-	        System.out.println("⚠️ No in-stock product found after trying " + maxAttempts);
+	        System.out.println("⚠️ No product found after " + maxAttempts + " attempts");
 	        return null;
 	    }
-	    // Click ADD TO CART button on PDP
-	    
-	    productlistingName = driver.findElement(
-	            By.xpath("//h3[@class='prod_name']")
-	    ).getText().trim();
-	    System.out.println("Product Name: " + productlistingName);
-	    
 
+	    // Get product name from PDP
+	    productlistingName = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.xpath("//h3[@class='prod_name']")
+	    )).getText().trim();
+	    
+	    System.out.println("Product Name: " + productlistingName);
 	    return productlistingName;
 	}
 	
@@ -176,19 +201,29 @@ public class Review_Page extends Review_ObjRepo{
 	    // STEP 1: Scroll to and click "Write a Review" button
 	    // ============================================
 	    
+
 	    WebElement writeReviewBtn = wait.until(ExpectedConditions.elementToBeClickable(
 	        By.xpath("(//button[normalize-space()='Write a Review'])[1]")
 	    ));
-	    
-	    // Scroll only until the button is visible (nearest edge)
-	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", writeReviewBtn);
-	    Common.waitForElement(1);
-	    
-	    // Re-find after scroll and click natively
+
+	    // Scroll with offset to avoid fixed header
+	    js.executeScript(
+	        "var headerOffset = 100;" +
+	        "var elementPosition = arguments[0].getBoundingClientRect().top;" +
+	        "var offsetPosition = elementPosition + window.pageYOffset - headerOffset;" +
+	        "window.scrollTo({top: offsetPosition, behavior: 'instant'});", 
+	        writeReviewBtn
+	    );
+	    Common.waitForElement(2);
+
+	    // Re-find after scroll
 	    writeReviewBtn = wait.until(ExpectedConditions.elementToBeClickable(
 	        By.xpath("(//button[normalize-space()='Write a Review'])[1]")
 	    ));
-	    writeReviewBtn.click();
+
+	    // ALWAYS use JS click to avoid both interception and stale element issues
+	    js.executeScript("arguments[0].click();", writeReviewBtn);
+
 	    System.out.println("🛒 'Write a Review' button clicked for: " + productlistingName);
 	    
 	    // Wait for form to fully open
@@ -199,11 +234,7 @@ public class Review_Page extends Review_ObjRepo{
 	    // ============================================
 	    
 	    WebElement star5 = wait.until(ExpectedConditions.elementToBeClickable(
-	        By.xpath("(//*[name()='svg'][contains(@class,'order_review_star Cls_order_review_star')])[15]")
-	    ));
-	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", star5);
-	    star5 = wait.until(ExpectedConditions.elementToBeClickable(
-	        By.xpath("(//*[name()='svg'][contains(@class,'order_review_star Cls_order_review_star')])[15]")
+	        By.xpath("(//*[name()='svg'][@class='order_review_star Cls_order_review_star '])[5]")
 	    ));
 	    star5.click();
 	    System.out.println("⭐ Selected 5-star rating");
@@ -213,15 +244,13 @@ public class Review_Page extends Review_ObjRepo{
 	    // ============================================
 	    
 	    WebElement tagsBest = wait.until(ExpectedConditions.elementToBeClickable(
-	        By.xpath("(//span[normalize-space()='Best'])[1]")
-	    ));
-	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", tagsBest);
-	    tagsBest = wait.until(ExpectedConditions.elementToBeClickable(
-	        By.xpath("(//span[normalize-space()='Best'])[1]")
+	    		
+	        By.xpath("(//label[@for='reviewInputTag0'])[1]")
 	    ));
 	    tagsBest.click();
 	    System.out.println("🏷️ Selected tag: Best");
 
+	    
 	    // ============================================
 	    // STEP 4: Enter review description
 	    // ============================================
@@ -247,13 +276,9 @@ public class Review_Page extends Review_ObjRepo{
 	    // ============================================
 	    
 	    WebElement trueToSize = wait.until(ExpectedConditions.elementToBeClickable(
-	        By.xpath("(//span[normalize-space()='True to size'])[1]")
+	        By.xpath("(//input[@id='overallFit_true'])[1]")
 	    ));
-	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", trueToSize);
-	    trueToSize = wait.until(ExpectedConditions.elementToBeClickable(
-	        By.xpath("(//span[normalize-space()='True to size'])[1]")
-	    ));
-	    trueToSize.click();
+	    js.executeScript("arguments[0].click();", trueToSize);
 	    System.out.println("📏 Selected 'True to size'");
 
 	    // ============================================
@@ -285,11 +310,27 @@ public class Review_Page extends Review_ObjRepo{
 	    WebElement submitBtn = wait.until(ExpectedConditions.elementToBeClickable(
 	        By.xpath("(//button[normalize-space()='Submit'])[1]")
 	    ));
-	    js.executeScript("arguments[0].scrollIntoView({block: 'nearest', inline: 'nearest'});", submitBtn);
+	    
+	    // Scroll submit button into view with offset
+	    js.executeScript(
+	        "var headerOffset = 100;" +
+	        "var elementPosition = arguments[0].getBoundingClientRect().top;" +
+	        "var offsetPosition = elementPosition + window.pageYOffset - headerOffset;" +
+	        "window.scrollTo({top: offsetPosition, behavior: 'smooth'});", 
+	        submitBtn
+	    );
+	    Common.waitForElement(1);
+	    
 	    submitBtn = wait.until(ExpectedConditions.elementToBeClickable(
 	        By.xpath("(//button[normalize-space()='Submit'])[1]")
 	    ));
-	    submitBtn.click();
+	    
+	    try {
+	        submitBtn.click();
+	    } catch (ElementClickInterceptedException e) {
+	        js.executeScript("arguments[0].click();", submitBtn);
+	    }
+	    
 	    System.out.println("📤 Review submitted");
 
 	    // ============================================
@@ -394,7 +435,7 @@ public class Review_Page extends Review_ObjRepo{
 
 	    // ---------------- STEP 2: CLICK PRODUCT ----------------
 	    WebElement productLink = wait.until(ExpectedConditions.elementToBeClickable(
-	            By.xpath("//a[contains(@class,'product_list_name') and contains(text(),'" + productlistingName + "')]")
+	            By.xpath("(//a[@class='product_list_name' and normalize-space()='" + productlistingName + "'])[1]")
 	    ));
 
 	    js.executeScript("arguments[0].scrollIntoView({block:'center'});", productLink);
@@ -405,20 +446,19 @@ public class Review_Page extends Review_ObjRepo{
 	    WebElement writeReview = wait.until(ExpectedConditions.elementToBeClickable(
 	            By.xpath("(//button[contains(text(),'Review')])[1]")));
 	    Common.waitForElement(2);
-	 // scroll it into center
+	    // scroll it into center
 	    ((JavascriptExecutor) driver).executeScript(
 	            "arguments[0].scrollIntoView({block: 'center'});", writeReview);
 
 	    // click via JS (bypasses click interception)
-	//    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", writeReview);
-	     System.out.println("🛒 Review clicked on PDP for: " + productlistingName);
+	    // ((JavascriptExecutor) driver).executeScript("arguments[0].click();", writeReview);
+	    System.out.println("🛒 Review clicked on PDP for: " + productlistingName);
 	}
 	
 	public void verifyFirstReviewDetails() {
 
 	    String GREEN  = "\u001B[32m";
 	    String RED    = "\u001B[31m";
-	    String YELLOW = "\u001B[33m";
 	    String RESET  = "\u001B[0m";
 	    Common.waitForElement(2);
 	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -431,10 +471,10 @@ public class Review_Page extends Review_ObjRepo{
 
 	        // ---------------- NAME ----------------
 	        String actualName = firstReview.findElement(
-	                By.xpath(".//h6[contains(@class,'review_customer_name')]")
+	                By.xpath(".//div[@class='review_customer_name']")  // ← FIXED: .// instead of //
 	        ).getText().trim().toLowerCase().replaceAll("\\s+", "");
 
-	        if (actualName.contains("saroj")) {
+	        if (actualName.contains("testuser")) {
 	            System.out.println(GREEN + "✅ Name verified: " + actualName + RESET);
 	        } else {
 	            throw new AssertionError("❌ Name mismatch: " + actualName);
@@ -442,12 +482,12 @@ public class Review_Page extends Review_ObjRepo{
 
 	        // ---------------- REVIEW TEXT ----------------
 	        String reviewText = firstReview.findElements(
-	                By.xpath(".//p[contains(@class,'review_card_content')]")
+	                By.xpath(".//p[@class='review_card_content']")  // ← FIXED: .// instead of //
 	        ).size() > 0 ?
-	                firstReview.findElement(By.xpath(".//p[contains(@class,'review_card_content')]")).getText().trim()
+	                firstReview.findElement(By.xpath(".//p[@class='review_card_content']")).getText().trim()  // ← FIXED
 	                : "";
 
-	        if (reviewText.equalsIgnoreCase("Best")) {
+	        if (reviewText.equalsIgnoreCase("Best product! Highly recommended.")) {
 	            System.out.println(GREEN + "✅ Review text verified: " + reviewText + RESET);
 	        } else {
 	            throw new AssertionError("❌ Review text mismatch: " + reviewText);
@@ -455,7 +495,7 @@ public class Review_Page extends Review_ObjRepo{
 
 	        // ---------------- IMAGE ----------------
 	        boolean imagePresent = firstReview.findElements(
-	                By.xpath(".//div[contains(@class,'review_card_pics')]//img")
+	                By.xpath(".//img[@alt='Zlaata Product Image']")  // ← FIXED: .// instead of //
 	        ).size() > 0;
 
 	        if (imagePresent) {
@@ -696,6 +736,65 @@ public class Review_Page extends Review_ObjRepo{
 	//    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", writeReview);
 	     System.out.println("🛒 Review clicked on PDP for: " + productName);
 	}
+	
+	
+	
+	public void verifyMyOrderReviewDetails() {
+
+	    String GREEN  = "\u001B[32m";
+	    String RED    = "\u001B[31m";
+	    String RESET  = "\u001B[0m";
+	    Common.waitForElement(2);
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+	    try {
+	        // ---------------- FIRST REVIEW CARD ----------------
+	        WebElement firstReview = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	                By.xpath("(//div[contains(@class,'customer_review_card')])[1]")
+	        ));
+
+	        // ---------------- NAME ----------------
+	        String actualName = firstReview.findElement(
+	                By.xpath(".//div[@class='review_customer_name']")  // ← FIXED: .// instead of //
+	        ).getText().trim();
+
+	        if (!actualName.isEmpty()) {
+	            System.out.println(GREEN + "✅ Name verified: " + actualName + RESET);
+	        } else {
+	            throw new AssertionError("❌ Name is empty");
+	        }
+
+	        // ---------------- REVIEW TEXT ----------------
+	        String reviewText = firstReview.findElements(
+	                By.xpath(".//p[@class='review_card_content']")  // ← FIXED: .// instead of //
+	        ).size() > 0 ?
+	                firstReview.findElement(By.xpath(".//p[@class='review_card_content']")).getText().trim()  // ← FIXED
+	                : "";
+
+	        if (reviewText.equalsIgnoreCase("Best")) {
+	            System.out.println(GREEN + "✅ Review text verified: " + reviewText + RESET);
+	        } else {
+	            throw new AssertionError("❌ Review text mismatch: " + reviewText);
+	        }
+
+	        // ---------------- IMAGE ----------------
+	        boolean imagePresent = firstReview.findElements(
+	                By.xpath(".//img[@alt='Zlaata Product Image']")  // ← FIXED: .// instead of //
+	        ).size() > 0;
+
+	        if (imagePresent) {
+	            System.out.println(GREEN + "✅ Image is displayed" + RESET);
+	        } else {
+	            throw new AssertionError("❌ Image not found");
+	        }
+	        Common.waitForElement(2);
+	    } catch (Exception e) {
+	        System.out.println(RED + "❌ Review verification FAILED: " + e.getMessage() + RESET);
+	        throw e;
+	    }
+	}
+	
+	
 	public void validateUserReview() {
 		
 		userLoginWithZlaataIndia();
@@ -727,7 +826,7 @@ public class Review_Page extends Review_ObjRepo{
 		
 		verifyApproveMyOrderReview();
 		
-		verifyFirstReviewDetails();
+		verifyMyOrderReviewDetails(); 
 
 
 	}

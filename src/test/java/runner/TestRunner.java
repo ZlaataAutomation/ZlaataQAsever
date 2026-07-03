@@ -16,9 +16,9 @@ features = {"src/test/resources/features/"},
 glue = "stepDef",	
 monochrome = true,	
 dryRun = false,
-tags= "@TC_UI_Zlaata_Review_01"
+tags= "@TC_UI_Zlaata_ADMI_01"
 
-)
+)	
 		
 public class TestRunner {	
 	
