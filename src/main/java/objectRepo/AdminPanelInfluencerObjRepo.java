@@ -33,7 +33,7 @@ public abstract class AdminPanelInfluencerObjRepo extends BasePage {
    	
   //Influencer
    	
-   	@FindBy(xpath = "//a[normalize-space()='Product Listing Name']")
+   	@FindBy(xpath = "//a[@class='nav-link dropdown-toggle'][normalize-space()='Product Detail Name']")
 	protected WebElement productListingMenu;
    	
    	@FindBy(xpath = "(//input[@role='searchbox'])[1]") 
@@ -101,7 +101,7 @@ public abstract class AdminPanelInfluencerObjRepo extends BasePage {
     @FindBy(xpath = "//a[normalize-space()='Category Name']")
     protected WebElement categoriesNameButton;
     
-    @FindBy(xpath = "(//span[@class='select2-selection select2-selection--single'])[1]")
+    @FindBy(xpath = "(//a[normalize-space()='Category Type'])[1]")
     protected WebElement categoryType;
     
     @FindBy(xpath = "//span[@class='ladda-label']")
@@ -130,7 +130,7 @@ public abstract class AdminPanelInfluencerObjRepo extends BasePage {
     @FindBy(xpath = "//input[@id='search_input']") 
     protected WebElement searchBox;
 	
-    @FindBy(xpath = "//a[normalize-space()='Styled by']") 
+    @FindBy(xpath = "(//a[normalize-space()='Styled By'])[1]") 
     protected WebElement clickInfluencer;
   
     
