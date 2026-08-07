@@ -40,50 +40,55 @@ public class Review_Page extends Review_ObjRepo{
 	    System.out.println("✅ Admin Login Successfull");
 	    
 	}
-	public void userLoginWithZlaataIndia(){
-		LoginPage log = new LoginPage(driver);
+	public void userLoginWithZlaataIndia() {
+	    LoginPage log = new LoginPage(driver);
 	    log.userLogin();
 	    Common.waitForElement(1);
 
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    // Fixed XPath: Removed leading '/' and extra trailing ']'
 	    WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//h2[normalize-space()='ZLAATA INDIA']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
-        ));
+	            By.xpath("(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[1]")
+	    ));
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
 
-        System.out.println("Clicked ZLAATA INDIA Home Page Banner");
+	    System.out.println("Clicked ZLAATA INDIA Home Page Banner");
 	}
+
 	public void launchHomepage(String page) {
+	    HomePage home = new HomePage(driver);
+	    home.homeLaunch();
 
-        HomePage home = new HomePage(driver);
-        home.homeLaunch();
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    // Updated to use the correct SHOP NOW banner XPath
+	    WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[1]")
+	    ));
 
-        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//h2[normalize-space()='" + page + "']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
-        ));
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+	    System.out.println("Clicked " + page + " Home Page Banner");
+	}
 
-        System.out.println("Clicked " + page + " Home Page Banner");
-    }
 	public void launchHomepageWithBrand(String page) {
+	    HomePage home = new HomePage(driver);
+	    home.homeLaunch();
+	    String formattedBrand = page.toUpperCase();
+	    
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        HomePage home = new HomePage(driver);
-        home.homeLaunch();
-        String formattedBrand = page.toUpperCase();
-        
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    // Updated to use the correct SHOP NOW banner XPath
+	    WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[1]")
+	    ));
 
-        WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//h2[normalize-space()='" + formattedBrand + "']/following-sibling::span[contains(@class,'landing_page_link_btn')]")
-        ));
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
-
-        System.out.println("Clicked " + formattedBrand + " Home Page Banner");
-    }
+	    System.out.println("Clicked " + formattedBrand + " Home Page Banner");
+	}
 	
 	String productlistingName;
 
