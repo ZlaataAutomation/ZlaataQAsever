@@ -16,8 +16,7 @@ features = {"src/test/resources/features/"},
 glue = "stepDef",	
 monochrome = true,	
 dryRun = false,
-tags= "@TC_UI_Zlaata_ADMI_01"
-
+tags= "@flash"
 )	
 		
 public class TestRunner {	
@@ -36,7 +35,8 @@ public class TestRunner {
 public static void generateExcelReport() {
 	 ExcelReportUtil.generateExcelReport();
 	// EmailSendUtils.sendEmail();	
-}
+	}
+
 }
 
 
