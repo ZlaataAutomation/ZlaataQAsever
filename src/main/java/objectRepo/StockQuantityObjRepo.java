@@ -76,11 +76,16 @@ public abstract class StockQuantityObjRepo extends BasePage {
 		
 		@FindBy(xpath = "//button[contains(@class,'Cls_cart_btn') and contains(@class,'header_cta_btn')]")
 		protected WebElement bagIcon;
-		@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Continue']")
-		protected WebElement continueBtn;
 		
-		@FindBy(xpath = "//button[contains(@class,'place_order_btn') and normalize-space(text())='Place order']")
-		protected WebElement placeOrderBtn;
+		
+		@FindBy(xpath = "(//button[@class='place_order_btn Cls_place_order btn___2 '])[1]")
+		protected WebElement placeorderBtn1;
+		
+		@FindBy(xpath = "(//button[@class='place_order_btn Cls_place_order btn___2 enabled'])[1]")
+		protected WebElement placeOrderBtn2;
+		
+		@FindBy(xpath = "(//button[@class='place_order_btn Cls_place_order btn___2'])[1]")
+		protected WebElement placeOrderBtn3;
 		
 		
 		@FindBy(xpath = "(//input[@id='net-banking'])[1]")
