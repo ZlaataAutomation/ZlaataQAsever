@@ -27,3 +27,14 @@ Scenario Outline: TC_UI_Zlaata_ExpressDelivery_02|Verify Express Delivery functi
 Examples:
   | TD_ID                              |
   | TD_UI_Zlaata_ExpressDelivery_02    |
+  
+     @exp
+  
+ @TC_UI_Zlaata_ExpressDelivery_03
+Scenario Outline: TC_UI_Zlaata_ExpressDelivery_03|Verify  Delivery Day functionality on Product Listing Page.| "<TD_ID>"
+
+  Given the user verifies  Delivery day functionality in the Product Listing page 
+
+Examples:
+  | TD_ID                              |
+  | TD_UI_Zlaata_ExpressDelivery_03    |

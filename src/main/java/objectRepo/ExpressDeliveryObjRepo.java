@@ -1,13 +1,26 @@
 package objectRepo;
 
+import java.time.Duration;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import basePage.BasePage;
 
 public abstract class ExpressDeliveryObjRepo extends BasePage {
 	
-	
+	public void waitFor(WebElement el) {
+        new WebDriverWait(driver, Duration.ofSeconds(15))
+            .until(ExpectedConditions.elementToBeClickable(el));
+    }
+    public void type(WebElement el, String value) {
+        waitFor(el); el.clear(); el.sendKeys(value);
+    }
+    public void click(WebElement el) {
+        waitFor(el); el.click();
+    }
 	 
     @FindBy(xpath = "//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW']")
 	   protected WebElement zlaataIndiaShopButton;
@@ -104,5 +117,55 @@ public abstract class ExpressDeliveryObjRepo extends BasePage {
 		@FindBy(xpath = "//li[normalize-space()='Express Delivery']")
 		protected WebElement expressList;
     
+		
+		
+		
+		
+		
+	
+		 @FindBy(xpath = "//input[@id='menuSearch']")  
+		    protected WebElement searchMenu;
+		 
+		 @FindBy(xpath = "//a[contains(normalize-space(),'Products')]")  
+		    protected WebElement clickProductReview;
+		 
+			@FindBy(xpath = "//a[normalize-space()='Product Listing Name']")
+			protected WebElement productListingMenu;
+			
+	
+		    
+		    @FindBy(xpath = "//i[@class='las la-edit']")
+		    protected WebElement editProductButton;
+		    
+		
+		    
+		    @FindBy(xpath = "(//input[@name='filters[0][name]'])[1]")
+			protected WebElement productListingBoxText;
+		    
+		    @FindBy(xpath="//span[@data-value='save_and_back']")
+		    protected WebElement saveButton;
+		    
+		   
+		    @FindBy(xpath = "//button[@id='searchBtn']")
+		  		protected WebElement searchIcon;
+		  		
+		  		@FindBy(xpath = "//input[@id='globalSearchInput']")
+		  		protected WebElement userSearchBox;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 }
