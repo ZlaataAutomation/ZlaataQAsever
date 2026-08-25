@@ -34,6 +34,14 @@ public class ExpressDeliveryStepDef {
 		
 	}
 
+		
+			@Given("the user verifies  Delivery day functionality in the Product Listing page")
+			public void the_user_verifies_delivery_day_functionality_in_the_product_listing_page() throws InterruptedException {
+				express.dayDeliveryDateFunctionalty();
+			}
+
+
+
 
 
 

@@ -24,3 +24,5 @@ Then the product should display the Almost Sold Out message
 Examples:  
   | TD_ID                  |  
   | TD_UI_Zlaata_Stock_02   |
+  
+  

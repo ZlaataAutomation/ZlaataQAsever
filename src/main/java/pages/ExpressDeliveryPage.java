@@ -1,9 +1,12 @@
 package pages;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -16,6 +19,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import java.util.concurrent.ThreadLocalRandom;
 
 import manager.FileReaderManager;
 import objectRepo.ExpressDeliveryObjRepo;
@@ -772,8 +776,198 @@ public final class ExpressDeliveryPage extends ExpressDeliveryObjRepo {
 	    }
 	}
 	    
-	   
+
+	public void launchHomepage(String page) {
+	    HomePage home = new HomePage(driver);
+	    home.homeLaunch();
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	    // Updated to use the correct SHOP NOW banner XPath
+	    WebElement banner = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("(//span[@class='landing_page_link_btn'][normalize-space()='SHOP NOW'])[1]")
+	    ));
+
+	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", banner);
+
+	    System.out.println("Clicked " + page + " Home Page Banner");
+	}
 	
+	
+	String productlistingName= "Pink cotton on zlaata";
+	String adminProductName;
+	String deliveryDay;
+	public void updateDeliveryDate() throws InterruptedException {
+		adminLogin();
+	     Common.waitForElement(2);
+	        click(searchMenu);
+	        type(searchMenu, "Products");
+	        click(clickProductReview);
+	        System.out.println("✅ Selected Product Reviews");
+	        Common.waitForElement(3);
+	    
+	        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+	        
+	        System.out.println("✅ Successful redirect to Adimn Product page");
+			 // Open product listing
+		      ((JavascriptExecutor) driver)
+	          .executeScript("arguments[0].click();", productDetailMenu);
+		  //  click(productDetailMenu);  
+		    System.out.println("✅ Successful click product listing menu");
+		    Common.waitForElement(2);
+		      ((JavascriptExecutor) driver)
+	          .executeScript("arguments[0].click();", productSearchBox);
+		 //   click(productSearchBox);
+
+		    // Fetch the product name directly from Excel map
+		//    String productName = Common.getValueFromTestDataMap("ProductListingName");
+		    System.out.println("✅ Fetched product listing name:" + productlistingName);
+		 // Search or enter the product
+		    // Clear + Type
+		    productSearchBox.clear();
+		    productSearchBox.sendKeys(productlistingName);
+
+		    System.out.println("✅ Product name typed: " + productlistingName);
+
+		    // Press Enter
+		    Thread.sleep(3000);
+		    productSearchBox.sendKeys(Keys.ENTER);
+
+		//    type(productSearchBox, productDetailName + Keys.ENTER);
+		    Common.waitForElement(2);
+		    System.out.println("✅ Entered product listing name in search box & pressed ENTER");
+		    
+		 // now click edit, etc…
+		    Common.waitForElement(1);
+		  //  waitFor(editProductButton);
+		    ((JavascriptExecutor) driver)
+	        .executeScript("arguments[0].click();", editProductButton);
+		  //  click(editProductButton);
+		    System.out.println("✅ Clicked product edit option");
+		    // now click item, etc…
+		  //  waitFor(itemProductButton);
+		    Common.waitForElement(2);
+		    driver.findElement(By.name("delivery_day")).clear();
+		    int fromDay = ThreadLocalRandom.current().nextInt(1, 20);
+		    int toDay = ThreadLocalRandom.current().nextInt(fromDay + 1, 32);
+
+		     deliveryDay = fromDay + "-" + toDay;
+
+		    driver.findElement(By.name("delivery_day"))
+		          .sendKeys(deliveryDay);
+		    
+		     deliveryDay = driver.findElement(By.name("delivery_day")).getAttribute("value");
+		    System.out.println(deliveryDay);
+		    Common.waitForElement(2);
+		    
+		    
+		//  Save
+			Common.waitForElement(3);
+			((JavascriptExecutor) driver)
+		       .executeScript("arguments[0].click();", saveButton);
+		  //  click(saveButton);
+		    System.out.println("✅ Saved collection changes");
+		    //Clear Catch
+		    Common.waitForElement(5);
+		    waitFor(clearCatchButton);
+		    ((JavascriptExecutor) driver)
+	        .executeScript("arguments[0].click();", clearCatchButton);
+		//    click(clearCatchButton);
+		    System.out.println( "🧹 Cache cleared successfully." );
+		    Common.waitForElement(7);
+		    waitFor(clearCatchButton);
+		    ((JavascriptExecutor) driver)
+	        .executeScript("arguments[0].click();", clearCatchButton);
+		//    click(clearCatchButton);
+		    System.out.println( "🧹 Cache cleared successfully." );
+		    
+		    
+		    WebElement productText = wait.until(
+		    	    ExpectedConditions.visibilityOfElementLocated(
+		    	        By.xpath("//span[normalize-space()='Product']")
+		    	    )
+		    	);
+
+		    	Assert.assertTrue(
+		    	    "❌ 'Product' text is NOT displayed!",
+		    	    productText.isDisplayed()
+		    	);
+
+		    	System.out.println("✅ 'Product' text is displayed successfully.");
+	}
+	public void verifyListingPage() {
+
+	    String YELLOW = "\u001B[33m";
+	    String RESET  = "\u001B[0m";
+
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
+
+	    // ---------------- STEP 1: SEARCH PRODUCT ----------------
+	    System.out.println(YELLOW + "🔍 Searching for product: " + productlistingName + RESET);
+
+	    Common.waitForElement(2);
+
+	    wait.until(ExpectedConditions.elementToBeClickable(searchIcon)).click();
+
+	    wait.until(ExpectedConditions.visibilityOf(userSearchBox));
+	    userSearchBox.clear();
+	    userSearchBox.sendKeys(productlistingName);
+	    userSearchBox.sendKeys(Keys.ENTER);
+
+	    Common.waitForElement(3);
+
+	    WebElement productLink = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[contains(@class,'product_list_name') and contains(text(),'" + productlistingName + "')]")
+	    ));
+
+	  
+	}
+	
+	public void verifyDayDeliveryInUserApp() {
+
+	  
+
+	    // Scroll to load products
+	    ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,340);");
+
+	    Common.waitForElement(2);
+
+	    // Click the product
+	    WebElement productLink = wait.until(ExpectedConditions.elementToBeClickable(
+	            By.xpath("//a[contains(@class,'product_list_name') and contains(text(),'"
+	                    + productlistingName + "')]")
+	    ));
+
+	    productLink.click();
+
+	    Common.waitForElement(2);
+
+	    // Verify Delivery Day in User App
+	    WebElement deliveryElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
+	            By.cssSelector("div.prod_delivery_wrap")
+	    ));
+
+	    String actualDelivery = deliveryElement.getText().trim();
+
+	    // Expected: "15-25 Day Delivery"
+	    String expectedDelivery = deliveryDay + " Day Delivery";
+
+	    System.out.println("Expected Delivery: " + expectedDelivery);
+	    System.out.println("Actual Delivery: " + actualDelivery);
+
+	    Assert.assertEquals(
+	            "Delivery Day is not matching between Admin and User App",
+	            expectedDelivery,
+	            actualDelivery
+	    );
+	    
+	    Common.waitForElement(2);
+	}
+	
+	
+
 	public void expressDeliveryOption() {
 
 		verifyExpressDeliveryYesAndNo();
@@ -786,6 +980,27 @@ public final class ExpressDeliveryPage extends ExpressDeliveryObjRepo {
 	}
 	
 	
+public void dayDeliveryDateFunctionalty() throws InterruptedException {
+	
+	updateDeliveryDate();
+	
+	launchHomepage("ZLAATA INDIA");
+	
+	verifyListingPage();
+	
+	verifyDayDeliveryInUserApp();
+	
+	
+	
+	
+}
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 	
 
 	@Override
